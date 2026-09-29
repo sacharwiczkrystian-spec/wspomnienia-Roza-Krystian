@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasz Pamiętnik Rocznicowy</title>
+    <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --primary-hover: #ff758f;
+            --bg-color: #fff0f3;
+            --card-color: #ffffff;
+            --text-color: #5c0d1e;
+            --text-muted: #a37081;
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 24px rgba(255, 77, 109, 0.15);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .heart-icon {
+            font-size: 50px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        p.info {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        input[type="password"], input[type="date"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffccd5;
+            border-radius: 8px;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 10px 18px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-color);
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 12px;
+            width: auto;
+            border-width: 1px;
+            display: inline-block;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Pin Dots */
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .dot {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .dot.filled {
+            background-color: var(--primary-color);
+        }
+
+        /* Keypad */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 240px;
+            margin: 0 auto 20px;
+        }
+
+        .key {
+            background: white;
+            border: 2px solid #ffccd5;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+        .key:active, .key:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .error-msg {
+            color: #d90429;
+            font-size: 14px;
+            margin: 10px 0;
+            min-height: 20px;
+        }
+
+        /* Main App */
+        .countdown-box {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px dashed var(--primary-color);
+        }
+
+        .countdown-time {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 5px 0;
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .settings-box {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0 10px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 5px;
+        }
+
+        .add-form {
+            background: #fff5f6;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .file-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Memories List */
+        .memories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .memory-card {
+            background: white;
+            border: 1px solid #ffccd5;
+            padding: 15px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .memory-date {
+            font-size: 12px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .memory-text {
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .memory-img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #d90429;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #recoveryCodesBox {
+            background: #eef1f6;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+            color: #333;
+        }
+
+
+        /* Music Section */
+        .music-card {
+            background: linear-gradient(135deg, #fff0f3, #ffffff);
+            border: 1px solid #ffccd5;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(255, 77, 109, 0.10);
+        }
+        .music-note { font-size: 34px; margin-bottom: 8px; }
+        .music-title { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+        .music-artist { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+        .music-button {
+            display: inline-block;
+            text-decoration: none;
+            background: var(--primary-color);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .music-button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN / SETUP -->
+    <main id="loginScreen" class="screen active" aria-live="polite">
+        <div class="center">
+            <div class="heart-icon" aria-hidden="true">❤️</div>
+            <h2 id="screenTitle">Witaj</h2>
+            
+            <div id="setupBox">
+                <p class="info">Ustaw 4-cyfrowy PIN, którym będziecie otwierać pamiętnik.</p>
+                <div style="max-width:420px;margin:10px auto;">
+                    <label for="pinField" class="sr-only">Nowy PIN</label>
+                    <input id="pinField" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Nowy PIN (4 cyfry)" maxlength="4" style="text-align:center;font-size:18px">
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <button id="setPinBtn" class="btn">Ustaw PIN</button>
+                        <button id="useDefaultBtn" class="btn-ghost">Użyj domyślnego</button>
+                    </div>
+                </div>
+                <p class="info" id="recoveryNote">Po ustawieniu otrzymasz kody awaryjne — zapisz je w bezpiecznym miejscu.</p>
+                <div id="recoveryCodesBox" style="display:none;margin-top:8px"></div>
+                <div id="loginHint" style="margin-top:10px;color:#666;font-size:13px">Masz już PIN? <button id="toLoginBtn" class="btn-ghost btn-small">Zaloguj się</button></div>
+            </div>
+
+            <div id="loginBox" style="display:none">
+                <div class="pin-dots" role="group" aria-label="Wprowadź PIN">
+                    <div class="dot" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+                </div>
+                <div class="keypad" role="application" aria-label="Klawiatura PIN">
+                    <button class="key" data-key="1">1</button><button class="key" data-key="2">2</button><button class="key" data-key="3">3</button>
+                    <button class="key" data-key="4">4</button><button class="key" data-key="5">5</button><button class="key" data-key="6">6</button>
+                    <button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button>
+                    <button class="key" data-key="C">C</button><button class="key" data-key="0">0</button><button class="key" data-key="⌫">⌫</button>
+                </div>
+                <div class="error-msg" id="loginError"></div>
+                <p class="info" style="margin-top:12px">Jeśli zapomniałeś PIN, użyj jednego z kodów awaryjnych.</p>
+                <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+                    <button id="toSetupBtn" class="btn-ghost btn-small">Zmień PIN</button>
+                    <button id="helpRecoveryBtn" class="btn-ghost btn-small">Kody awaryjne</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MAIN APP -->
+    <main id="mainScreen" class="screen" aria-hidden="true">
+        <div class="countdown-box" role="region" aria-label="Odliczanie">
+            <div>Do kolejnej rocznicy zostało:</div>
+            <div class="countdown-time" id="countdownTimer">-- dni</div>
+            <div class="countdown-label" id="anniversaryInfo">Następna rocznica: ładuję...</div>
+        </div>
+
+        <div class="settings-box">
+            <button id="settingsBtn" class="btn-ghost btn-small">Ustawienia</button>
+            <button id="logoutBtn" class="btn-ghost btn-small">Wyloguj</button>
+        </div>
+
+
+        <div class="section-title">🎵 Nasza muzyka</div>
+        <div class="music-card">
+            <div class="music-note" aria-hidden="true">🎶</div>
+            <div class="music-title">Perfect</div>
+            <div class="music-artist">Ed Sheeran</div>
+            <a class="music-button" href="https://www.youtube.com/results?search_query=Ed+Sheeran+Perfect+official" target="_blank" rel="noopener noreferrer" aria-label="Otwórz Perfect na YouTube">▶ Posłuchaj utworu</a>
+        </div>
+
+        <div class="section-title">✨ Dodaj wspomnienie</div>
+        <div class="add-form" role="form" aria-label="Dodaj wspomnienie">
+            <label class="sr-only" for="memoryDate">Data</label>
+            <input id="memoryDate" type="date" aria-label="Data wspomnienia">
+            
+            <label class="sr-only" for="memoryText">Treść</label>
+            <textarea id="memoryText" placeholder="Co pięknego dziś się wydarzyło?" aria-label="Treść wspomnienia"></textarea>
+            
+            <div class="row file-row" style="align-items:center;">
+                <input id="memoryFile" type="file" accept="image/*" aria-label="Wybierz zdjęcie (opcjonalnie)">
+                <button id="addFileBtn" class="btn-ghost btn-small" onclick="document.getElementById('memoryFile').click()">Wybierz zdjęcie</button>
+                <span id="fileNameDisplay" style="font-size:12px;color:var(--text-muted)"></span>
+            </div>
+            
+            <div style="display:flex;gap:8px">
+                <button id="saveMemoryBtn" class="btn">Zapisz</button>
+                <button id="clearFormBtn" class="btn-ghost">Wyczyść</button>
+            </div>
+            <div id="saveInfo" class="info" style="margin-top:6px">Zdjęcia są przechowywane lokalnie w przeglądarce.</div>
+        </div>
+
+        <div class="section-title">💖 Galeria wspomnień</div>
+        <div id="memoriesList" class="memories-list" aria-live="polite" aria-label="Lista wspomnień"></div>
+
+        <footer>Wersja offline • Możesz zapisać plik i otworzyć go w przeglądarce</footer>
+    </main>
+
+    <script>
+        // --- CONFIG & STATE ---
+        const DEFAULT_PIN = "1234";
+        const STORAGE_KEY_PIN = "diary_pin_hash";
+        const STORAGE_KEY_RECOVERY = "diary_recovery_codes";
+        const STORAGE_KEY_MEMORIES = "diary_memories";
+        const STORAGE_KEY_ANNIVERSARY = "diary_anniversary_date";
+
+        let currentPinInput = "";
+        let selectedImageBase64 = "";
+
+        // --- DOM ELEMENTS ---
+        const loginScreen = document.getElementById("loginScreen");
+        const mainScreen = document.getElementById("mainScreen");
+        const screenTitle = document.getElementById("screenTitle");
+        const setupBox = document.getElementById("setupBox");
+        const loginBox = document.getElementById("loginBox");
+        const pinField = document.getElementById("pinField");
+        const recoveryCodesBox = document.getElementById("recoveryCodesBox");
+        const recoveryNote = document.getElementById("recoveryNote");
+        const loginError = document.getElementById("loginError");
+        const memoriesList = document.getElementById("memoriesList");
+        const memoryDate = document.getElementById("memoryDate");
+        const memoryText = document.getElementById("memoryText");
+        const memoryFile = document.getElementById("memoryFile");
+        const fileNameDisplay = document.getElementById("fileNameDisplay");
+        const countdownTimer = document.getElementById("countdownTimer");
+        const anniversaryInfo = document.getElementById("anniversaryInfo");
+
+        // --- INIT ---
+        window.addEventListener("DOMContentLoaded", () => {
+            initApp();
+            setupDateInput();
+        });
+
+        function initApp() {
+            const hasPin = localStorage.getItem(STORAGE_KEY_PIN);
+            if (hasPin) {
+                showLoginBox();
+            } else {
+                showSetupBox();
+            }
+        }
+
+        function setupDateInput() {
+            // Set today as default date
+            const today = new Date().toISOString().split('T')[0];
+            memoryDate.value = today;
+        }
+
+        // --- NAVIGATION ---
+        function showSetupBox() {
+            screenTitle.textContent = "Ustawienia Pamiętnika";
+            setupBox.style.display = "block";
+            loginBox.style.display = "none";
+        }
+
+        function showLoginBox() {
+            screenTitle.textContent = "Zaloguj się";
+            setupBox.style.display = "none";
+            loginBox.style.display = "block";
+            resetPinDots();
+        }
+
+        function unlockApp() {
+            loginScreen.classList.remove("active");
+            loginScreen.setAttribute("aria-hidden", "true");
+            mainScreen.classList.add("active");
+            mainScreen.removeAttribute("aria-hidden");
+            
+            updateCountdown();
+            loadMemories();
+        }
+
+        function logoutApp() {
+            mainScreen.classList.remove("active");
+            mainScreen.setAttribute("aria-hidden", "true");
+            loginScreen.classList.add("active");
+            loginScreen.removeAttribute("aria-hidden");
+            showLoginBox();
+        }
+
+        // --- PIN & RECOVERY LOGIC ---
+        document.getElementById("setPinBtn").addEventListener("click", () => {
+            const pin = pinField.value.trim();
+            if (pin.length === 4 && /^\d+$/.test(pin)) {
+                saveNewPin(pin);
+            } else {
+                alert("PIN musi składać się dokładnie z 4 cyfr!");
+            }
+        });
+
+        document.getElementById("useDefaultBtn").addEventListener("click", () => {
+            saveNewPin(DEFAULT_PIN);
+            alert("Ustawiono domyślny PIN: " + DEFAULT_PIN);
+        });
+
+        document.getElementById("toLoginBtn").addEventListener("click", showLoginBox);
+        document.getElementById("toSetupBtn").addEventListener("click", showSetupBox);
+        
+        document.getElementById("helpRecoveryBtn").addEventListener("click", () => {
+            const code = prompt("Wpisz jeden ze swoich kodów awaryjnych:");
+            if (!code) return;
+            
+            let codes = JSON.parse(localStorage.getItem(STORAGE_KEY_RECOVERY) || "[]");
+            if (codes.includes(code.trim())) {
+                alert("Kod poprawny! Możesz zmienić teraz swój PIN.");
+                showSetupBox();
+            } else {
+                alert("Nieprawidłowy kod awaryjny!");
+            }
+        });
+
+        function saveNewPin(pin) {
+            localStorage.setItem(STORAGE_KEY_PIN, btoa(pin)); // Simple encoding for storage
+            
+            // Generate recovery codes
+            let codes = [];
+            for(let i=0; i<3; i++) {
+                codes.push(Math.random().toString(36).substring(2, 8).toUpperCase());
+            }
+            localStorage.setItem(STORAGE_KEY_RECOVERY, JSON.stringify(codes));
+            
+            recoveryNote.textContent = "Zapisz te kody! Pozwolą Ci wejść, gdy zapomnisz PIN:";
+            recoveryCodesBox.style.display = "block";
+            recoveryCodesBox.innerHTML = codes.map(c => `<strong>${c}</strong>`).join(" | ");
+            
+            document.getElementById("loginHint").style.display = "block";
+        }
+
+        // --- KEYPAD LOGIC ---
+        document.querySelectorAll(".key").forEach(button => {
+            button.addEventListener("click", () => {
+                const key = button.getAttribute("data-key");
+                handleKeyPress(key);
+            });
+        });
+
+        function handleKeyPress(key) {
+            loginError.textContent = "";
+            if (key === "C") {
+                currentPinInput = "";
+            } else if (key === "⌫") {
+                currentPinInput = currentPinInput.slice(0, -1);
+            } else if (currentPinInput.length < 4) {
+                currentPinInput += key;
+            }
+            
+            updatePinDots();
+
+            if (currentPinInput.length === 4) {
+                setTimeout(verifyPin, 150);
+            }
+        }
+
+        function updatePinDots() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById(`d${i}`);
+                if (i < currentPinInput.length) {
+                    dot.classList.add("filled");
+                } else {
+                    dot.classList.remove("filled");
+                }
+            }
+        }
+
+        function resetPinDots() {
+            currentPinInput = "";
+            updatePinDots();
+        }
+
+        function verifyPin() {
+            const savedPinHash = localStorage.getItem(STORAGE_KEY_PIN);
+            const inputHash = btoa(currentPinInput);
+
+            if (savedPinHash === inputHash) {
+                unlockApp();
+            } else {
+                loginError.textContent = "Błędny PIN. Spróbuj ponownie.";
+                resetPinDots();
+            }
+        }
+
+        // --- COUNTDOWN LOGIC ---
+        function updateCountdown() {
+            let anniversaryStr = localStorage.getItem(STORAGE_KEY_ANNIVERSARY);
+            if (!anniversaryStr) {
+                // Default anniversary: 14th February (Valentine's Day)
+                const currentYear = new Date().getFullYear();
+                anniversaryStr = `${currentYear}-02-14`;
+                localStorage.setItem(STORAGE_KEY_ANNIVERSARY, anniversaryStr);
+            }
+
+            const now = new Date();
+            let annDate = new Date(anniversaryStr);
+            
+            // Adjust to current/next year depending on if it already passed
+            annDate.setFullYear(now.getFullYear());
+            if (annDate < now) {
+                annDate.setFullYear(now.getFullYear() + 1);
+            }
+
+            const diffTime = Math.abs(annDate - now);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            countdownTimer.textContent = `${diffDays} dni`;
+            anniversaryInfo.textContent = `Następna rocznica: ${annDate.toLocaleDateString('pl-PL')}`;
+        }
+
+        // --- SETTINGS & LOGOUT ---
+        document.getElementById("logoutBtn").addEventListener("click", logoutApp);
+        document.getElementById("settingsBtn").addEventListener("click", () => {
+            const newAnnDate = prompt("Wpisz datę Waszej rocznicy (RRRR-MM-DD):", localStorage.getItem(STORAGE_KEY_ANNIVERSARY) || "");
+            if (newAnnDate && /^\d{4}-\d{2}-\d{2}$/.test(newAnnDate)) {
+                localStorage.setItem(STORAGE_KEY_ANNIVERSARY, newAnnDate);
+                updateCountdown();
+            } else if (newAnnDate) {
+                alert("Nieprawidłowy format daty! Użyj RRRR-MM-DD.");
+            }
+        });
+
+        // --- MEMORIES LOGIC (LOCALSTORAGE) ---
+        memoryFile.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameDisplay.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    selectedImageBase64 = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileNameDisplay.textContent = "";
+                selectedImageBase64 = "";
+            }
+        });
+
+        document.getElementById("saveMemoryBtn").addEventListener("click", () => {
+            const dateVal = memoryDate.value;
+            const textVal = memoryText.value.trim();
+
+            if (!textVal) {
+                alert("Wpisz treść wspomnienia!");
+                return;
+            }
+
+            const newMemory = {
+                id: Date.now(),
+                date: dateVal,
+                text: textVal,
+                image: selectedImageBase64
+            };
+
+            let memories = JSON.parse(localStorage.getItem(STORAGE_KEY_MEMORIES) || "[]");
+            memories.unshift(newMemory); // Newest first
+            localStorage.setItem(STORAGE_KEY_MEMORIES, JSON.stringify(memories));
+
+            clearForm();
+            loadMemories();
+        });
+
+        document.getElementById("clearFormBtn").addEventListener("click", clearForm);
+
+        function clearForm() {
+            memoryText.value = "";
+            memoryFile.value = "";
+            fileNameDisplay.textContent = "";
+            selectedImageBase64 = "";
+            setupDateInput();
+        }
+
+        function loadMemories() {
+            memoriesList.innerHTML = "";
+            const memories = JSON.parse(localStorage.getItem(STORAGE_KEY_MEMORIES) || "[]");
+
+            if (memories.length === 0) {
+                memoriesList.innerHTML = '<p class="info" style="text-align:center;">Brak wspomnień. Dodaj pierwsze powyżej! 💕</p>';
+                return;
+            }
+
+            memories.forEach(m => {
+                const card = document.createElement("div");
+                card.className = "memory-card";
+                
+                const formattedDate = new Date(m.date).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' });
+                
+                let imgHtml = m.image ? `<img src="${m.image}" class="memory-img" alt="Zdjęcie do wspomnienia">` : '';
+
+                card.innerHTML = `
+                    <button class="delete-btn" onclick="deleteMemory(${m.id})">🗑️</button>
+                    <div class="memory-date">${formattedDate}</div>
+                    <div class="memory-text">${escapeHtml(m.text)}</div>
+                    ${imgHtml}
+                `;
+                memoriesList.appendChild(card);
+            });
+        }
+
+        window.deleteMemory = function(id) {
+            if (confirm("Czy na pewno chcesz usunąć to wspomnienie?")) {
+                let memories = JSON.parse(localStorage.getItem(STORAGE_KEY_MEMORIES) || "[]");
+                memories = memories.filter(m => m.id !== id);
+                localStorage.setItem(STORAGE_KEY_MEMORIES, JSON.stringify(memories));
+                loadMemories();
+            }
+        };
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
