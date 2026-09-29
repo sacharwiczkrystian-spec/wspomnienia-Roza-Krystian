@@ -381,26 +381,42 @@
             <h2 id="screenTitle">Witaj</h2>
             
             <div id="setupBox">
+                <p class="info">Zaloguj się do swojego pamiętnika.</p>
+
                 <button id="googleLoginBtn" class="google-btn" type="button">
                     <span class="google-icon">G</span>
                     Kontynuuj przez Google
                 </button>
-                <div id="authStatus" class="auth-status" aria-live="polite"></div>
 
-                <p class="info">Ustaw 4-cyfrowy PIN, którym będziecie otwierać pamiętnik.</p>
-                <div style="max-width:420px;margin:10px auto;">
-                    <label for="pinField" class="sr-only">Nowy PIN</label>
-                    <input id="pinField" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Nowy PIN (4 cyfry)" maxlength="4" style="text-align:center;font-size:18px">
-                    <div style="display:flex;gap:8px;margin-top:8px">
-                        <button id="setPinBtn" class="btn">Ustaw PIN</button>
-                        <button id="useDefaultBtn" class="btn-ghost">Użyj domyślnego</button>
-                    </div>
+                <div style="display:flex;align-items:center;gap:10px;margin:16px 0;color:#a37081;font-size:13px">
+                    <span style="flex:1;height:1px;background:#ffd5dd"></span>
+                    <span>lub e-mail</span>
+                    <span style="flex:1;height:1px;background:#ffd5dd"></span>
                 </div>
-                <p class="info" id="recoveryNote">Po ustawieniu otrzymasz kody awaryjne — zapisz je w bezpiecznym miejscu.</p>
-                <div id="recoveryCodesBox" style="display:none;margin-top:8px"></div>
-                <div id="loginHint" style="margin-top:10px;color:#666;font-size:13px">Masz już PIN? <button id="toLoginBtn" class="btn-ghost btn-small">Zaloguj się</button></div>
-            </div>
 
+                <div style="max-width:420px;margin:0 auto">
+                    <label for="authEmail" class="sr-only">Adres e-mail</label>
+                    <input id="authEmail" type="email" autocomplete="email" placeholder="Adres e-mail">
+
+                    <label for="authPassword" class="sr-only">Hasło</label>
+                    <input id="authPassword" type="password" autocomplete="current-password" placeholder="Hasło">
+
+                    <button id="emailLoginBtn" class="btn" type="button">Zaloguj się</button>
+                    <button id="emailSignupBtn" class="btn-ghost" type="button" style="margin-top:8px">Utwórz konto</button>
+                    <button id="forgotPasswordBtn" class="btn-ghost" type="button" style="margin-top:8px">Nie pamiętam hasła</button>
+                    <div id="authStatus" class="auth-status" aria-live="polite" style="margin-top:12px"></div>
+                </div>
+
+                <div style="display:none">
+                    <input id="pinField">
+                    <button id="setPinBtn" type="button"></button>
+                    <button id="useDefaultBtn" type="button"></button>
+                    <button id="toLoginBtn" type="button"></button>
+                    <div id="recoveryCodesBox"></div>
+                    <div id="recoveryNote"></div>
+                    <div id="loginHint"></div>
+                </div>
+            </div>
             <div id="loginBox" style="display:none">
                 <div class="pin-dots" role="group" aria-label="Wprowadź PIN">
                     <div class="dot" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
@@ -793,65 +809,139 @@
     const SUPABASE_URL = "https://khggputlakhupiypybic.supabase.co";
     const SUPABASE_KEY = "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+        }
     });
 
-    function setAuthUi(session) {
-        const setup = document.getElementById("setupBox");
-        const login = document.getElementById("loginBox");
-        const button = document.getElementById("googleLoginBtn");
-        const status = document.getElementById("authStatus");
+    const setup = document.getElementById("setupBox");
+    const login = document.getElementById("loginBox");
+    const status = document.getElementById("authStatus");
+    const googleBtn = document.getElementById("googleLoginBtn");
+    const email = document.getElementById("authEmail");
+    const password = document.getElementById("authPassword");
 
+    function showStatus(message, ok) {
+        if (!status) return;
+        status.textContent = message || "";
+        status.style.color = ok ? "#2f7d32" : "#d90429";
+    }
+
+    function showLoggedIn(session) {
         if (session && session.user) {
-            setup.style.display = "none";
             login.style.display = "none";
+            setup.style.display = "none";
             unlockApp();
         } else {
             setup.style.display = "block";
             login.style.display = "none";
-            if (button) button.disabled = false;
         }
-        if (status && session) status.textContent = "";
     }
 
-    async function startGoogleLogin() {
-        const button = document.getElementById("googleLoginBtn");
-        const status = document.getElementById("authStatus");
-        button.disabled = true;
-        status.textContent = "";
-
+    async function googleLogin() {
+        googleBtn.disabled = true;
+        showStatus("", false);
         const redirectTo = window.location.origin + window.location.pathname;
-        const result = await client.auth.signInWithOAuth({
+        const { error } = await client.auth.signInWithOAuth({
             provider: "google",
-            options: { redirectTo: redirectTo }
+            options: { redirectTo }
+        });
+        if (error) {
+            showStatus("Logowanie Google nie działa: " + error.message, false);
+            googleBtn.disabled = false;
+        }
+    }
+
+    async function emailLogin() {
+        const emailValue = email.value.trim();
+        const passwordValue = password.value;
+        if (!emailValue || !passwordValue) {
+            showStatus("Wpisz e-mail i hasło.", false);
+            return;
+        }
+
+        showStatus("Logowanie...", true);
+        const { error } = await client.auth.signInWithPassword({
+            email: emailValue,
+            password: passwordValue
         });
 
-        if (result.error) {
-            status.textContent = "Logowanie Google nie działa: " + result.error.message;
-            button.disabled = false;
+        if (error) {
+            showStatus("Nie udało się zalogować: " + error.message, false);
+        }
+    }
+
+    async function emailSignup() {
+        const emailValue = email.value.trim();
+        const passwordValue = password.value;
+        if (!emailValue || !passwordValue) {
+            showStatus("Wpisz e-mail i hasło.", false);
+            return;
+        }
+        if (passwordValue.length < 6) {
+            showStatus("Hasło powinno mieć co najmniej 6 znaków.", false);
+            return;
+        }
+
+        showStatus("Tworzenie konta...", true);
+        const redirectTo = window.location.origin + window.location.pathname;
+        const { data, error } = await client.auth.signUp({
+            email: emailValue,
+            password: passwordValue,
+            options: { emailRedirectTo: redirectTo }
+        });
+
+        if (error) {
+            showStatus("Nie udało się utworzyć konta: " + error.message, false);
+            return;
+        }
+
+        if (data.session) {
+            showStatus("Konto utworzone. Zalogowano.", true);
+        } else {
+            showStatus("Konto utworzone. Sprawdź skrzynkę e-mail i potwierdź adres.", true);
+        }
+    }
+
+    async function resetPassword() {
+        const emailValue = email.value.trim();
+        if (!emailValue) {
+            showStatus("Najpierw wpisz adres e-mail.", false);
+            return;
+        }
+
+        const redirectTo = window.location.origin + window.location.pathname;
+        const { error } = await client.auth.resetPasswordForEmail(emailValue, {
+            redirectTo
+        });
+
+        if (error) {
+            showStatus("Nie udało się wysłać wiadomości: " + error.message, false);
+        } else {
+            showStatus("Wiadomość do resetowania hasła została wysłana.", true);
         }
     }
 
     window.addEventListener("DOMContentLoaded", async function () {
-        const button = document.getElementById("googleLoginBtn");
-        if (button) button.addEventListener("click", startGoogleLogin);
+        googleBtn.addEventListener("click", googleLogin);
+        document.getElementById("emailLoginBtn").addEventListener("click", emailLogin);
+        document.getElementById("emailSignupBtn").addEventListener("click", emailSignup);
+        document.getElementById("forgotPasswordBtn").addEventListener("click", resetPassword);
 
-        const result = await client.auth.getSession();
-        setAuthUi(result.data.session);
+        const { data } = await client.auth.getSession();
+        showLoggedIn(data.session);
 
         client.auth.onAuthStateChange(function (_event, session) {
-            setAuthUi(session);
+            showLoggedIn(session);
         });
 
-        const logout = document.getElementById("logoutBtn");
-        if (logout) {
-            logout.addEventListener("click", function () {
-                client.auth.signOut();
-            });
-        }
+        document.getElementById("logoutBtn").addEventListener("click", async function () {
+            await client.auth.signOut();
+        });
     });
 })();
 </script>
-
 </body>
 </html>
