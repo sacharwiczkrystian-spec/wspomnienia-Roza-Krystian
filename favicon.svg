@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#111111"/><path d="M32 50S9 36 9 21c0-8 6-13 13-13 5 0 9 3 10 7 1-4 5-7 10-7 7 0 13 5 13 13 0 15-23 29-23 29Z" fill="#e63946"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<rect width="256" height="256" rx="48" fill="#111111"/>
+<path d="M128 190S45 139 45 83c0-30 22-51 49-51 17 0 29 9 34 24 5-15 17-24 34-24 27 0 49 21 49 51 0 56-83 107-83 107Z" fill="#e63946"/>
+<text x="128" y="126" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#ffffff">LOVE</text>
+<text x="128" y="153" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#ffffff">STORY</text>
+</svg>
