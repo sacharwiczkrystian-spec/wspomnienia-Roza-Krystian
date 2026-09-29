@@ -37,9 +37,9 @@
 <div class="grid"><div class="field"><label>Data</label><input id="memoryDate" type="date"></div><div class="field"><label>Zdjęcie (opcjonalnie)</label><label class="upload"><input id="memoryFile" type="file" accept="image/*">Wybierz zdjęcie</label></div></div>
 <div id="fileName" class="muted" style="font-size:12px"></div><img id="preview" class="preview hidden" alt="Podgląd zdjęcia"><div class="field"><label>Co chcecie zapamiętać?</label><textarea id="memoryText" placeholder="Napiszcie kilka zdań..."></textarea></div><div class="actions" style="justify-content:flex-start"><button id="save" class="btn">Zapisz wspomnienie</button><button id="clear" class="btn secondary">Wyczyść</button></div><div id="saveStatus" class="status"></div></div></section>
 <section class="section"><div class="section-head"><div><div class="eyebrow">Wasza oś czasu</div><h2>Wspomnienia</h2></div></div><div id="timeline" class="timeline"></div></section>
-</main><nav class="legal-nav" aria-label="Informacje prawne"><button data-legal="rules">Regulamin</button><button data-legal="privacy">Polityka prywatności</button><button data-legal="creator">O twórcy</button></nav><section id="legalPanel" class="card legal hidden"></section><footer>Wasza prywatna przestrzeń • każde konto widzi swoje wspomnienia<br>Twórca: <strong>Nieresorowana IT Krystian</strong></footer>
+</main>
 </div>
-
+<nav class="legal-nav" aria-label="Informacje prawne"><button data-legal="rules">Regulamin</button><button data-legal="privacy">Polityka prywatności</button><button data-legal="creator">O twórcy</button></nav><section id="legalPanel" class="card legal hidden"></section><footer>Wasza prywatna przestrzeń • każde konto widzi swoje wspomnienia<br>Twórca: <strong>Nieresorowana IT Krystian</strong></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script>
 const sb=supabase.createClient("https://khggputlakhupiypybic.supabase.co","sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
