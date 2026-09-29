@@ -1,272 +1,68 @@
 <!doctype html>
 <html lang="pl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#100b16">
-<title>Nasz Pamiętnik — Love Story</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100b16"><title>Nasz Pamiętnik — Love Story</title>
 <style>
-:root{--bg:#100b16;--panel:#18111f;--panel2:#211629;--text:#fff7fb;--muted:#bbaebe;--pink:#ff6b9d;--pink2:#ff9fc0;--line:#34253d;--good:#78d9a2;--bad:#ff7b91}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 0,#40203d 0,transparent 34%),radial-gradient(circle at 100% 20%,#2d2141 0,transparent 32%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.wrap{width:min(1080px,calc(100% - 32px));margin:auto}.top{padding:20px 0;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;gap:11px;align-items:center;font-weight:800}.brand-mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),#8b5cf6);box-shadow:0 12px 30px #ff6b9d2b}.brand small{display:block;color:var(--muted);font-weight:500}.hero{text-align:center;padding:58px 0 32px}.eyebrow{color:var(--pink2);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(42px,8vw,82px);line-height:.95;letter-spacing:-.055em;margin:15px 0}.hero h1 span{color:var(--pink2)}.hero p{max-width:650px;margin:0 auto;color:var(--muted);font-size:18px;line-height:1.6}.card{background:linear-gradient(180deg,#1d1526f2,#15101bf2);border:1px solid var(--line);border-radius:24px;box-shadow:0 25px 70px #0004}.auth{max-width:540px;margin:0 auto 70px;padding:28px}.auth h2{margin:0 0 6px;font-size:29px}.muted{color:var(--muted)}.field{margin:13px 0}.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}.field input,.field textarea{width:100%;padding:13px;border-radius:13px;border:1px solid var(--line);background:#0f0b14;color:var(--text);outline:none}.field textarea{min-height:125px;resize:vertical}.field input:focus,.field textarea:focus{border-color:var(--pink)}.btn{border:0;border-radius:13px;padding:13px 18px;font-weight:850;background:linear-gradient(135deg,var(--pink),#e94f91);color:#fff;box-shadow:0 12px 30px #ff6b9d26}.btn.secondary{background:var(--panel2);border:1px solid var(--line);box-shadow:none}.btn.danger{background:transparent;border:1px solid #5b2a3b;color:#ff9aac;box-shadow:none}.google{width:100%;padding:13px;border:0;border-radius:13px;background:#fff;color:#211b23;font-weight:800}.divider{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:12px;margin:18px 0}.divider:before,.divider:after{content:"";height:1px;background:var(--line);flex:1}.actions{display:flex;gap:10px;flex-wrap:wrap}.actions>*{flex:1}.status{min-height:22px;margin-top:10px;font-size:13px}.legal-links{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}.legal-links button{border:1px solid var(--line);border-radius:999px;padding:9px 13px;background:transparent;color:var(--muted)}.legal-links button:hover{border-color:var(--pink);color:var(--text)}.doc-icon{width:17px;height:17px;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.legal{margin-top:14px;padding:25px}.legal h2{margin-top:0}.legal h3{color:var(--pink2);margin-bottom:5px}.legal p{color:#ddd3dc;line-height:1.65}.legal small{color:var(--muted)}.app{padding-bottom:70px}.dashboard{display:grid;grid-template-columns:1.4fr .8fr;gap:18px}.count,.stats{padding:26px}.number{font-size:clamp(44px,7vw,76px);font-weight:900;letter-spacing:-.05em;margin:6px 0}.date{color:var(--pink2)}.stats h3{margin-top:0}.stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);color:var(--muted)}.stat strong{color:var(--text)}.section{margin-top:25px}.section h2{margin:4px 0 14px;font-size:25px}.music{padding:23px;display:flex;align-items:center;justify-content:space-between;gap:18px}.music-left{display:flex;gap:14px;align-items:center}.music-note{font-size:38px}.music a{color:#fff;text-decoration:none}.form{padding:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.upload{display:block;text-align:center;padding:13px;border:1px dashed #5b475f;border-radius:13px;color:var(--muted)}.upload input{display:none}.preview{width:100%;max-height:190px;object-fit:cover;border-radius:15px;margin-top:10px}.timeline{display:grid;gap:14px}.memory{padding:20px}.memory-head{display:flex;justify-content:space-between;gap:10px;color:var(--pink2);font-size:13px;font-weight:800}.memory p{white-space:pre-wrap;line-height:1.65;color:#eee5ed}.memory img{width:100%;max-height:460px;object-fit:cover;border-radius:15px}.delete{border:0;background:none;color:var(--muted)}.admin{margin-top:25px;padding:22px}.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.admin-stat{padding:18px;border:1px solid var(--line);border-radius:16px;background:#0f0b14}.admin-stat strong{display:block;font-size:30px;margin-top:5px}.admin-table{width:100%;border-collapse:collapse;margin-top:15px}.admin-table th,.admin-table td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line);font-size:13px}.admin-table th{color:var(--muted)}.admin-id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;word-break:break-all;color:var(--muted)}@media(max-width:760px){.admin-grid{grid-template-columns:1fr}}.empty{text-align:center;padding:32px;color:var(--muted)}footer{text-align:center;color:#817684;padding:28px 0 36px;font-size:13px}@media(max-width:760px){.dashboard,.grid{grid-template-columns:1fr}.hero{padding-top:35px}.music{align-items:flex-start;flex-direction:column}.actions>*{flex:1 1 100%}}
+:root{--bg:#0b0810;--card:#17111d;--card2:#211729;--text:#fff8fb;--muted:#b9aabd;--pink:#ff6b9d;--line:#33263c;--good:#79d7a0;--bad:#ff7c93}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#47213f,transparent 32%),radial-gradient(circle at 100% 15%,#30204a,transparent 30%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}.wrap{width:min(1080px,calc(100% - 30px));margin:auto}.hidden{display:none!important}.top{padding:20px 0;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900}.brand small{display:block;color:var(--muted);font-weight:500}.mark{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--pink),#8b5cf6);margin-right:9px}.hero{text-align:center;padding:60px 0 35px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:900;color:#ff9fc0}.hero h1{font-size:clamp(42px,8vw,82px);line-height:.95;letter-spacing:-.06em;margin:15px 0}.hero h1 span{color:#ff9fc0}.hero p{max-width:650px;margin:auto;color:var(--muted);font-size:18px;line-height:1.6}.card{background:#17111df2;border:1px solid var(--line);border-radius:24px;box-shadow:0 25px 70px #0005}.auth{max-width:540px;margin:0 auto 70px;padding:28px}.auth h2{margin:0 0 6px}.muted{color:var(--muted)}label{display:block;color:var(--muted);font-size:13px;margin:14px 0 7px}input,textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:13px;background:#0e0a12;color:var(--text);font:inherit;outline:none}textarea{min-height:125px;resize:vertical}.btn{border:0;border-radius:13px;padding:13px 17px;font-weight:850;background:linear-gradient(135deg,var(--pink),#e94f91);color:#fff;cursor:pointer}.secondary{background:var(--card2);border:1px solid var(--line)}.danger{background:transparent;border:1px solid #5b2a3b;color:#ff9aac}.actions{display:flex;gap:10px;flex-wrap:wrap}.actions>*{flex:1}.status{min-height:22px;margin-top:10px;font-size:13px}.legal-links{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}.legal-links button{border:1px solid var(--line);border-radius:999px;padding:9px 13px;background:transparent;color:var(--muted);cursor:pointer}.legal{margin-top:14px;padding:25px;line-height:1.65}.legal h2{margin-top:0}.legal h3{color:#ff9fc0}.dashboard{display:grid;grid-template-columns:1.35fr .8fr;gap:16px}.count,.stats,.form,.music,.admin{padding:24px}.number{font-size:clamp(46px,7vw,76px);font-weight:900;letter-spacing:-.05em;margin:8px 0}.date{color:#ff9fc0}.stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);color:var(--muted)}.stat strong{color:var(--text)}.section{margin-top:25px}.section h2{margin:5px 0 14px}.music{display:flex;justify-content:space-between;align-items:center;gap:15px}.music-left{display:flex;gap:14px;align-items:center}.note{font-size:38px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.upload{display:block;padding:13px;border:1px dashed #5b475f;border-radius:13px;text-align:center;cursor:pointer}.upload input{display:none}.preview{width:100%;max-height:350px;object-fit:cover;border-radius:15px;margin-top:10px}.timeline{display:grid;gap:14px}.memory{padding:20px}.memory-head{display:flex;justify-content:space-between;color:#ff9fc0;font-size:13px;font-weight:800}.memory p{white-space:pre-wrap;line-height:1.65}.memory img{width:100%;max-height:460px;object-fit:cover;border-radius:15px}.delete{background:none;border:0;color:var(--muted);cursor:pointer}.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.admin-stat{padding:16px;background:#0f0b14;border:1px solid var(--line);border-radius:16px}.admin-stat strong{display:block;font-size:30px}.admin-table{width:100%;border-collapse:collapse;margin-top:15px}.admin-table th,.admin-table td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:12px}.admin-table th{color:var(--muted)}footer{text-align:center;color:#817684;padding:30px 0 40px;font-size:13px}@media(max-width:760px){.dashboard,.grid{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}.music{flex-direction:column;align-items:flex-start}.hero{padding-top:35px}}
 </style>
 </head>
 <body>
-<header class="top wrap">
-  <div class="brand"><div class="brand-mark">♥</div><div>Nasz Pamiętnik<small>Love Story</small></div></div>
-</header>
+<header class="top wrap"><div><span class="mark">♥</span><b>Nasz Pamiętnik</b><small>Love Story</small></div></header>
 
-<div id="authView">
-<main class="wrap">
-  <section class="hero">
-    <div class="eyebrow">Tylko dla Was</div>
-    <h1>Wasza historia,<br><span>zapisana na zawsze.</span></h1>
-    <p>Miejsce na daty, zdjęcia, małe chwile i wspomnienia, do których chcecie wracać.</p>
-  </section>
-  <section class="auth card">
-    <h2>Wejdź do pamiętnika</h2>
-    <p class="muted">Zaloguj się lub utwórz swoje konto.</p>
-    <button id="google" class="google">Kontynuuj przez Google</button>
-    <div class="divider">lub e-mail</div>
-    <div class="field"><label>E-mail</label><input id="email" type="email" autocomplete="email" placeholder="twoj@email.com"></div>
-    <div class="field"><label>Hasło</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 znaków"></div>
-    <div class="actions"><button id="login" class="btn">Zaloguj</button><button id="signup" class="btn secondary">Utwórz konto</button></div>
-    <button id="reset" class="btn secondary" style="width:100%;margin-top:10px">Nie pamiętam hasła</button>
-    <button id="resend" class="btn secondary" style="width:100%;margin-top:10px">Wyślij ponownie potwierdzenie e-mail</button>
-    <div id="authStatus" class="status"></div>
-    <div class="legal-links">
-      <button data-legal="rules"><svg class="doc-icon" viewBox="0 0 24 24"><path d="M6 3.5h8l4 4V20.5H6z"/><path d="M14 3.5v4h4M9 12h6M9 15.5h6"/></svg> Regulamin</button>
-      <button data-legal="privacy">Polityka prywatności</button>
-      <button data-legal="creator">O twórcy</button>
-    </div>
-    <section id="authLegal" class="card legal hidden"></section>
-  </section>
-</main>
-</div>
+<div id="authView"><main class="wrap">
+<section class="hero"><div class="eyebrow">Tylko dla Was</div><h1>Wasza historia,<br><span>zapisana na zawsze.</span></h1><p>Miejsce na daty, zdjęcia, małe chwile i wspomnienia, do których chcecie wracać.</p></section>
+<section class="auth card"><h2>Wejdź do pamiętnika</h2><p class="muted">Zaloguj się lub utwórz konto.</p>
+<button id="google" class="btn secondary" style="width:100%">Kontynuuj przez Google</button>
+<label>E-mail</label><input id="email" type="email" autocomplete="email" placeholder="twoj@email.com">
+<label>Hasło</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 znaków">
+<div class="actions" style="margin-top:14px"><button id="login" class="btn">Zaloguj</button><button id="signup" class="btn secondary">Utwórz konto</button></div>
+<div class="actions" style="margin-top:10px"><button id="reset" class="btn secondary">Reset hasła</button><button id="resend" class="btn secondary">Potwierdzenie e-mail</button></div>
+<div id="authStatus" class="status"></div>
+<div class="legal-links"><button data-legal="rules">Regulamin</button><button data-legal="privacy">Prywatność</button><button data-legal="creator">O twórcy</button></div><div id="legal" class="card legal hidden"></div>
+</section></main></div>
 
-<div id="appView" class="hidden">
-<main class="wrap app">
-  <div class="top" style="padding-left:0;padding-right:0">
-    <div class="brand"><div class="brand-mark">♥</div><div>Nasz Pamiętnik<small id="userLabel">Wasza historia</small></div></div>
-    <div class="actions" style="justify-content:flex-end;flex:0 0 auto"><button id="adminBtn" class="btn secondary hidden">Panel admina</button><button id="logout" class="btn danger">Wyloguj</button></div>
-  </div>
+<div id="appView" class="hidden"><main class="wrap">
+<div class="top"><div><span class="mark">♥</span><b>Nasz Pamiętnik</b><small id="userLabel">Twoje konto</small></div><div class="actions" style="flex:0 0 auto"><button id="adminBtn" class="btn secondary hidden">Panel admina</button><button id="logout" class="btn danger">Wyloguj</button></div></div>
+<section class="dashboard"><div class="card count"><div class="eyebrow">Do rocznicy</div><div id="days" class="number">—</div><div id="annDate" class="date">Ustaw datę</div><button id="setDate" class="btn secondary" style="margin-top:18px">Ustaw datę rocznicy</button></div>
+<div class="card stats"><h3>Statystyki</h3><div class="stat"><span>Wspomnienia</span><strong id="countMem">0</strong></div><div class="stat"><span>Zdjęcia</span><strong id="countImg">0</strong></div><div class="stat"><span>Rocznica</span><strong id="shortDate">—</strong></div></div></section>
 
-  <section class="dashboard">
-    <div class="card count">
-      <div class="eyebrow">Do Waszej rocznicy</div>
-      <div id="days" class="number">—</div>
-      <div id="annDate" class="date">Ustawcie datę rocznicy</div>
-      <button id="setDate" class="btn secondary" style="margin-top:20px">Ustaw datę</button>
-    </div>
-    <div class="card stats">
-      <h3>Wasze statystyki</h3>
-      <div class="stat"><span>Wspomnienia</span><strong id="countMem">0</strong></div>
-      <div class="stat"><span>Zdjęcia</span><strong id="countImg">0</strong></div>
-      <div class="stat"><span>Najbliższa rocznica</span><strong id="shortDate">—</strong></div>
-    </div>
-  </section>
+<section class="section"><div class="eyebrow">Nasza muzyka</div><h2>Muzyka na wspólne chwile</h2><div class="card music"><div class="music-left"><div class="note">♪</div><div><b>Perfect</b><div class="muted">Ed Sheeran</div></div></div><a class="btn" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=Ed+Sheeran+Perfect+official">Posłuchaj</a></div></section>
 
-  <section class="section">
-    <div class="eyebrow">Nasza muzyka</div><h2>Utwór, który może Wam towarzyszyć</h2>
-    <div class="card music">
-      <div class="music-left"><div class="music-note">♪</div><div><strong>Perfect</strong><div class="muted">Ed Sheeran</div></div></div>
-      <a class="btn" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=Ed+Sheeran+Perfect+official">Posłuchaj</a>
-    </div>
-  </section>
+<section class="section"><div class="eyebrow">Nowa chwila</div><h2>Dodaj wspomnienie</h2><div class="card form"><div class="grid"><div><label>Data</label><input id="memoryDate" type="date"></div><div><label>Zdjęcie</label><label class="upload"><input id="memoryFile" type="file" accept="image/*">Wybierz zdjęcie</label></div></div><div id="fileName" class="muted" style="font-size:12px;margin-top:7px"></div><img id="preview" class="preview hidden" alt="Podgląd"><label>Wspomnienie</label><textarea id="memoryText" placeholder="Co chcecie zapamiętać?"></textarea><div class="actions" style="margin-top:12px"><button id="save" class="btn">Zapisz</button><button id="clear" class="btn secondary">Wyczyść</button></div><div id="saveStatus" class="status"></div></div></section>
 
-  <section class="section">
-    <div class="eyebrow">Nowa chwila</div><h2>Dodaj wspomnienie</h2>
-    <div class="card form">
-      <div class="grid">
-        <div class="field"><label>Data</label><input id="memoryDate" type="date"></div>
-        <div class="field"><label>Zdjęcie (opcjonalnie)</label><label class="upload"><input id="memoryFile" type="file" accept="image/*">Wybierz zdjęcie</label></div>
-      </div>
-      <div id="fileName" class="muted" style="font-size:12px"></div>
-      <img id="preview" class="preview hidden" alt="Podgląd zdjęcia">
-      <div class="field"><label>Co chcecie zapamiętać?</label><textarea id="memoryText" placeholder="Napiszcie kilka zdań..."></textarea></div>
-      <div class="actions"><button id="save" class="btn">Zapisz wspomnienie</button><button id="clear" class="btn secondary">Wyczyść</button></div>
-      <div id="saveStatus" class="status"></div>
-    </div>
-  </section>
+<section class="section"><div class="eyebrow">Wasza oś czasu</div><h2>Wspomnienia</h2><div id="timeline" class="timeline"></div></section>
 
-  <section class="section">
-    <div class="eyebrow">Wasza oś czasu</div><h2>Wspomnienia</h2>
-    <div id="timeline" class="timeline"></div>
-  </section>
-</main>
-</div>
-
-<footer>Wasza prywatna przestrzeń • każde konto widzi swoje wspomnienia<br>Twórca: <strong>Nieresorowana IT Krystian</strong></footer>
+<section id="adminPanel" class="card admin hidden"><div class="eyebrow">Tylko administrator</div><h2>Panel administracyjny</h2><div class="admin-grid"><div class="admin-stat">Użytkownicy<strong id="adminUsers">0</strong></div><div class="admin-stat">Wspomnienia<strong id="adminMemories">0</strong></div><div class="admin-stat">Zdjęcia<strong id="adminPhotos">0</strong></div></div><div style="overflow:auto"><table class="admin-table"><thead><tr><th>Data</th><th>Użytkownik</th><th>Wspomnienie</th><th></th></tr></thead><tbody id="adminRows"></tbody></table></div><div id="adminStatus" class="status"></div></section>
+</main></div>
+<footer>Wasza prywatna przestrzeń<br>Twórca: <b>Nieresorowana IT Krystian</b></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script>
 const sb=supabase.createClient("https://khggputlakhupiypybic.supabase.co","sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const $=id=>document.getElementById(id);
-let user=null,imageData="",isAdmin=false;
-
-function msg(el,text,good=false){el.textContent=text||"";el.style.color=good?"var(--good)":"var(--bad)"}
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function today(){return new Date().toISOString().slice(0,10)}
-function annKey(){return "love_anniversary_"+(user?.id||"")}
-function getAnniversary(){return localStorage.getItem(annKey())||""}
-
-function updateCountdown(){
-  const d=getAnniversary();
-  if(!d){$("days").textContent="—";$("annDate").textContent="Ustawcie datę rocznicy";$("shortDate").textContent="—";return}
-  const now=new Date(),p=d.split("-").map(Number);
-  let next=new Date(now.getFullYear(),p[1]-1,p[2]);
-  if(next<now)next.setFullYear(next.getFullYear()+1);
-  const days=Math.max(0,Math.ceil((next-now)/86400000));
-  $("days").textContent=days+" dni";
-  $("annDate").textContent="Następna: "+next.toLocaleDateString("pl-PL",{day:"numeric",month:"long",year:"numeric"});
-  $("shortDate").textContent=next.toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit"});
-}
-
-async function loadMemories(){
-  const {data,error}=await sb.from("memories").select("*").order("memory_date",{ascending:false}).order("created_at",{ascending:false});
-  if(error){msg($("saveStatus"),"Nie udało się pobrać wspomnień: "+error.message);return}
-  $("countMem").textContent=data.length;
-  $("countImg").textContent=data.filter(x=>x.image_data).length;
-  if(!data.length){$("timeline").innerHTML='<div class="card empty">Jeszcze nie ma wspomnień. Dodajcie pierwsze.</div>';return}
-  $("timeline").innerHTML=data.map(m=>{
-    const date=m.memory_date?new Date(m.memory_date+"T12:00:00").toLocaleDateString("pl-PL",{day:"numeric",month:"long",year:"numeric"}):"Bez daty";
-    return '<article class="card memory"><div class="memory-head"><span>'+escapeHtml(date)+'</span><button class="delete" data-id="'+escapeHtml(m.id)+'">Usuń</button></div><p>'+escapeHtml(m.memory_text||"")+'</p>'+(m.image_data?'<img src="'+m.image_data+'" alt="Zdjęcie wspomnienia">':"")+'</article>';
-  }).join("");
-  $("timeline").querySelectorAll(".delete").forEach(button=>button.onclick=async()=>{
-    if(!confirm("Usunąć to wspomnienie?"))return;
-    const {error}=await sb.from("memories").delete().eq("id",button.dataset.id);
-    if(error)msg($("saveStatus"),"Nie udało się usunąć: "+error.message);else loadMemories();
-  });
-}
-
-
-async function checkAdmin(){
-  if(!user){isAdmin=false;return}
-  const {data,error}=await sb.from("admin_users").select("user_id").eq("user_id",user.id).maybeSingle();
-  isAdmin=!error && !!data;
-  $("adminBtn").classList.toggle("hidden",!isAdmin);
-  $("adminPanel").classList.add("hidden");
-}
-async function loadAdmin(){
-  if(!isAdmin)return;
-  const {data,error}=await sb.from("memories").select("id,user_id,memory_date,memory_text,image_data,created_at").order("created_at",{ascending:false});
-  if(error){msg($("adminStatus"),"Nie udało się pobrać danych admina: "+error.message);return}
-  const rows=data||[];
-  const users=new Set(rows.map(x=>x.user_id).filter(Boolean));
-  $("adminUsers").textContent=users.size;
-  $("adminMemories").textContent=rows.length;
-  $("adminPhotos").textContent=rows.filter(x=>x.image_data).length;
-  $("adminRows").innerHTML=rows.length?rows.map(m=>{
-    const date=m.memory_date?new Date(m.memory_date+"T12:00:00").toLocaleDateString("pl-PL"): "—";
-    const text=String(m.memory_text||"").replace(/\s+/g," ").slice(0,90);
-    return '<tr><td>'+escapeHtml(date)+'</td><td><span class="admin-id">'+escapeHtml(m.user_id)+'</span></td><td>'+escapeHtml(text)+'</td><td><button class="delete admin-delete" data-id="'+escapeHtml(m.id)+'">Usuń</button></td></tr>';
-  }).join(""):'<tr><td colspan="4" class="empty">Brak wspomnień.</td></tr>';
-  document.querySelectorAll(".admin-delete").forEach(button=>button.onclick=async()=>{
-    if(!confirm("Usunąć to wspomnienie?"))return;
-    const {error}=await sb.from("memories").delete().eq("id",button.dataset.id);
-    if(error)msg($("adminStatus"),"Nie udało się usunąć: "+error.message);else {loadAdmin();loadMemories();}
-  });
-}
-
-function showApp(session){
-  user=session?.user||null;
-  $("authView").classList.toggle("hidden",!!user);
-  $("appView").classList.toggle("hidden",!user);
-  if(!user)return;
-  $("userLabel").textContent=user.email||"Wasza historia";
-  $("memoryDate").value=today();
-  updateCountdown();
-  loadMemories();
-}
-
-$("google").onclick=async()=>{
-  const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});
-  if(error)msg($("authStatus"),error.message);
-};
-
-$("login").onclick=async()=>{
-  const email=$("email").value.trim(),password=$("password").value;
-  if(!email||!password)return msg($("authStatus"),"Wpisz e-mail i hasło.");
-  const {error}=await sb.auth.signInWithPassword({email,password});
-  if(error){
-    let text=error.message;
-    if(/not confirmed|email.*confirm/i.test(text))text="Ten adres e-mail nie został jeszcze potwierdzony. Sprawdź skrzynkę lub wyślij potwierdzenie ponownie.";
-    msg($("authStatus"),text);
-  }
-};
-
-$("signup").onclick=async()=>{
-  const email=$("email").value.trim(),password=$("password").value;
-  if(!email||password.length<6)return msg($("authStatus"),"Podaj e-mail i hasło (min. 6 znaków).");
-  const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
-  if(error)return msg($("authStatus"),error.message);
-  msg($("authStatus"),data.session?"Konto utworzone.":"Konto utworzone — sprawdź e-mail i potwierdź adres.",true);
-};
-
-$("resend").onclick=async()=>{
-  const email=$("email").value.trim();
-  if(!email)return msg($("authStatus"),"Najpierw wpisz e-mail.");
-  const {error}=await sb.auth.resend({type:"signup",email});
-  msg($("authStatus"),error?error.message:"Wiadomość z potwierdzeniem została wysłana.",!error);
-};
-
-$("reset").onclick=async()=>{
-  const email=$("email").value.trim();
-  if(!email)return msg($("authStatus"),"Najpierw wpisz e-mail.");
-  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
-  msg($("authStatus"),error?error.message:"Wiadomość została wysłana.",!error);
-};
-
-$("logout").onclick=()=>sb.auth.signOut();\n$("adminBtn").onclick=()=>{ $("adminPanel").classList.toggle("hidden"); if(isAdmin && !$("adminPanel").classList.contains("hidden")) loadAdmin(); };
-
-$("setDate").onclick=()=>{
-  const value=prompt("Podaj datę rocznicy (RRRR-MM-DD):",getAnniversary());
-  if(value&&/^\d{4}-\d{2}-\d{2}$/.test(value)){localStorage.setItem(annKey(),value);updateCountdown()}
-};
-
-$("memoryFile").onchange=event=>{
-  const file=event.target.files?.[0];
-  imageData="";
-  $("preview").classList.add("hidden");
-  if(!file)return;
-  $("fileName").textContent=file.name;
-  const reader=new FileReader();
-  reader.onload=()=>{imageData=reader.result;$("preview").src=imageData;$("preview").classList.remove("hidden")};
-  reader.readAsDataURL(file);
-};
-
-$("clear").onclick=()=>{
-  $("memoryText").value="";
-  $("memoryFile").value="";
-  $("fileName").textContent="";
-  $("preview").classList.add("hidden");
-  imageData="";
-};
-
-$("save").onclick=async()=>{
-  const text=$("memoryText").value.trim(),date=$("memoryDate").value;
-  if(!text)return msg($("saveStatus"),"Napisz treść wspomnienia.");
-  msg($("saveStatus"),"Zapisywanie...",true);
-  const {error}=await sb.from("memories").insert({user_id:user.id,memory_date:date,memory_text:text,image_data:imageData||null});
-  if(error)return msg($("saveStatus"),"Nie udało się zapisać: "+error.message);
-  $("clear").click();
-  msg($("saveStatus"),"Wspomnienie zapisane.",true);
-  loadMemories();
-};
-
-const legal={
-rules:'<h2>Regulamin „Nasz Pamiętnik”</h2><p><small>Ostatnia aktualizacja: 29.09.2026</small></p><h3>1. Postanowienia ogólne</h3><p>„Nasz Pamiętnik” to prywatna aplikacja do zapisywania wspomnień, dat, tekstów i zdjęć. Twórcą aplikacji jest <strong>Nieresorowana IT Krystian</strong>.</p><h3>2. Konto</h3><p>Funkcje pamiętnika wymagają konta. Konto może być utworzone przez e-mail i hasło albo dostępne logowanie Google. Użytkownik powinien chronić dane logowania.</p><h3>3. Treści</h3><p>Użytkownik odpowiada za treści dodawane do aplikacji i powinien posiadać odpowiednie prawa lub zgody. Nie należy dodawać treści bezprawnych ani próbować uzyskiwać dostępu do cudzych danych.</p><h3>4. Prywatność</h3><p>Wspomnienia są przypisane do konta użytkownika. Szczegóły przetwarzania danych opisuje Polityka prywatności.</p><h3>5. Usuwanie</h3><p>Użytkownik może usuwać własne wspomnienia. Usunięcie treści może być nieodwracalne, dlatego ważne wspomnienia warto zachować także poza aplikacją.</p><h3>6. Dostępność</h3><p>Aplikacja może zależeć od zewnętrznych usług hostingu, bazy danych i logowania, dlatego mogą wystąpić czasowe przerwy w działaniu.</p><h3>7. Bezpieczeństwo</h3><p>Zabronione jest obchodzenie zabezpieczeń oraz uzyskiwanie dostępu do cudzych kont lub danych.</p><h3>8. Zmiany</h3><p>Regulamin może być aktualizowany wraz ze zmianami aplikacji lub wymaganiami prawnymi.</p><h3>9. Kontakt</h3><p>W sprawach technicznych, konta lub danych można skontaktować się z twórcą: <strong>Nieresorowana IT Krystian</strong>.</p><p><small>Dokument ma charakter informacyjny i nie stanowi indywidualnej porady prawnej.</small></p>',
-privacy:'<h2>Polityka prywatności</h2><p><small>Ostatnia aktualizacja: 29.09.2026</small></p><h3>Jakie dane?</h3><p>Adres e-mail konta oraz dane dodane przez użytkownika, takie jak daty, teksty wspomnień i zdjęcia.</p><h3>Cel</h3><p>Dane służą do utworzenia konta, logowania oraz przechowywania i wyświetlania prywatnych wspomnień.</p><h3>Usługi</h3><p>Aplikacja korzysta z Supabase oraz hostingu Vercel. Google może być używany jako opcjonalna metoda logowania.</p><h3>Bezpieczeństwo</h3><p>Dane wspomnień są przypisane do kont użytkowników, a baza wykorzystuje reguły dostępu ograniczające dostęp do własnych danych.</p><h3>Kontakt</h3><p>W sprawach danych lub działania serwisu: <strong>Nieresorowana IT Krystian</strong>.</p><p><small>Dokument ma charakter informacyjny i nie zastępuje indywidualnej porady prawnej.</small></p>',
-creator:'<h2>O twórcy</h2><h3>Nieresorowana IT Krystian</h3><p>„Nasz Pamiętnik” został stworzony i jest rozwijany przez <strong>Nieresorowana IT Krystian</strong>, odpowiedzialnego za projekt, rozwój i utrzymanie aplikacji.</p>'
-};
-
-document.querySelectorAll("[data-legal]").forEach(button=>button.onclick=()=>{
-  $("authLegal").innerHTML=legal[button.dataset.legal];
-  $("authLegal").classList.remove("hidden");
-  $("authLegal").scrollIntoView({behavior:"smooth",block:"start"});
-});
-
-sb.auth.onAuthStateChange((_event,session)=>showApp(session));
-sb.auth.getSession().then(({data})=>showApp(data.session));
+const $=id=>document.getElementById(id);let user=null,imageData="",isAdmin=false;
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function msg(el,t,good=false){el.textContent=t||"";el.style.color=good?"var(--good)":"var(--bad)"}
+function key(){return"ann_"+(user?.id||"")}
+function countdown(){let d=localStorage.getItem(key());if(!d){$("days").textContent="—";$("annDate").textContent="Ustaw datę";$("shortDate").textContent="—";return}let [y,m,day]=d.split("-").map(Number),n=new Date(),next=new Date(n.getFullYear(),m-1,day);if(next<n)next.setFullYear(next.getFullYear()+1);$("days").textContent=Math.max(0,Math.ceil((next-n)/86400000))+" dni";$("annDate").textContent="Następna: "+next.toLocaleDateString("pl-PL",{day:"numeric",month:"long",year:"numeric"});$("shortDate").textContent=next.toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit"})}
+async function memories(){let {data,error}=await sb.from("memories").select("*").order("memory_date",{ascending:false}).order("created_at",{ascending:false});if(error){msg($("saveStatus"),error.message);return}$("countMem").textContent=data.length;$("countImg").textContent=data.filter(x=>x.image_data).length;$("timeline").innerHTML=data.length?data.map(m=>'<article class="card memory"><div class="memory-head"><span>'+esc(m.memory_date||"Bez daty")+'</span><button class="delete" data-id="'+esc(m.id)+'">Usuń</button></div><p>'+esc(m.memory_text||"")+'</p>'+(m.image_data?'<img src="'+m.image_data+'" alt="Zdjęcie">':"")+'</article>').join(""):'<div class="card" style="padding:30px;text-align:center;color:var(--muted)">Brak wspomnień. Dodaj pierwsze.</div>';document.querySelectorAll(".delete").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć wspomnienie?"))return;let {error}=await sb.from("memories").delete().eq("id",b.dataset.id);if(error)msg($("saveStatus"),error.message);else memories()})}
+async function adminCheck(){if(!user)return;let {data,error}=await sb.from("admin_users").select("user_id").eq("user_id",user.id).maybeSingle();isAdmin=!error&&!!data;$("adminBtn").classList.toggle("hidden",!isAdmin)}
+async function adminLoad(){if(!isAdmin)return;let {data,error}=await sb.from("memories").select("id,user_id,memory_date,memory_text,image_data").order("created_at",{ascending:false});if(error){msg($("adminStatus"),error.message);return}let rows=data||[];$("adminUsers").textContent=new Set(rows.map(x=>x.user_id)).size;$("adminMemories").textContent=rows.length;$("adminPhotos").textContent=rows.filter(x=>x.image_data).length;$("adminRows").innerHTML=rows.map(m=>'<tr><td>'+esc(m.memory_date)+'</td><td style="max-width:170px;word-break:break-all">'+esc(m.user_id)+'</td><td>'+esc((m.memory_text||"").slice(0,100))+'</td><td><button class="delete" data-admin-id="'+esc(m.id)+'">Usuń</button></td></tr>').join("");document.querySelectorAll("[data-admin-id]").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć wspomnienie?"))return;let {error}=await sb.from("memories").delete().eq("id",b.dataset.adminId);if(error)msg($("adminStatus"),error.message);else{adminLoad();memories()}})}
+function app(session){user=session?.user||null;$("authView").classList.toggle("hidden",!!user);$("appView").classList.toggle("hidden",!user);if(!user)return;$("userLabel").textContent=user.email||"Twoje konto";$("memoryDate").value=new Date().toISOString().slice(0,10);countdown();memories();adminCheck()}
+$("google").onclick=async()=>{let {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.href.split("#")[0]}});if(error)msg($("authStatus"),error.message)};
+$("login").onclick=async()=>{let e=$("email").value.trim(),p=$("password").value;if(!e||!p)return msg($("authStatus"),"Wpisz e-mail i hasło.");let {error}=await sb.auth.signInWithPassword({email:e,password:p});if(error)msg($("authStatus"),/not confirmed/i.test(error.message)?"Potwierdź najpierw adres e-mail.":error.message)};
+$("signup").onclick=async()=>{let e=$("email").value.trim(),p=$("password").value;if(!e||p.length<6)return msg($("authStatus"),"Podaj e-mail i hasło (min. 6 znaków).");let {data,error}=await sb.auth.signUp({email:e,password:p,options:{emailRedirectTo:location.href.split("#")[0]}});if(error)msg($("authStatus"),error.message);else msg($("authStatus"),data.session?"Konto utworzone.":"Sprawdź e-mail i potwierdź konto.",true)};
+$("resend").onclick=async()=>{let e=$("email").value.trim();if(!e)return msg($("authStatus"),"Wpisz e-mail.");let {error}=await sb.auth.resend({type:"signup",email:e});msg($("authStatus"),error?.message||"Wiadomość została wysłana.",!error)};
+$("reset").onclick=async()=>{let e=$("email").value.trim();if(!e)return msg($("authStatus"),"Wpisz e-mail.");let {error}=await sb.auth.resetPasswordForEmail(e,{redirectTo:location.href.split("#")[0]});msg($("authStatus"),error?.message||"Wiadomość została wysłana.",!error)};
+$("logout").onclick=()=>sb.auth.signOut();
+$("setDate").onclick=()=>{let v=prompt("Data rocznicy (RRRR-MM-DD):",localStorage.getItem(key())||"");if(v&&/^\d{4}-\d{2}-\d{2}$/.test(v)){localStorage.setItem(key(),v);countdown()}};
+$("memoryFile").onchange=e=>{let f=e.target.files?.[0];imageData="";$("preview").classList.add("hidden");if(!f)return;$("fileName").textContent=f.name;let r=new FileReader();r.onload=()=>{imageData=r.result;$("preview").src=imageData;$("preview").classList.remove("hidden")};r.readAsDataURL(f)};
+$("clear").onclick=()=>{$("memoryText").value="";$("memoryFile").value="";$("fileName").textContent="";$("preview").classList.add("hidden");imageData=""};
+$("save").onclick=async()=>{let t=$("memoryText").value.trim();if(!t)return msg($("saveStatus"),"Napisz treść wspomnienia.");let {error}=await sb.from("memories").insert({user_id:user.id,memory_date:$("memoryDate").value,memory_text:t,image_data:imageData||null});if(error)msg($("saveStatus"),error.message);else{$("clear").click();msg($("saveStatus"),"Zapisano wspomnienie.",true);memories()}};
+$("adminBtn").onclick=()=>{$("adminPanel").classList.toggle("hidden");if(!$("adminPanel").classList.contains("hidden"))adminLoad()};
+const legal={rules:"<h2>Regulamin</h2><p>„Nasz Pamiętnik” służy do przechowywania prywatnych wspomnień. Użytkownik odpowiada za dodawane treści i nie powinien uzyskiwać dostępu do cudzych danych.</p><h3>Konto</h3><p>Logowanie może odbywać się przez e-mail i hasło lub Google. Użytkownik powinien chronić swoje dane logowania.</p>",privacy:"<h2>Polityka prywatności</h2><p>Aplikacja przetwarza dane potrzebne do logowania oraz dane dodawane przez użytkownika, takie jak daty, teksty i zdjęcia wspomnień. Dane są przechowywane w Supabase i aplikacja jest hostowana przez Vercel.</p>",creator:"<h2>O twórcy</h2><p><b>Nieresorowana IT Krystian</b> — twórca i opiekun projektu „Nasz Pamiętnik”.</p>"};
+document.querySelectorAll("[data-legal]").forEach(b=>b.onclick=()=>{$("legal").innerHTML=legal[b.dataset.legal];$("legal").classList.remove("hidden")});
+sb.auth.onAuthStateChange((_e,s)=>app(s));sb.auth.getSession().then(({data})=>app(data.session));
 </script>
-</body>
-</html>
+</body></html>
