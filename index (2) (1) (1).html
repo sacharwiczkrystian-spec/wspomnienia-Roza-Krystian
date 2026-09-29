@@ -347,6 +347,23 @@
         }
         .music-button:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
+
+        .google-btn {
+            width: 100%; max-width: 420px; margin: 8px auto 14px; padding: 13px 18px;
+            border: 1px solid #dadce0; border-radius: 10px; background: #fff; color: #3c4043;
+            font-size: 16px; font-weight: 600; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.08);
+        }
+        .google-btn:hover { box-shadow: 0 3px 10px rgba(0,0,0,.14); }
+        .google-btn:disabled { opacity: .6; cursor: wait; }
+        .google-icon {
+            width: 24px; height: 24px; border-radius: 50%; display: inline-flex;
+            align-items: center; justify-content: center; font-weight: 800; color: #4285f4;
+            border: 1px solid #e5e7eb;
+        }
+        .auth-status { min-height: 20px; color: #d90429; font-size: 13px; margin-bottom: 10px; }
+
         footer {
             text-align: center;
             font-size: 11px;
@@ -364,6 +381,12 @@
             <h2 id="screenTitle">Witaj</h2>
             
             <div id="setupBox">
+                <button id="googleLoginBtn" class="google-btn" type="button">
+                    <span class="google-icon">G</span>
+                    Kontynuuj przez Google
+                </button>
+                <div id="authStatus" class="auth-status" aria-live="polite"></div>
+
                 <p class="info">Ustaw 4-cyfrowy PIN, którym będziecie otwierać pamiętnik.</p>
                 <div style="max-width:420px;margin:10px auto;">
                     <label for="pinField" class="sr-only">Nowy PIN</label>
@@ -763,5 +786,72 @@
                 .replace(/'/g, "&#039;");
         }
     </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script>
+(function () {
+    const SUPABASE_URL = "https://khggputlakhupiypybic.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+
+    function setAuthUi(session) {
+        const setup = document.getElementById("setupBox");
+        const login = document.getElementById("loginBox");
+        const button = document.getElementById("googleLoginBtn");
+        const status = document.getElementById("authStatus");
+
+        if (session && session.user) {
+            setup.style.display = "none";
+            login.style.display = "none";
+            unlockApp();
+        } else {
+            setup.style.display = "block";
+            login.style.display = "none";
+            if (button) button.disabled = false;
+        }
+        if (status && session) status.textContent = "";
+    }
+
+    async function startGoogleLogin() {
+        const button = document.getElementById("googleLoginBtn");
+        const status = document.getElementById("authStatus");
+        button.disabled = true;
+        status.textContent = "";
+
+        const redirectTo = window.location.origin + window.location.pathname;
+        const result = await client.auth.signInWithOAuth({
+            provider: "google",
+            options: { redirectTo: redirectTo }
+        });
+
+        if (result.error) {
+            status.textContent = "Logowanie Google nie działa: " + result.error.message;
+            button.disabled = false;
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", async function () {
+        const button = document.getElementById("googleLoginBtn");
+        if (button) button.addEventListener("click", startGoogleLogin);
+
+        const result = await client.auth.getSession();
+        setAuthUi(result.data.session);
+
+        client.auth.onAuthStateChange(function (_event, session) {
+            setAuthUi(session);
+        });
+
+        const logout = document.getElementById("logoutBtn");
+        if (logout) {
+            logout.addEventListener("click", function () {
+                client.auth.signOut();
+            });
+        }
+    });
+})();
+</script>
+
 </body>
 </html>
