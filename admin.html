@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel administracyjny — Nasz Pamiętnik</title>
+<style>
+:root{--bg:#0c0910;--panel:#17121d;--panel2:#211829;--text:#fff7fb;--muted:#bbaebe;--pink:#ff6b9d;--line:#34253d;--good:#78d9a2;--bad:#ff7b91}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 0,#40203d 0,transparent 34%),radial-gradient(circle at 100% 20%,#2d2141 0,transparent 32%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}.wrap{width:min(1120px,calc(100% - 30px));margin:auto}.hidden{display:none!important}.top{padding:22px 0;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:18px}.brand small{display:block;color:var(--muted);font-size:12px;font-weight:500}.card{background:#17121df2;border:1px solid var(--line);border-radius:22px;box-shadow:0 25px 70px #0005}.login{max-width:460px;margin:80px auto;padding:28px}.login h1{margin:0 0 8px}.muted{color:var(--muted)}label{display:block;color:var(--muted);font-size:13px;margin:15px 0 7px}input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#0e0a12;color:var(--text)}button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-weight:800}.primary{background:linear-gradient(135deg,var(--pink),#e94f91);color:white}.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}.status{min-height:22px;margin-top:12px;font-size:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:20px}.stat span{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:34px;margin-top:5px}.panel{padding:22px;margin-top:18px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:12px 9px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}.table th{color:var(--muted)}.danger{background:transparent;border:1px solid #633043;color:#ff9aac}.empty{text-align:center;color:var(--muted);padding:30px}@media(max-width:700px){.stats{grid-template-columns:1fr}.top{align-items:flex-start;gap:12px;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="top wrap"><div class="brand">Nasz Pamiętnik<small>Panel administracyjny</small></div><button id="logout" class="secondary hidden">Wyloguj</button></header>
+
+<main class="wrap">
+<section id="loginView" class="card login">
+<h1>Panel admina</h1><p class="muted">Zaloguj się kontem posiadającym uprawnienia administratora.</p>
+<label>E-mail</label><input id="email" type="email" autocomplete="email">
+<label>Hasło</label><input id="password" type="password" autocomplete="current-password">
+<button id="login" class="primary" style="width:100%;margin-top:18px">Zaloguj do panelu</button>
+<div id="status" class="status"></div>
+</section>
+
+<section id="adminView" class="hidden">
+<div class="stats">
+<div class="card stat"><span>Użytkownicy ze wspomnieniami</span><strong id="users">0</strong></div>
+<div class="card stat"><span>Wspomnienia</span><strong id="memories">0</strong></div>
+<div class="card stat"><span>Zdjęcia</span><strong id="photos">0</strong></div>
+</div>
+<div class="card panel"><h2>Wszystkie wspomnienia</h2><div id="tableWrap" class="table-wrap"></div><div id="panelStatus" class="status"></div></div>
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+<script>
+const sb=supabase.createClient("https://khggputlakhupiypybic.supabase.co","sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+function status(t,good=false){$("status").textContent=t||"";$("status").style.color=good?"var(--good)":"var(--bad)"}
+function panelStatus(t,good=false){$("panelStatus").textContent=t||"";$("panelStatus").style.color=good?"var(--good)":"var(--bad)"}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+async function check(){
+ const {data,error}=await sb.from("admin_users").select("user_id").maybeSingle();
+ if(error||!data){await sb.auth.signOut();$("loginView").classList.remove("hidden");$("adminView").classList.add("hidden");$("logout").classList.add("hidden");status("To konto nie ma uprawnień administratora.");return false}
+ $("loginView").classList.add("hidden");$("adminView").classList.remove("hidden");$("logout").classList.remove("hidden");await load();return true;
+}
+async function load(){
+ const {data,error}=await sb.from("memories").select("id,user_id,memory_date,memory_text,image_data,created_at").order("created_at",{ascending:false});
+ if(error){panelStatus("Nie udało się pobrać danych: "+error.message);return}
+ const rows=data||[]; $("users").textContent=new Set(rows.map(x=>x.user_id).filter(Boolean)).size;$("memories").textContent=rows.length;$("photos").textContent=rows.filter(x=>x.image_data).length;
+ if(!rows.length){$("tableWrap").innerHTML='<div class="empty">Brak wspomnień.</div>';return}
+ $("tableWrap").innerHTML='<table class="table"><thead><tr><th>Data</th><th>Użytkownik</th><th>Wspomnienie</th><th>Zdjęcie</th><th></th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+esc(x.memory_date)+'</td><td><span style="font-family:monospace;font-size:11px">'+esc(x.user_id)+'</span></td><td>'+esc(x.memory_text)+'</td><td>'+(x.image_data?'Tak':'Nie')+'</td><td><button class="danger delete" data-id="'+esc(x.id)+'">Usuń</button></td></tr>').join("")+'</tbody></table>';
+ document.querySelectorAll(".delete").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć to wspomnienie?"))return;const {error}=await sb.from("memories").delete().eq("id",b.dataset.id);if(error)panelStatus("Błąd: "+error.message);else await load()});
+}
+$("login").onclick=async()=>{status("Logowanie...");const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error){status(error.message);return}await check()};
+$("logout").onclick=async()=>{await sb.auth.signOut();location.reload()};
+sb.auth.getSession().then(({data})=>{if(data.session)check()});
+sb.auth.onAuthStateChange((_e,s)=>{if(s)check()});
+</script>
+</body>
+</html>
