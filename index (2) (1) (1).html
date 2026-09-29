@@ -321,6 +321,32 @@
             color: #333;
         }
 
+
+        /* Music Section */
+        .music-card {
+            background: linear-gradient(135deg, #fff0f3, #ffffff);
+            border: 1px solid #ffccd5;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(255, 77, 109, 0.10);
+        }
+        .music-note { font-size: 34px; margin-bottom: 8px; }
+        .music-title { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+        .music-artist { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+        .music-button {
+            display: inline-block;
+            text-decoration: none;
+            background: var(--primary-color);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .music-button:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
         footer {
             text-align: center;
             font-size: 11px;
@@ -383,6 +409,15 @@
         <div class="settings-box">
             <button id="settingsBtn" class="btn-ghost btn-small">Ustawienia</button>
             <button id="logoutBtn" class="btn-ghost btn-small">Wyloguj</button>
+        </div>
+
+
+        <div class="section-title">🎵 Nasza muzyka</div>
+        <div class="music-card">
+            <div class="music-note" aria-hidden="true">🎶</div>
+            <div class="music-title">Perfect</div>
+            <div class="music-artist">Ed Sheeran</div>
+            <a class="music-button" href="https://www.youtube.com/results?search_query=Ed+Sheeran+Perfect+official" target="_blank" rel="noopener noreferrer" aria-label="Otwórz Perfect na YouTube">▶ Posłuchaj utworu</a>
         </div>
 
         <div class="section-title">✨ Dodaj wspomnienie</div>
