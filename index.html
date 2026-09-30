@@ -20,86 +20,52 @@ header{padding:22px 0;display:flex;align-items:center;justify-content:space-betw
 </head>
 <body>
 <div id="maintenance" class="maintenance hidden"><section class="card"><div class="eyebrow">Chwila przerwy</div><h1>Wracamy <span>wkrótce.</span></h1><p id="maintenanceMessage" class="muted"></p><p id="maintenanceUntil" class="muted"></p></section></div>
-
 <div id="site">
-<header class="wrap">
-  <div class="brand"><div class="logo">♥</div><div>Love Story<small>NASZ PAMIĘTNIK</small></div></div>
-</header>
-
+<header class="wrap"><div class="brand"><div class="logo">♥</div><div>Love Story<small>NASZ PAMIĘTNIK</small></div></div></header>
 <main id="authView" class="wrap">
-  <section class="hero"><div class="eyebrow">Wasza prywatna przestrzeń</div><h1>Wasza historia,<br><span>jedno miejsce.</span></h1><p>Daty, zdjęcia i wspomnienia. Prosty pamiętnik stworzony po to, żeby najważniejsze chwile były zawsze pod ręką.</p></section>
-  <section class="card auth">
-    <h2>Wejdź do pamiętnika</h2><p class="muted">Zaloguj się albo utwórz swoje konto.</p>
-    <button id="google" class="btn secondary" style="width:100%">Kontynuuj przez Google</button>
-    <label for="email">E-mail</label><input id="email" type="email" autocomplete="email" placeholder="twoj@email.com">
-    <label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 znaków">
-    <div class="actions" style="margin-top:14px"><button id="login" class="btn">Zaloguj</button><button id="signup" class="btn secondary">Utwórz konto</button></div>
-    <div class="actions" style="margin-top:10px"><button id="reset" class="btn secondary">Reset hasła</button><button id="resend" class="btn secondary">Wyślij potwierdzenie</button></div>
-    <div id="authStatus" class="status" role="status" aria-live="polite"></div>
-    <section id="recovery" class="card hidden" style="padding:20px;margin-top:15px"><b>Ustaw nowe hasło</b><p class="muted">Link do resetu jest aktywny. Wpisz nowe hasło.</p><label>Nowe hasło</label><input id="newPassword" type="password" autocomplete="new-password"><label>Powtórz hasło</label><input id="newPassword2" type="password" autocomplete="new-password"><button id="savePassword" class="btn" style="width:100%;margin-top:12px">Zapisz nowe hasło</button><div id="recoveryStatus" class="status"></div></section>
-    <div class="legal-links"><button data-legal="rules">Regulamin</button><button data-legal="privacy">Prywatność</button><button data-legal="creator">O twórcy</button></div><div id="legal" class="card legal hidden"></div>
-  </section>
-</main>
-
-<main id="appView" class="wrap hidden">
-<header class="appbar">
-  <div class="left"><div class="logo">♥</div><div><b>Love Story</b><small id="userLabel" class="muted" style="display:block">Twoje wspomnienia</small></div></div>
-  <div class="right"><button id="logout" class="btn danger">Wyloguj</button></div>
-</header>
-
-<section class="dashboard">
-  <div class="card count"><div class="eyebrow">Następna rocznica</div><div id="days" class="big">—</div><div id="annDate" class="accent">Ustaw datę</div><button id="setDate" class="btn secondary" style="margin-top:18px">Ustaw datę rocznicy</button></div>
-  <div class="card stats"><h3>Wasze statystyki</h3><div class="stat"><span>Wspomnienia</span><strong id="countMem">0</strong></div><div class="stat"><span>Zdjęcia</span><strong id="countImg">0</strong></div><div class="stat"><span>Rocznica</span><strong id="shortDate">—</strong></div></div>
+<section class="hero"><div class="eyebrow">Wasza prywatna przestrzeń</div><h1>Wasza historia,<br><span>jedno miejsce.</span></h1><p>Daty, zdjęcia i wspomnienia. Prosty pamiętnik stworzony po to, żeby najważniejsze chwile były zawsze pod ręką.</p></section>
+<section class="card auth">
+<h2>Wejdź do pamiętnika</h2><p class="muted">Zaloguj się albo utwórz swoje konto.</p>
+<button id="google" class="btn secondary" style="width:100%">Kontynuuj przez Google</button>
+<label for="email">E-mail</label><input id="email" type="email" autocomplete="email" placeholder="twoj@email.com">
+<label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 znaków">
+<div class="actions" style="margin-top:14px"><button id="login" class="btn">Zaloguj</button><button id="signup" class="btn secondary">Utwórz konto</button></div>
+<div class="actions" style="margin-top:10px"><button id="reset" class="btn secondary">Reset hasła</button><button id="resend" class="btn secondary">Wyślij potwierdzenie</button></div>
+<div id="authStatus" class="status" role="status" aria-live="polite"></div>
+<section id="recovery" class="card hidden" style="padding:20px;margin-top:15px"><b>Ustaw nowe hasło</b><p class="muted">Link do resetu jest aktywny. Wpisz nowe hasło.</p><label>Nowe hasło</label><input id="newPassword" type="password" autocomplete="new-password"><label>Powtórz hasło</label><input id="newPassword2" type="password" autocomplete="new-password"><button id="savePassword" class="btn" style="width:100%;margin-top:12px">Zapisz nowe hasło</button><div id="recoveryStatus" class="status"></div></section>
+<div class="legal-links"><button data-legal="rules">Regulamin</button><button data-legal="privacy">Prywatność</button><button data-legal="creator">O twórcy</button></div><div id="legal" class="card legal hidden"></div>
 </section>
-
+</main>
+<main id="appView" class="wrap hidden">
+<header class="appbar"><div class="left"><div class="logo">♥</div><div><b>Love Story</b><small id="userLabel" class="muted" style="display:block">Twoje wspomnienia</small></div></div><div class="right"><button id="logout" class="btn danger">Wyloguj</button></div></header>
+<section class="dashboard"><div class="card count"><div class="eyebrow">Następna rocznica</div><div id="days" class="big">—</div><div id="annDate" class="accent">Ustaw datę</div><button id="setDate" class="btn secondary" style="margin-top:18px">Ustaw datę rocznicy</button></div><div class="card stats"><h3>Wasze statystyki</h3><div class="stat"><span>Wspomnienia</span><strong id="countMem">0</strong></div><div class="stat"><span>Zdjęcia</span><strong id="countImg">0</strong></div><div class="stat"><span>Rocznica</span><strong id="shortDate">—</strong></div></div></section>
 <section class="section"><div class="eyebrow">Personalizacja</div><h2 class="section-title">Kolor strony</h2><div class="card panel"><div class="theme-row"><input id="themeColor" type="color" value="#ff6b9d" aria-label="Kolor motywu"><button class="btn secondary theme" data-color="#ff6b9d">Różowy</button><button class="btn secondary theme" data-color="#8b5cf6">Fioletowy</button><button class="btn secondary theme" data-color="#38bdf8">Niebieski</button></div><div id="themeStatus" class="status"></div></div></section>
-
 <section class="section"><div class="eyebrow">Nasza muzyka</div><h2 class="section-title">Piosenka na wspólne chwile</h2><div class="card panel music"><div class="music-info"><div class="music-icon">♪</div><div><b>Perfect</b><div class="muted">Ed Sheeran</div></div></div><a class="btn" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=Ed+Sheeran+Perfect+official">Otwórz muzykę</a></div></section>
-
-<section class="section"><div class="eyebrow">Nowe wspomnienie</div><h2 class="section-title">Dodaj chwilę</h2><div class="card panel">
-<div class="grid"><div><label>Data</label><input id="memoryDate" type="date"></div><div><label>Zdjęcie</label><label class="file"><input id="memoryFile" type="file" accept="image/*">Wybierz zdjęcie</label></div></div>
-<div id="fileName" class="muted" style="font-size:12px;margin-top:7px"></div><img id="preview" class="preview hidden" alt="Podgląd zdjęcia">
-<label>Wspomnienie</label><textarea id="memoryText" placeholder="Co chcecie zapamiętać?"></textarea>
-<div class="actions" style="margin-top:12px"><button id="save" class="btn">Zapisz wspomnienie</button><button id="clear" class="btn secondary">Wyczyść</button></div><div id="saveStatus" class="status"></div>
-</div></section>
-
+<section class="section"><div class="eyebrow">Nowe wspomnienie</div><h2 class="section-title">Dodaj chwilę</h2><div class="card panel"><div class="grid"><div><label>Data</label><input id="memoryDate" type="date"></div><div><label>Zdjęcie</label><label class="file"><input id="memoryFile" type="file" accept="image/*">Wybierz zdjęcie</label></div></div><div id="fileName" class="muted" style="font-size:12px;margin-top:7px"></div><img id="preview" class="preview hidden" alt="Podgląd zdjęcia"><label>Wspomnienie</label><textarea id="memoryText" placeholder="Co chcecie zapamiętać?"></textarea><div class="actions" style="margin-top:12px"><button id="save" class="btn">Zapisz wspomnienie</button><button id="clear" class="btn secondary">Wyczyść</button></div><div id="saveStatus" class="status"></div></div></section>
 <section class="section"><div class="eyebrow">Wasza historia</div><h2 class="section-title">Oś czasu</h2><div id="timeline" class="memory-list"></div></section>
 </main>
 <footer>Wasza prywatna przestrzeń · Twórca: <b>firma nierejestrowana IT Krystian</b></footer>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script>
 const sb=supabase.createClient("https://khggputlakhupiypybic.supabase.co","sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);let user=null,imageData="";
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",""":"&quot;","'":"&#039;"}[c]));
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 function status(el,text,good=false){el.textContent=text||"";el.style.color=good?"var(--good)":"var(--danger)"}
 function applyTheme(c){if(!/^#[0-9a-fA-F]{6}$/.test(c))return;document.documentElement.style.setProperty("--accent",c);localStorage.setItem("loveStoryAccent",c);if($("themeColor"))$("themeColor").value=c}
 function loadTheme(){applyTheme(localStorage.getItem("loveStoryAccent")||"#ff6b9d")}
 function annKey(){return"loveStoryAnniversary_"+(user?.id||"")}
-function updateCountdown(){
- const value=localStorage.getItem(annKey()); if(!value){$("days").textContent="—";$("annDate").textContent="Ustaw datę rocznicy";$("shortDate").textContent="—";return}
- const d=new Date(value+"T00:00:00"),now=new Date();let next=new Date(now.getFullYear(),d.getMonth(),d.getDate());if(next<new Date(now.getFullYear(),now.getMonth(),now.getDate()))next.setFullYear(now.getFullYear()+1);
- const days=Math.ceil((next-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);
- $("days").textContent=days;$("annDate").textContent="Najbliższa: "+next.toLocaleDateString("pl-PL",{day:"numeric",month:"long"});$("shortDate").textContent=d.toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit"});
-}
-async function checkMaintenance(){
- const r=await sb.from("site_settings").select("maintenance_mode,maintenance_message,maintenance_until").eq("id",1).maybeSingle();
- if(r.error||!r.data)return false;let active=!!r.data.maintenance_mode;if(active&&r.data.maintenance_until&&new Date(r.data.maintenance_until)<=new Date())active=false;
- if(active){$("site").classList.add("hidden");$("maintenance").classList.remove("hidden");$("maintenanceMessage").textContent=r.data.maintenance_message||"Trwają prace konserwacyjne. Wrócimy wkrótce.";if(r.data.maintenance_until)$("maintenanceUntil").textContent="Planowany koniec: "+new Date(r.data.maintenance_until).toLocaleString("pl-PL");}return active
-}
-function legal(type){
- const data={rules:["Regulamin","Korzystanie z pamiętnika jest przeznaczone do prywatnego przechowywania wspomnień. Nie publikuj danych innych osób bez ich zgody. Użytkownik odpowiada za treści, które dodaje do swojego konta."],privacy:["Polityka prywatności","Aplikacja przetwarza dane potrzebne do działania konta i pamiętnika, w tym adres e-mail, zapisane wspomnienia oraz dane techniczne związane z bezpieczeństwem. Dane są obsługiwane przez usługi infrastrukturalne używane przez aplikację. Przysługują Ci prawa wynikające z obowiązujących przepisów o ochronie danych."],creator:["O twórcy","Projekt został przygotowany przez firmę nierejestrowaną IT Krystian jako prywatną przestrzeń pamiętnika."]}[type];$("legal").innerHTML="<h2>"+esc(data[0])+"</h2><p>"+esc(data[1])+"</p>";$("legal").classList.remove("hidden")}
-async function authError(e){
- console.error(e);const code=e?.code||"";if(code==="email_not_confirmed")return"Adres e-mail nie został potwierdzony. Użyj „Wyślij potwierdzenie”.";if(code==="invalid_credentials")return"E-mail lub hasło są nieprawidłowe. Jeśli nie pamiętasz hasła, użyj „Reset hasła”.";return"Nie udało się wykonać operacji: "+(e?.message||"spróbuj ponownie.")
-}
-$("login").onclick=async()=>{const email=$("email").value.trim(),password=$("password").value;if(!email||!password)return status($("authStatus"),"Wpisz e-mail i hasło.");const r=await sb.auth.signInWithPassword({email,password});if(r.error)status($("authStatus"),await authError(r.error));else status($("authStatus"),"Zalogowano.",true)}
-$("signup").onclick=async()=>{const email=$("email").value.trim(),password=$("password").value;if(!email||password.length<6)return status($("authStatus"),"Podaj e-mail i hasło o długości co najmniej 6 znaków.");const r=await sb.auth.signUp({email,password});if(r.error)return status($("authStatus"),await authError(r.error));status($("authStatus"),r.data.session?"Konto utworzone i zalogowano.":"Konto utworzone. Sprawdź e-mail i potwierdź adres.",true)}
-$("google").onclick=async()=>{const r=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(r.error)status($("authStatus"),await authError(r.error))}
-$("reset").onclick=async()=>{const email=$("email").value.trim();if(!email)return status($("authStatus"),"Najpierw wpisz adres e-mail.");const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(r.error)return status($("authStatus"),await authError(r.error));status($("authStatus"),"Jeśli dla tego adresu istnieje konto, wysłaliśmy wiadomość z linkiem do zmiany hasła. Sprawdź też spam.",true)}
-$("resend").onclick=async()=>{const email=$("email").value.trim();if(!email)return status($("authStatus"),"Najpierw wpisz adres e-mail.");const r=await sb.auth.resend({type:"signup",email});if(r.error)return status($("authStatus"),await authError(r.error));status($("authStatus"),"Wiadomość z potwierdzeniem została wysłana ponownie.",true)}
+function updateCountdown(){const value=localStorage.getItem(annKey());if(!value){$("days").textContent="—";$("annDate").textContent="Ustaw datę rocznicy";$("shortDate").textContent="—";return}const d=new Date(value+"T00:00:00"),now=new Date();let next=new Date(now.getFullYear(),d.getMonth(),d.getDate());if(next<new Date(now.getFullYear(),now.getMonth(),now.getDate()))next.setFullYear(now.getFullYear()+1);const days=Math.ceil((next-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);$("days").textContent=days;$("annDate").textContent="Najbliższa: "+next.toLocaleDateString("pl-PL",{day:"numeric",month:"long"});$("shortDate").textContent=d.toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit"})}
+async function checkMaintenance(){const r=await sb.from("site_settings").select("maintenance_mode,maintenance_message,maintenance_until").eq("id",1).maybeSingle();if(r.error||!r.data)return false;let active=!!r.data.maintenance_mode;if(active&&r.data.maintenance_until&&new Date(r.data.maintenance_until)<=new Date())active=false;if(active){$("site").classList.add("hidden");$("maintenance").classList.remove("hidden");$("maintenanceMessage").textContent=r.data.maintenance_message||"Trwają prace konserwacyjne. Wrócimy wkrótce.";if(r.data.maintenance_until)$("maintenanceUntil").textContent="Planowany koniec: "+new Date(r.data.maintenance_until).toLocaleString("pl-PL")}return active}
+function legal(type){const data={rules:["Regulamin","Korzystanie z pamiętnika jest przeznaczone do prywatnego przechowywania wspomnień. Nie publikuj danych innych osób bez ich zgody. Użytkownik odpowiada za treści, które dodaje do swojego konta."],privacy:["Polityka prywatności","Aplikacja przetwarza dane potrzebne do działania konta i pamiętnika, w tym adres e-mail, zapisane wspomnienia oraz dane techniczne związane z bezpieczeństwem. Dane są obsługiwane przez usługi infrastrukturalne używane przez aplikację. Przysługują Ci prawa wynikające z obowiązujących przepisów o ochronie danych."],creator:["O twórcy","Projekt został przygotowany przez firmę nierejestrowaną IT Krystian jako prywatną przestrzeń pamiętnika."]}[type];$("legal").innerHTML="<h2>"+esc(data[0])+"</h2><p>"+esc(data[1])+"</p>";$("legal").classList.remove("hidden")}
+function authError(e){console.error(e);const code=e?.code||"";if(code==="email_not_confirmed")return"Adres e-mail nie został potwierdzony. Użyj „Wyślij potwierdzenie”.";if(code==="invalid_credentials")return"E-mail lub hasło są nieprawidłowe. Jeśli nie pamiętasz hasła, użyj „Reset hasła”.";return"Nie udało się wykonać operacji: "+(e?.message||"spróbuj ponownie.")}
+$("login").onclick=async()=>{const email=$("email").value.trim(),password=$("password").value;if(!email||!password)return status($("authStatus"),"Wpisz e-mail i hasło.");const r=await sb.auth.signInWithPassword({email,password});if(r.error)status($("authStatus"),authError(r.error));else{status($("authStatus"),"Zalogowano.",true);render(r.data.session)}}
+$("signup").onclick=async()=>{const email=$("email").value.trim(),password=$("password").value;if(!email||password.length<6)return status($("authStatus"),"Podaj e-mail i hasło o długości co najmniej 6 znaków.");const r=await sb.auth.signUp({email,password});if(r.error)return status($("authStatus"),authError(r.error));status($("authStatus"),r.data.session?"Konto utworzone i zalogowano.":"Konto utworzone. Sprawdź e-mail i potwierdź adres.",true);if(r.data.session)render(r.data.session)}
+$("google").onclick=async()=>{const r=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(r.error)status($("authStatus"),authError(r.error))}
+$("reset").onclick=async()=>{const email=$("email").value.trim();if(!email)return status($("authStatus"),"Najpierw wpisz adres e-mail.");const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(r.error)return status($("authStatus"),authError(r.error));status($("authStatus"),"Jeśli dla tego adresu istnieje konto, wysłaliśmy wiadomość z linkiem do zmiany hasła. Sprawdź też spam.",true)}
+$("resend").onclick=async()=>{const email=$("email").value.trim();if(!email)return status($("authStatus"),"Najpierw wpisz adres e-mail.");const r=await sb.auth.resend({type:"signup",email});if(r.error)return status($("authStatus"),authError(r.error));status($("authStatus"),"Wiadomość z potwierdzeniem została wysłana ponownie.",true)}
 function showRecovery(){$("recovery").classList.remove("hidden");$("authView").classList.remove("hidden")}
-$("savePassword").onclick=async()=>{const a=$("newPassword").value,b=$("newPassword2").value;if(a.length<6)return status($("recoveryStatus"),"Hasło musi mieć co najmniej 6 znaków.");if(a!==b)return status($("recoveryStatus"),"Hasła nie są takie same.");const r=await sb.auth.updateUser({password:a});if(r.error)return status($("recoveryStatus"),await authError(r.error));status($("recoveryStatus"),"Hasło zostało zmienione. Możesz się zalogować.",true);await sb.auth.signOut({scope:"local"})}
+$("savePassword").onclick=async()=>{const a=$("newPassword").value,b=$("newPassword2").value;if(a.length<6)return status($("recoveryStatus"),"Hasło musi mieć co najmniej 6 znaków.");if(a!==b)return status($("recoveryStatus"),"Hasła nie są takie same.");const r=await sb.auth.updateUser({password:a});if(r.error)return status($("recoveryStatus"),authError(r.error));status($("recoveryStatus"),"Hasło zostało zmienione. Możesz się zalogować.",true);await sb.auth.signOut({scope:"local"})}
 $("logout").onclick=async()=>{await sb.auth.signOut({scope:"local"});user=null;render(null)}
 $("setDate").onclick=()=>{const old=localStorage.getItem(annKey())||"";const d=prompt("Podaj datę rocznicy w formacie RRRR-MM-DD:",old);if(d&&/^\d{4}-\d{2}-\d{2}$/.test(d)){localStorage.setItem(annKey(),d);updateCountdown()}}
 $("themeColor").oninput=e=>{applyTheme(e.target.value);status($("themeStatus"),"Kolor zapisany.",true)}
@@ -108,13 +74,7 @@ document.querySelectorAll("[data-legal]").forEach(b=>b.onclick=()=>legal(b.datas
 $("memoryFile").onchange=e=>{const f=e.target.files[0];if(!f){imageData="";$("preview").classList.add("hidden");return}$("fileName").textContent=f.name;const reader=new FileReader();reader.onload=()=>{imageData=reader.result;$("preview").src=imageData;$("preview").classList.remove("hidden")};reader.readAsDataURL(f)}
 $("clear").onclick=()=>{imageData="";$("memoryText").value="";$("memoryFile").value="";$("fileName").textContent="";$("preview").classList.add("hidden");status($("saveStatus"),"")}
 $("save").onclick=async()=>{if(!user)return;const text=$("memoryText").value.trim(),date=$("memoryDate").value||new Date().toISOString().slice(0,10);if(!text&&!imageData)return status($("saveStatus"),"Dodaj opis albo zdjęcie.");const r=await sb.from("memories").insert({user_id:user.id,memory_date:date,memory_text:text,image_data:imageData||null});if(r.error){console.error(r.error);return status($("saveStatus"),"Nie udało się zapisać wspomnienia: "+r.error.message)}status($("saveStatus"),"Wspomnienie zapisane.",true);$("clear").click();loadMemories()}
-async function loadMemories(){
- const r=await sb.from("memories").select("id,created_at,memory_date,memory_text,image_data").eq("user_id",user.id).order("memory_date",{ascending:false});
- if(r.error){console.error(r.error);$("timeline").innerHTML="<div class='card empty'>Nie udało się wczytać wspomnień.</div>";return}
- const rows=r.data||[];$("countMem").textContent=rows.length;$("countImg").textContent=rows.filter(x=>x.image_data).length;
- $("timeline").innerHTML=rows.length?rows.map(x=>"<article class='card memory'><div class='memory-head'><span>"+esc(new Date(x.memory_date+"T00:00:00").toLocaleDateString("pl-PL",{day:"numeric",month:"long",year:"numeric"}))+"</span><button class='delete' data-delete='"+esc(x.id)+"'>Usuń</button></div>"+(x.memory_text?"<p>"+esc(x.memory_text)+"</p>":"")+(x.image_data?"<img src='"+x.image_data+"' alt='Zdjęcie ze wspomnienia'>":"")+"</article>").join(""):"<div class='card empty'>Wasza oś czasu jest jeszcze pusta. Dodaj pierwsze wspomnienie.</div>";
- document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć to wspomnienie?"))return;const r=await sb.from("memories").delete().eq("id",b.dataset.delete).eq("user_id",user.id);if(r.error)alert("Nie udało się usunąć wspomnienia.");else loadMemories()})
-}
+async function loadMemories(){const r=await sb.from("memories").select("id,created_at,memory_date,memory_text,image_data").eq("user_id",user.id).order("memory_date",{ascending:false});if(r.error){console.error(r.error);$("timeline").innerHTML="<div class='card empty'>Nie udało się wczytać wspomnień.</div>";return}const rows=r.data||[];$("countMem").textContent=rows.length;$("countImg").textContent=rows.filter(x=>x.image_data).length;$("timeline").innerHTML=rows.length?rows.map(x=>"<article class='card memory'><div class='memory-head'><span>"+esc(new Date(x.memory_date+"T00:00:00").toLocaleDateString("pl-PL",{day:"numeric",month:"long",year:"numeric"}))+"</span><button class='delete' data-delete='"+esc(x.id)+"'>Usuń</button></div>"+(x.memory_text?"<p>"+esc(x.memory_text)+"</p>":"")+(x.image_data?"<img src='"+x.image_data+"' alt='Zdjęcie ze wspomnienia'>":"")+"</article>").join(""):"<div class='card empty'>Wasza oś czasu jest jeszcze pusta. Dodaj pierwsze wspomnienie.</div>";document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć to wspomnienie?"))return;const r=await sb.from("memories").delete().eq("id",b.dataset.delete).eq("user_id",user.id);if(r.error)alert("Nie udało się usunąć wspomnienia.");else loadMemories()})}
 function render(session){user=session?.user||null;$("authView").classList.toggle("hidden",!!user);$("appView").classList.toggle("hidden",!user);if(!user)return;$("userLabel").textContent=user.email||"Twoje wspomnienia";$("memoryDate").value=new Date().toISOString().slice(0,10);updateCountdown();loadTheme();loadMemories()}
 sb.auth.onAuthStateChange(async(e,s)=>{if(e==="PASSWORD_RECOVERY")showRecovery();if(!await checkMaintenance())render(s)})
 (async()=>{loadTheme();if(await checkMaintenance())return;const r=await sb.auth.getSession();render(r.data.session)})()
