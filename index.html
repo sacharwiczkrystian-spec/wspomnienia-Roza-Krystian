@@ -15,26 +15,51 @@ header{padding:22px 0;display:flex;align-items:center;justify-content:space-betw
 .appbar{padding:18px 0}.appbar .left{display:flex;align-items:center;gap:11px}.appbar .right{display:flex;gap:8px}.dashboard{display:grid;grid-template-columns:1.35fr .8fr;gap:16px}.count,.stats,.panel{padding:25px}.big{font-size:clamp(54px,9vw,88px);font-weight:950;letter-spacing:-.07em;margin:10px 0}.accent{color:var(--accent)}.stat{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);color:var(--muted)}.stat:last-child{border-bottom:0}.stat strong{color:var(--text)}
 .section{margin-top:34px}.section-title{margin:5px 0 14px;font-size:26px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.file{display:block;border:1px dashed #55485b;border-radius:14px;padding:13px;text-align:center}.file input{display:none}.preview{width:100%;max-height:420px;object-fit:cover;border-radius:16px;margin-top:12px}.theme-row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.theme-row input{width:68px;height:46px;padding:4px}.memory-list{display:grid;gap:14px}.memory{padding:21px}.memory-head{display:flex;justify-content:space-between;gap:10px;color:var(--accent);font-size:13px;font-weight:800}.memory p{white-space:pre-wrap;line-height:1.7}.memory img{width:100%;max-height:520px;object-fit:cover;border-radius:16px}.delete{border:0;background:transparent;color:var(--muted);padding:5px}.account-danger{margin:34px 0}.account-danger .panel{border-color:#5b2b3c}.danger-title{color:#ff9bad}.music{display:flex;justify-content:space-between;align-items:center;gap:18px}.music-info{display:flex;align-items:center;gap:14px}.music-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--surface2);font-size:25px}.empty{text-align:center;padding:30px;color:var(--muted)}footer{text-align:center;color:#77717d;padding:42px 0 50px;font-size:13px}
 .maintenance{min-height:100vh;display:grid;place-items:center;padding:24px}.maintenance .card{max-width:700px;padding:42px;text-align:center}.maintenance h1{font-size:clamp(42px,7vw,70px)}
-@media(max-width:760px){.hero{padding-top:45px}.dashboard,.grid{grid-template-columns:1fr}.music{align-items:flex-start;flex-direction:column}.appbar{align-items:flex-start;gap:15px}.appbar .right{width:100%}.appbar .right>*{flex:1}.auth{padding:22px}}
+.login-page{min-height:calc(100vh - 85px);display:grid;place-items:center;padding:40px 16px}.login-card{width:min(430px,100%);padding:34px 30px;background:#121019;border:1px solid #2b2632;border-radius:24px;box-shadow:0 25px 80px #0008;text-align:center}.login-logo{width:62px;height:62px;margin:0 auto 18px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,var(--accent),#8b5cf6);font-size:28px;box-shadow:0 12px 30px #0005}.login-kicker{font-size:11px;font-weight:900;letter-spacing:.22em;color:var(--accent)}.login-card h1{font-size:36px;letter-spacing:-.05em;margin:10px 0 6px}.login-subtitle{margin:0 0 26px;color:var(--muted)}.login-card{text-align:left}.login-card .login-logo,.login-card .login-kicker,.login-card h1,.login-card .login-subtitle{text-align:center}.login-card label{margin:15px 0 7px}.login-card input{height:48px}.login-primary,.login-google,.login-link{width:100%;height:48px;border-radius:13px;font-weight:800}.login-primary{border:0;background:linear-gradient(135deg,var(--accent),#e34e8b);color:#fff;box-shadow:0 10px 25px #0003;margin-top:18px}.login-google{border:1px solid var(--line);background:#181520;color:#fff;margin-top:12px}.login-divider{display:flex;align-items:center;gap:12px;color:#6f6874;margin:22px 0}.login-divider:before,.login-divider:after{content:"";height:1px;background:var(--line);flex:1}.login-link{border:0;background:transparent;color:var(--accent);margin-top:5px}.login-link.muted-link{color:var(--muted);font-weight:600;height:auto;padding:8px}.login-status{text-align:center;min-height:22px;margin-top:13px;font-size:13px}.login-recovery{margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#0d0b11}.login-recovery p{color:var(--muted);font-size:13px;line-height:1.5}.login-recovery input{margin-bottom:4px}.login-recovery .login-primary{margin-top:12px}.login-recovery .login-status{text-align:left}@media(max-width:760px){.hero{padding-top:45px}.dashboard,.grid{grid-template-columns:1fr}.music{align-items:flex-start;flex-direction:column}.appbar{align-items:flex-start;gap:15px}.appbar .right{width:100%}.appbar .right>*{flex:1}.auth{padding:22px}}
 </style>
 </head>
 <body>
 <div id="maintenance" class="maintenance hidden"><section class="card"><div class="eyebrow">Chwila przerwy</div><h1>Wracamy <span>wkrótce.</span></h1><p id="maintenanceMessage" class="muted"></p><p id="maintenanceUntil" class="muted"></p></section></div>
 <div id="site">
 <header class="wrap"><div class="brand"><div class="logo">♥</div><div>Love Story<small>NASZ PAMIĘTNIK</small></div></div></header>
-<main id="authView" class="wrap">
-<section class="hero"><div class="eyebrow">Wasza prywatna przestrzeń</div><h1>Wasza historia,<br><span>jedno miejsce.</span></h1><p>Daty, zdjęcia i wspomnienia. Prosty pamiętnik stworzony po to, żeby najważniejsze chwile były zawsze pod ręką.</p></section>
-<section class="card auth">
-<h2>Wejdź do pamiętnika</h2><p class="muted">Zaloguj się albo utwórz swoje konto.</p>
-<button id="google" class="btn secondary" style="width:100%">Kontynuuj przez Google</button>
-<label for="email">E-mail</label><input id="email" type="email" autocomplete="email" placeholder="twoj@email.com">
-<label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" placeholder="Minimum 6 znaków">
-<div class="actions" style="margin-top:14px"><button id="login" class="btn">Zaloguj</button><button id="signup" class="btn secondary">Utwórz konto</button></div>
-<div class="actions" style="margin-top:10px"><button id="reset" class="btn secondary">Reset hasła</button><button id="resend" class="btn secondary">Wyślij potwierdzenie</button></div>
-<div id="authStatus" class="status" role="status" aria-live="polite"></div>
-<section id="recovery" class="card hidden" style="padding:20px;margin-top:15px"><b>Ustaw nowe hasło</b><p class="muted">Link do resetu jest aktywny. Wpisz nowe hasło.</p><label>Nowe hasło</label><input id="newPassword" type="password" autocomplete="new-password"><label>Powtórz hasło</label><input id="newPassword2" type="password" autocomplete="new-password"><button id="savePassword" class="btn" style="width:100%;margin-top:12px">Zapisz nowe hasło</button><div id="recoveryStatus" class="status"></div></section>
-<div class="legal-links"><button data-legal="rules">Regulamin</button><button data-legal="privacy">Prywatność</button><button data-legal="creator">O twórcy</button></div><div id="legal" class="card legal hidden"></div>
-</section>
+<main id="authView" class="login-page">
+  <section class="login-card">
+    <div class="login-logo">♥</div>
+    <div class="login-kicker">LOVE STORY</div>
+    <h1>Zaloguj się</h1>
+    <p class="login-subtitle">Wróć do swoich wspomnień.</p>
+
+    <form id="loginForm" novalidate>
+      <label for="email">E-mail</label>
+      <input id="email" type="email" autocomplete="email" placeholder="twoj@email.com" required>
+
+      <label for="password">Hasło</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Twoje hasło" required>
+
+      <button id="login" class="login-primary" type="submit">Zaloguj się</button>
+    </form>
+
+    <button id="google" class="login-google" type="button">Kontynuuj przez Google</button>
+
+    <div class="login-divider"><span>lub</span></div>
+
+    <button id="signup" class="login-link" type="button">Utwórz nowe konto</button>
+    <button id="reset" class="login-link muted-link" type="button">Nie pamiętasz hasła?</button>
+    <button id="resend" class="login-link muted-link" type="button">Wyślij ponownie e-mail potwierdzający</button>
+
+    <div id="authStatus" class="login-status" role="status" aria-live="polite"></div>
+
+    <section id="recovery" class="login-recovery hidden">
+      <b>Ustaw nowe hasło</b>
+      <p>Wpisz nowe hasło i zatwierdź.</p>
+      <label for="newPassword">Nowe hasło</label>
+      <input id="newPassword" type="password" autocomplete="new-password">
+      <label for="newPassword2">Powtórz hasło</label>
+      <input id="newPassword2" type="password" autocomplete="new-password">
+      <button id="savePassword" class="login-primary" type="button">Zapisz nowe hasło</button>
+      <div id="recoveryStatus" class="login-status"></div>
+    </section>
+  </section>
 </main>
 <main id="appView" class="wrap hidden">
 <header class="appbar"><div class="left"><div class="logo">♥</div><div><b>Love Story</b><small id="userLabel" class="muted" style="display:block">Twoje wspomnienia</small></div></div><div class="right"><button id="logout" class="btn danger">Wyloguj</button></div></header>
@@ -60,7 +85,7 @@ function updateCountdown(){const value=localStorage.getItem(annKey());if(!value)
 async function checkMaintenance(){const r=await sb.from("site_settings").select("maintenance_mode,maintenance_message,maintenance_until,accent_color").eq("id",1).maybeSingle();if(r.error||!r.data)return false;if(r.data.accent_color)applyTheme(r.data.accent_color);let active=!!r.data.maintenance_mode;if(active&&r.data.maintenance_until&&new Date(r.data.maintenance_until)<=new Date())active=false;if(active){$("site").classList.add("hidden");$("maintenance").classList.remove("hidden");$("maintenanceMessage").textContent=r.data.maintenance_message||"Trwają prace konserwacyjne. Wrócimy wkrótce.";if(r.data.maintenance_until)$("maintenanceUntil").textContent="Planowany koniec: "+new Date(r.data.maintenance_until).toLocaleString("pl-PL")}return active}
 function legal(type){const data={rules:["Regulamin","Korzystanie z pamiętnika jest przeznaczone do prywatnego przechowywania wspomnień. Nie publikuj danych innych osób bez ich zgody. Użytkownik odpowiada za treści, które dodaje do swojego konta."],privacy:["Polityka prywatności","Aplikacja przetwarza dane potrzebne do działania konta i pamiętnika, w tym adres e-mail, zapisane wspomnienia oraz dane techniczne związane z bezpieczeństwem. Dane są obsługiwane przez usługi infrastrukturalne używane przez aplikację. Przysługują Ci prawa wynikające z obowiązujących przepisów o ochronie danych."],creator:["O twórcy","Projekt został przygotowany przez firmę nierejestrowaną IT Krystian jako prywatną przestrzeń pamiętnika."]}[type];$("legal").innerHTML="<h2>"+esc(data[0])+"</h2><p>"+esc(data[1])+"</p>";$("legal").classList.remove("hidden")}
 function authError(e){console.error(e);const code=e?.code||"";if(code==="email_not_confirmed")return"Adres e-mail nie został potwierdzony. Użyj „Wyślij potwierdzenie”.";if(code==="invalid_credentials")return"E-mail lub hasło są nieprawidłowe. Jeśli nie pamiętasz hasła, użyj „Reset hasła”.";return"Nie udało się wykonać operacji: "+(e?.message||"spróbuj ponownie.")}
-$("login").onclick=async()=>{
+$("loginForm").onsubmit=async(ev)=>{ev.preventDefault();
   const email=$("email").value.trim().toLowerCase(),password=$("password").value;
   if(!email||!password)return status($("authStatus"),"Wpisz e-mail i hasło.");
   const btn=$("login");btn.disabled=true;status($("authStatus"),"Logowanie...");
