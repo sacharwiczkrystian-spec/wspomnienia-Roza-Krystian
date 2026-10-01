@@ -99,10 +99,9 @@ $("loginForm").onsubmit=async(ev)=>{ev.preventDefault();
   try{
     const r=await sb.auth.signInWithPassword({email,password});
     if(r.error){status($("authStatus"),authError(r.error));return}
-    const verified=await sb.auth.getUser();
-    if(verified.error){status($("authStatus"),"Logowanie nie zostało potwierdzone. Spróbuj ponownie.");return}
+    if(!r.data.session){status($("authStatus"),"Nie udało się utworzyć sesji. Spróbuj ponownie.");return}
     status($("authStatus"),"Zalogowano.",true);
-    render(r.data.session);
+    await render(r.data.session);
   }catch(e){console.error(e);status($("authStatus"),"Nie udało się zalogować. Sprawdź połączenie i spróbuj ponownie.")}
   finally{btn.disabled=false}
 }
@@ -125,7 +124,7 @@ async function loadPremium(){if(!user)return;const r=await sb.from("premium_user
 async function render(session){user=session?.user||null;if(!user){$("authView").classList.remove("hidden");$("appView").classList.add("hidden");$("mfaLogin").classList.add("hidden");return}if(!(await requireMfa(session)))return;$("authView").classList.add("hidden");$("appView").classList.remove("hidden");$("userLabel").textContent=user.email||"Twoje wspomnienia";$("memoryDate").value=new Date().toISOString().slice(0,10);updateCountdown();if(remoteAccent)applyTheme(remoteAccent);else loadTheme();await loadPremium();loadMemories();refreshMfaPanel()}
 sb.auth.onAuthStateChange((e,s)=>{
   if(e==="PASSWORD_RECOVERY"){showRecovery();return}
-  render(s);
+  if(e==="SIGNED_IN"||e==="SIGNED_OUT"||e==="TOKEN_REFRESHED"){setTimeout(()=>render(s),0)}
 });
 (async()=>{
   loadTheme();
