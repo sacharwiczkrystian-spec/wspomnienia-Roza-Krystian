@@ -1,129 +1,25 @@
-<!doctype html>
-<html lang="pl">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0b12"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<title>Panel administratora — Love Story</title>
-<style>
-:root{--bg:#09090f;--surface:#11111a;--surface2:#181824;--line:#282836;--text:#fafafa;--muted:#9d9daa;--accent:#ff6b9d;--good:#72d6a0;--danger:#ff7189}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0d0b14,#09090f 55%,#130b13);color:var(--text);font:14px Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
-button,input,textarea{font:inherit}.hidden{display:none!important}.shell{width:min(1180px,calc(100% - 32px));margin:auto}
-.login-screen{min-height:100vh;display:grid;place-items:center;padding:24px}.login-card{width:min(430px,100%);background:#11111af2;border:1px solid var(--line);border-radius:28px;padding:32px;box-shadow:0 30px 90px #0008}
-.logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#d94c87);font-size:24px;margin-bottom:22px}
-.kicker{color:var(--accent);font-weight:800;letter-spacing:.14em;font-size:11px}.login-card h1{font-size:30px;margin:8px 0}.login-card p{color:var(--muted);line-height:1.6}
-label{display:block;color:#c9c9d2;font-size:12px;font-weight:700;margin:18px 0 7px}input,textarea{width:100%;background:#0b0b11;border:1px solid var(--line);border-radius:12px;color:var(--text);padding:13px;outline:none}input:focus,textarea:focus{border-color:var(--accent)}textarea{min-height:100px;resize:vertical}
-button{border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:var(--surface2);border:1px solid var(--line);color:var(--text)}.danger{background:transparent;border:1px solid #542536;color:#ff9bad}.full{width:100%;margin-top:18px}
-.status{min-height:20px;margin-top:12px;color:var(--danger);line-height:1.5}.status.good{color:var(--good)}
-.app{padding-bottom:60px}.topbar{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--accent);display:grid;place-items:center}.brand strong{display:block}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.top-actions{display:flex;gap:8px}
-.hero{padding:42px 0 28px}.hero h1{font-size:36px;margin:0 0 8px}.hero p{color:var(--muted);margin:0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}.stat span{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:32px;margin-top:7px}
-.safety-notice{border-color:#5b2b3c;background:linear-gradient(180deg,#17111a,#11111a)}.safety-notice h2{margin:0 0 8px;color:#ff9bad}.safety-notice p{color:var(--muted);line-height:1.65;margin:8px 0}.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:14px}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.panel h2{font-size:18px;margin:0 0 5px}.muted{color:var(--muted);line-height:1.55}.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.color{width:58px;height:42px;padding:3px}.switch{display:flex;align-items:center;gap:9px;margin-top:18px;color:#ddd}.switch input{width:auto;accent-color:var(--accent)}
-.table-wrap{overflow:auto;margin-top:14px}.table{width:100%;border-collapse:collapse;min-width:700px}.table th,.table td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);vertical-align:top}.table th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.table td{font-size:13px}.pill{display:inline-block;padding:5px 8px;border-radius:999px;background:#1d1d29;color:#cfcfd8;font-size:11px}.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.topbar{height:auto;padding:18px 0;align-items:flex-start}.hero{padding-top:30px}.hero h1{font-size:29px}.top-actions{flex-wrap:wrap}}
-</style>
-</head>
-<body>
-<section id="loginView" class="login-screen">
-  <div class="login-card">
-    <div class="logo">♥</div><div class="kicker">LOVE STORY</div>
-    <h1>Panel administratora</h1><p>Zaloguj się, aby zarządzać stroną, kontami i ustawieniami pamiętnika.</p>
-    <label for="email">E-mail</label><input id="email" type="email" autocomplete="username" placeholder="admin@email.com">
-    <label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" placeholder="Twoje hasło">
-    <button id="login" class="primary full">Zaloguj się</button>
-    <button id="resetAdmin" class="secondary full">Reset hasła</button>
-    <div id="status" class="status" role="status" aria-live="polite"></div>
-  </div>
-</section>
-
-<div id="adminView" class="app hidden">
-<header class="topbar shell">
-  <div class="brand"><div class="brand-mark">♥</div><div><strong>Love Story</strong><span>Centrum administratora</span></div></div>
-  <div class="top-actions"><button id="refresh" class="secondary">Odśwież</button><button id="logout" class="secondary">Wyloguj</button></div>
-</header>
-<main class="shell">
-  <section class="hero"><h1>Witaj w panelu</h1><p>Zarządzaj pamiętnikiem w jednym, prostym miejscu.</p></section>
-  <section class="grid">
-    <div class="stat"><span>Użytkownicy ze wspomnieniami</span><strong id="users">0</strong></div>
-    <div class="stat"><span>Wspomnienia</span><strong id="memories">0</strong></div>
-    <div class="stat"><span>Zdjęcia</span><strong id="photos">0</strong></div>
-  </section>
-
-  <section class="panel"><div class="panel-head"><div><h2>Wygląd strony</h2><div class="muted">Ustaw główny kolor całej strony.</div></div></div>
-    <div class="controls" style="margin-top:16px"><input id="siteColor" class="color" type="color" value="#ff6b9d"><button class="secondary preset" data-color="#ff6b9d">Różowy</button><button class="secondary preset" data-color="#8b5cf6">Fioletowy</button><button class="secondary preset" data-color="#38bdf8">Niebieski</button><button id="saveColor" class="primary">Zapisz kolor</button></div>
-    <div id="colorStatus" class="status"></div>
-  </section>
-
-  <section class="panel"><div class="panel-head"><div><h2>Tryb konserwacji</h2><div class="muted">Tymczasowo ukryj pamiętnik podczas prac.</div></div><button id="saveMaintenance" class="primary">Zapisz</button></div>
-    <label class="switch"><input id="maintenance" type="checkbox"> Włącz tryb konserwacji</label>
-    <label for="maintenanceMessage">Komunikat</label><textarea id="maintenanceMessage" placeholder="Trwają prace konserwacyjne. Wrócimy wkrótce."></textarea>
-    <label for="maintenanceUntil">Planowany koniec — opcjonalnie</label><input id="maintenanceUntil" type="datetime-local">
-    <div id="maintenanceStatus" class="status"></div>
-  </section>
-
-  <section class="panel"><div class="panel-head"><div><h2>Użytkownicy</h2><div class="muted">Konta zarządzane przez administratora. Możesz nadać lub odebrać Premium.</div></div></div><div id="accountsWrap" class="table-wrap"></div><div id="accountsStatus" class="status"></div></section>
-
-  <section class="panel"><div class="panel-head"><div><h2>Wspomnienia</h2><div class="muted">Przegląd i moderacja zapisanych wspomnień.</div></div></div><div id="tableWrap" class="table-wrap"></div><div id="panelStatus" class="status"></div></section>
-
-  <section class="panel safety-notice"><div class="panel-head"><div><h2>Bezpieczeństwo użytkowników</h2><div class="muted">Zasady obsługi treści i zgłoszeń mogących wskazywać na zagrożenie życia lub zdrowia.</div></div></div><p>Zachowania, treści lub zgłoszenia wskazujące na bezpośrednie albo poważne zagrożenie życia lub zdrowia mogą zostać oznaczone jako incydent bezpieczeństwa i przekazane do weryfikacji administratorowi.</p><p>W takich przypadkach mogą być rejestrowane niezbędne informacje techniczne związane ze zdarzeniem, zgodnie z zasadami ochrony danych osobowych.</p><p><b>Panel nie oznacza automatycznego powiadamiania służb.</b> W przypadku rzeczywistego zagrożenia życia lub zdrowia należy skontaktować się z odpowiednimi służbami ratunkowymi.</p></section><section class="panel"><div class="panel-head"><div><h2>Zdarzenia bezpieczeństwa</h2><div class="muted">Adresy IP i zdarzenia techniczne dostępne tylko dla administratora.</div></div></div><div id="securityWrap" class="table-wrap"></div></section>
-</main>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
-<script>
-const sb=supabase.createClient("https://khggputlakhupiypybic.supabase.co","sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const $=id=>document.getElementById(id);
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function msg(id,t,good=false){const e=$(id);e.textContent=t||"";e.className="status"+(good?" good":"")}
-function showLogin(t=""){ $("loginView").classList.remove("hidden");$("adminView").classList.add("hidden");msg("status",t)}
-function showAdmin(){ $("loginView").classList.add("hidden");$("adminView").classList.remove("hidden") }
-
-async function isAdmin(user){
-  const a=await sb.from("admin_users").select("user_id").eq("user_id",user.id).maybeSingle();
-  const b=await sb.from("admins").select("user_id").eq("user_id",user.id).maybeSingle();
-  return !!a.data||!!b.data;
-}
-async function check(){
-  const {data:{user}}=await sb.auth.getUser();
-  if(!user)return showLogin();
-  if(!(await isAdmin(user))){await sb.auth.signOut({scope:"local"});return showLogin("To konto nie ma uprawnień administratora.")}
-  showAdmin();await refreshAll();
-}
-async function loadSettings(){
-  const {data,error}=await sb.from("site_settings").select("*").eq("id",1).maybeSingle();
-  if(error||!data)return msg("maintenanceStatus","Nie udało się pobrać ustawień.");
-  $("maintenance").checked=!!data.maintenance_mode;$("maintenanceMessage").value=data.maintenance_message||"";
-  $("maintenanceUntil").value=data.maintenance_until?new Date(data.maintenance_until).toISOString().slice(0,16):"";
-  $("siteColor").value=/^#[0-9a-fA-F]{6}$/.test(data.accent_color||"")?data.accent_color:"#ff6b9d";
-}
-async function loadAccounts(){
-  const session=(await sb.auth.getSession()).data.session;if(!session)return;
-  const r=await fetch("https://khggputlakhupiypybic.supabase.co/functions/v1/admin-users",{method:"POST",headers:{Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},body:JSON.stringify({action:"list"})});
-  let body={};try{body=await r.json()}catch{}
-  if(!r.ok)return msg("accountsStatus",body.error||"Nie udało się pobrać kont.");
-  const users=body.users||[];if(!users.length){const premiumRes=await sb.from("premium_users").select("user_id,expires_at");const premiumMap=new Map((premiumRes.data||[]).map(x=>[x.user_id,x]));$("accountsWrap").innerHTML='<table class="table"><thead><tr><th>E-mail</th><th>Utworzono</th><th>Ostatnie logowanie</th><th>Potwierdzenie</th><th>Premium</th><th>Akcja</th></tr></thead><tbody>'+users.map(x=>{const p=premiumMap.get(x.id);const active=p&&(!p.expires_at||new Date(p.expires_at)>new Date());return '<tr><td>'+esc(x.email)+'</td><td>'+esc(x.created_at?new Date(x.created_at).toLocaleString("pl-PL"):"—")+'</td><td>'+esc(x.last_sign_in_at?new Date(x.last_sign_in_at).toLocaleString("pl-PL"):"—")+'</td><td><span class="pill">'+(x.email_confirmed_at?"Potwierdzony":"Niepotwierdzony")+'</span></td><td><span class="pill">'+(active?"AKTYWNE":"Wyłączone")+'</span></td><td><button class="secondary premium-set" data-id="'+esc(x.id)+'" data-email="'+esc(x.email)+'">Premium</button> <button class="danger account-delete" data-id="'+esc(x.id)+'">Usuń</button></td></tr>'}).join("")+'</tbody></table>';document.querySelectorAll(".premium-set").forEach(b=>b.onclick=async()=>{const current=await sb.from("premium_users").select("expires_at").eq("user_id",b.dataset.id).maybeSingle();const choice=prompt("Premium dla "+b.dataset.email+"\\nWpisz liczbę dni (np. 30) albo 0 aby wyłączyć. Puste = bezterminowo:","30");if(choice===null)return;const raw=String(choice).trim();if(raw==="0"){const d=await sb.from("premium_users").delete().eq("user_id",b.dataset.id);if(d.error)return msg("accountsStatus","Nie udało się wyłączyć Premium.");msg("accountsStatus","Premium wyłączone.",true);return refreshAll()}const days=raw===""?null:Number(raw);if(days!==null&&(!Number.isFinite(days)||days<1||days>3650))return msg("accountsStatus","Podaj liczbę dni od 1 do 3650.");const up=await sb.from("premium_users").upsert({user_id:b.dataset.id,expires_at:days===null?null:new Date(Date.now()+days*86400000).toISOString(),updated_at:new Date().toISOString()},{onConflict:"user_id"});if(up.error)return msg("accountsStatus","Nie udało się nadać Premium: "+up.error.message);msg("accountsStatus",days===null?"Premium bezterminowe włączone.":"Premium włączone na "+days+" dni.",true);await refreshAll()});document.querySelectorAll(".account-delete").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć konto wraz z jego danymi? Tej operacji nie można cofnąć."))return;const s=(await sb.auth.getSession()).data.session;if(!s)return msg("accountsStatus","Sesja wygasła.");msg("accountsStatus","Usuwanie...");const r=await fetch("https://khggputlakhupiypybic.supabase.co/functions/v1/admin-users",{method:"POST",headers:{Authorization:"Bearer "+s.access_token,"Content-Type":"application/json"},body:JSON.stringify({action:"delete",userId:b.dataset.id})});let x={};try{x=await r.json()}catch{}if(!r.ok)return msg("accountsStatus",x.error||"Nie udało się usunąć konta.");msg("accountsStatus","Konto usunięte.",true);await refreshAll()})
-}
-async function loadMemories(){
-  const {data,error}=await sb.from("memories").select("id,user_id,memory_date,memory_text,image_data,created_at").order("created_at",{ascending:false});
-  if(error)return msg("panelStatus","Nie udało się pobrać wspomnień: "+error.message);
-  const rows=data||[];$("users").textContent=new Set(rows.map(x=>x.user_id).filter(Boolean)).size;$("memories").textContent=rows.length;$("photos").textContent=rows.filter(x=>x.image_data).length;
-  if(!rows.length){$("tableWrap").innerHTML='<div class="empty">Brak wspomnień.</div>';return}
-  $("tableWrap").innerHTML='<table class="table"><thead><tr><th>Data</th><th>Użytkownik</th><th>Wspomnienie</th><th>Zdjęcie</th><th>Akcja</th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+esc(x.memory_date)+'</td><td><span class="pill">'+esc(x.user_id)+'</span></td><td>'+esc(x.memory_text)+'</td><td>'+(x.image_data?"Tak":"Nie")+'</td><td><button class="danger memory-delete" data-id="'+esc(x.id)+'">Usuń</button></td></tr>').join("")+'</tbody></table>';
-  document.querySelectorAll(".memory-delete").forEach(b=>b.onclick=async()=>{if(!confirm("Usunąć to wspomnienie?"))return;const {error}=await sb.from("memories").delete().eq("id",b.dataset.id);if(error)msg("panelStatus","Błąd: "+error.message);else await refreshAll()})
-}
-async function loadSecurity(){
-  const {data,error}=await sb.from("security_events").select("*").order("created_at",{ascending:false}).limit(100);
-  if(error){$("securityWrap").innerHTML='<div class="empty">Nie udało się pobrać zdarzeń.</div>';return}
-  if(!data?.length){$("securityWrap").innerHTML='<div class="empty">Brak zdarzeń.</div>';return}
-  $("securityWrap").innerHTML='<table class="table"><thead><tr><th>Czas</th><th>Zdarzenie</th><th>IP</th><th>Użytkownik</th></tr></thead><tbody>'+data.map(x=>'<tr><td>'+esc(x.created_at?new Date(x.created_at).toLocaleString("pl-PL"):"—")+'</td><td>'+esc(x.event_type||x.event||"—")+'</td><td>'+esc(x.ip_address||"—")+'</td><td>'+esc(x.user_id||"—")+'</td></tr>').join("")+'</tbody></table>'
-}
-async function refreshAll(){await Promise.all([loadSettings(),loadAccounts(),loadMemories(),loadSecurity()])}
-$("login").onclick=async()=>{msg("status","Logowanie...",true);const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim().toLowerCase(),password:$("password").value});if(error)return msg("status","Nie udało się zalogować. Sprawdź e-mail, hasło i potwierdzenie adresu.");await check()}
-$("resetAdmin").onclick=async()=>{const email=$("email").value.trim();if(!email)return msg("status","Wpisz najpierw e-mail.");const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});if(error)msg("status","Nie udało się wysłać resetu.");else msg("status","Jeśli konto istnieje, wiadomość do resetu hasła została wysłana.",true)}
-$("logout").onclick=async()=>{await sb.auth.signOut({scope:"local"});showLogin("Wylogowano.",true)}
-$("refresh").onclick=refreshAll
-$("siteColor").oninput=()=>document.documentElement.style.setProperty("--accent",$("siteColor").value)
-document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{$("siteColor").value=b.dataset.color;document.documentElement.style.setProperty("--accent",b.dataset.color)})
-$("saveColor").onclick=async()=>{const {error}=await sb.from("site_settings").update({accent_color:$("siteColor").value,updated_at:new Date().toISOString()}).eq("id",1);msg("colorStatus",error?"Nie udało się zapisać koloru.":"Kolor zapisany.",!error)}
-$("saveMaintenance").onclick=async()=>{const until=$("maintenanceUntil").value?new Date($("maintenanceUntil").value).toISOString():null;const {error}=await sb.from("site_settings").update({maintenance_mode:$("maintenance").checked,maintenance_message:$("maintenanceMessage").value.trim()||"Trwają prace konserwacyjne. Wrócimy wkrótce.",maintenance_until:until,updated_at:new Date().toISOString()}).eq("id",1);msg("maintenanceStatus",error?"Nie udało się zapisać ustawień.":"Ustawienia zapisane.",!error)}
-sb.auth.getSession().then(({data})=>{if(data.session)check()})
-</script>
-</body></html>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111116"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>Love Story — Admin</title><style>
+:root{--bg:#0b0b0f;--panel:#14141b;--line:#292831;--text:#f4f1f4;--muted:#a7a3ad;--accent:#e7a6bd;--good:#8bd8a8;--danger:#f28d9d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#2a1a25,#0b0b0f 40%);color:var(--text);font:14px/1.55 system-ui,sans-serif}.wrap{width:min(1200px,calc(100% - 28px));margin:auto}.top{padding:20px 0;border-bottom:1px solid var(--line)}.nav{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:800}.brand span{color:var(--accent)}.btn{border:1px solid var(--line);background:#191921;color:var(--text);padding:9px 12px;border-radius:10px;cursor:pointer}.btn.primary{background:var(--accent);color:#21151b;border-color:var(--accent);font-weight:700}.btn.danger{color:var(--danger)}main{padding:30px 0 60px}.card{background:#14141bdd;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px;overflow:auto}h1,h2{margin-top:0}.eyebrow{color:var(--accent);text-transform:uppercase;font-size:11px;letter-spacing:1.2px;font-weight:700}.status{color:var(--danger);min-height:22px;margin-top:10px}.good{color:var(--good)}table{width:100%;border-collapse:collapse;min-width:760px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:600}code{word-break:break-all;color:var(--muted)}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center}.login .card{width:min(430px,calc(100% - 28px))}input{width:100%;background:#0d0d12;color:var(--text);border:1px solid var(--line);padding:11px;border-radius:10px;margin:6px 0 12px}.row{display:flex;gap:8px;flex-wrap:wrap}</style></head><body>
+<div id="login" class="login"><div class="card"><div class="eyebrow">Panel administratora</div><h1>Love Story</h1><p>Zaloguj się kontem posiadającym uprawnienia administratora.</p><label>E-mail</label><input id="email" type="email"><label>Hasło</label><input id="password" type="password"><button id="loginBtn" class="btn primary">Zaloguj</button><div id="loginStatus" class="status"></div></div></div>
+<div id="app" class="hidden"><header class="top"><div class="wrap nav"><div class="brand">Love <span>Story</span> · Admin</div><button id="logout" class="btn">Wyloguj</button></div></header><main class="wrap">
+<div class="card"><div class="eyebrow">Konserwacja</div><h2>Tryb konserwacji</h2><label><input id="maintenance" type="checkbox" style="width:auto"> Włącz tryb konserwacji</label><label>Komunikat</label><input id="maintenanceMessage"><label>Koniec (opcjonalnie)</label><input id="maintenanceUntil" type="datetime-local"><div class="row"><button id="saveMaintenance" class="btn primary">Zapisz</button></div><div id="maintenanceStatus" class="status"></div></div>
+<div class="card"><div class="eyebrow">Użytkownicy</div><h2>Premium i konta</h2><table><thead><tr><th>ID</th><th>Premium</th><th>Ważność</th><th>Akcja</th></tr></thead><tbody id="users"></tbody></table><div id="usersStatus" class="status"></div></div>
+<div class="card"><div class="eyebrow">Moderacja</div><h2>Wspomnienia</h2><table><thead><tr><th>Data</th><th>Użytkownik</th><th>Treść</th><th>Akcja</th></tr></thead><tbody id="memories"></tbody></table><div id="memStatus" class="status"></div></div>
+<div class="card"><div class="eyebrow">Bezpieczeństwo</div><h2>Zdarzenia i adresy IP</h2><table><thead><tr><th>Data</th><th>IP</th><th>User ID</th><th>Typ</th></tr></thead><tbody id="security"></tbody></table><div id="securityStatus" class="status"></div></div>
+</main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script><script>
+const URL="https://khggputlakhupiypybic.supabase.co",KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true}});const $=x=>document.getElementById(x);let me=null;
+function st(id,msg,good=false){$(id).textContent=msg||"";$(id).className="status"+(good?" good":"")}
+async function isAdmin(){const r=await sb.from("admin_users").select("user_id").eq("user_id",me.id).maybeSingle();return !!r.data&&!r.error}
+async function boot(){const s=(await sb.auth.getSession()).data.session;if(!s)return;if(!(await isAdmin())){await sb.auth.signOut({scope:"local"});return st("loginStatus","To konto nie ma uprawnień administratora.")}me=s.user;$("login").classList.add("hidden");$("app").classList.remove("hidden");await Promise.all([loadMaintenance(),loadUsers(),loadMemories(),loadSecurity()])}
+$("loginBtn").onclick=async()=>{const r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(r.error)return st("loginStatus",r.error.message);me=r.data.user;await boot()};
+$("logout").onclick=async()=>{await sb.auth.signOut({scope:"local"});location.reload()};
+async function loadMaintenance(){const r=await sb.from("site_settings").select("*").limit(1).maybeSingle();if(r.error)return st("maintenanceStatus",r.error.message);if(r.data){$("maintenance").checked=r.data.maintenance_mode;$("maintenanceMessage").value=r.data.maintenance_message||"";$("maintenanceUntil").value=r.data.maintenance_until?new Date(r.data.maintenance_until).toISOString().slice(0,16):""}}
+$("saveMaintenance").onclick=async()=>{const r=await sb.from("site_settings").update({maintenance_mode:$("maintenance").checked,maintenance_message:$("maintenanceMessage").value,maintenance_until:$("maintenanceUntil").value?new Date($("maintenanceUntil").value).toISOString():null,updated_at:new Date().toISOString()}).not("id","is",null);if(r.error)return st("maintenanceStatus",r.error.message);st("maintenanceStatus","Zapisano.",true)};
+async function loadUsers(){const a=await sb.from("admin_users").select("user_id,created_at");if(a.error)return st("usersStatus",a.error.message);const p=await sb.from("premium_users").select("user_id,expires_at");if(p.error)return st("usersStatus",p.error.message);const pm=new Map((p.data||[]).map(x=>[x.user_id,x]));$("users").innerHTML=(a.data||[]).map(x=>{const q=pm.get(x.user_id);return "<tr><td><code>"+x.user_id+"</code></td><td>"+(q?"PREMIUM":"—")+"</td><td>"+(q?.expires_at?new Date(q.expires_at).toLocaleString("pl-PL"):"—")+"</td><td><button class='btn' data-prem='"+x.user_id+"'>Premium</button></td></tr>"}).join("");document.querySelectorAll("[data-prem]").forEach(b=>b.onclick=()=>setPremium(b.dataset.prem))}
+async function setPremium(id){const days=prompt("Liczba dni Premium. Puste = bezterminowo, 0 = wyłącz.");if(days===null)return;if(days==="0"){const r=await sb.from("premium_users").delete().eq("user_id",id);if(r.error)return st("usersStatus",r.error.message);return loadUsers()}if(days!==""&&(!/^\d+$/.test(days)||+days<1))return st("usersStatus","Podaj poprawną liczbę dni.");const expires=days===""?null:new Date(Date.now()+Number(days)*86400000).toISOString();const r=await sb.from("premium_users").upsert({user_id:id,expires_at:expires,updated_at:new Date().toISOString()});if(r.error)return st("usersStatus",r.error.message);st("usersStatus","Zapisano Premium.",true);await loadUsers()}
+async function loadMemories(){const r=await sb.from("memories").select("id,user_id,memory_date,memory_text,created_at").order("created_at",{ascending:false}).limit(200);if(r.error)return st("memStatus",r.error.message);$("memories").innerHTML=(r.data||[]).map(x=>"<tr><td>"+new Date(x.memory_date+"T12:00:00").toLocaleDateString("pl-PL")+"</td><td><code>"+x.user_id+"</code></td><td>"+escapeHtml(x.memory_text||"")+"</td><td><button class='btn danger' data-del='"+x.id+"'>Usuń</button></td></tr>").join("");document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>deleteMemory(b.dataset.del))}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+async function deleteMemory(id){if(!confirm("Usunąć wspomnienie?"))return;const r=await sb.from("memories").delete().eq("id",id).select("id");if(r.error)return st("memStatus",r.error.message);await loadMemories()}
+async function loadSecurity(){const r=await sb.from("security_events").select("created_at,ip_address,user_id,event_type").order("created_at",{ascending:false}).limit(200);if(r.error)return st("securityStatus",r.error.message);$("security").innerHTML=(r.data||[]).map(x=>"<tr><td>"+new Date(x.created_at).toLocaleString("pl-PL")+"</td><td><code>"+(x.ip_address||"—")+"</code></td><td><code>"+(x.user_id||"—")+"</code></td><td>"+escapeHtml(x.event_type||"")+"</td></tr>").join("")}
+boot();</script></body></html>
