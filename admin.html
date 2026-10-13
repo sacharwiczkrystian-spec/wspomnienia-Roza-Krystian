@@ -18,7 +18,7 @@
 </section>
 <p class="end">Love Story · Panel administracyjny. Przyznawaj dostęp wyłącznie zaufanym kontom.</p>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2" onerror="document.getElementById(\'loginStatus\').textContent=\'Nie udało się załadować biblioteki logowania. Sprawdź połączenie i odśwież stronę.\'"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script><script>
 if(!window.supabase||typeof window.supabase.createClient!=="function"){document.getElementById("loginStatus").textContent="Biblioteka logowania nie została załadowana. Odśwież stronę lub spróbuj w innej przeglądarce.";throw new Error("Supabase JS client library unavailable")}
 const URL="https://khggputlakhupiypybic.supabase.co",KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}),$=id=>document.getElementById(id);let user=null,settingsId=null;
 function status(id,msg,good=false){$(id).textContent=msg||"";$(id).className="status"+(good?" good":"")}
