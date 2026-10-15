@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f8f5fc">
+<title>Kontakt — Love Story</title>
+<style>
+:root{color-scheme:light;--bg:#f8f5fc;--ink:#262238;--muted:#777287;--line:#e9e5ef;--purple:#7755d9;--purple2:#f0eaff;--green:#18794e;--red:#b4233d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#fbf7ff,#f7f5fa 55%,#fff8fb);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;display:grid;place-items:center;padding:22px}.wrap{width:min(100%,620px)}.brand{font-size:21px;font-weight:900;letter-spacing:-.8px;margin-bottom:18px}.brand span{color:var(--purple)}.card{background:white;border:1px solid var(--line);border-radius:22px;padding:clamp(22px,5vw,38px);box-shadow:0 16px 50px #2e1a4c0d}.eyebrow{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--purple);font-weight:900}h1{font-size:clamp(29px,5vw,39px);line-height:1.1;letter-spacing:-1px;margin:9px 0}p{color:var(--muted)}.field{display:grid;gap:7px;margin:17px 0}.field label{font-size:12px;font-weight:800}.field input,.field textarea{width:100%;font:inherit;border:1px solid #dfdae8;background:#fdfcff;border-radius:11px;padding:12px;color:var(--ink);outline:none}.field input:focus,.field textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #7755d91a}.field textarea{min-height:150px;resize:vertical}.btn{width:100%;border:0;border-radius:11px;padding:13px 16px;background:var(--purple);color:white;font:inherit;font-weight:850;cursor:pointer}.btn:disabled{opacity:.6;cursor:wait}.status{min-height:22px;margin-top:13px;font-size:13px;color:var(--red)}.status.good{color:var(--green)}.hint{font-size:11px;margin-top:15px}.back{display:inline-block;margin-top:17px;color:#6244bd;text-decoration:none;font-size:13px;font-weight:750}.trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+</style>
+</head>
+<body><main class="wrap"><div class="brand">Love <span>Story</span></div><section class="card"><div class="eyebrow">Jesteśmy do Twojej dyspozycji</div><h1>Napisz do nas</h1><p>Masz pytanie lub chcesz przekazać opinię? Wypełnij formularz. Wiadomość trafi do skrzynki w panelu administratora.</p>
+<form id="contactForm">
+<div class="field"><label for="name">Imię lub nazwa</label><input id="name" name="name" maxlength="100" autocomplete="name" required></div>
+<div class="field"><label for="email">Twój adres e-mail</label><input id="email" name="email" type="email" maxlength="254" autocomplete="email" required></div>
+<div class="field"><label for="subject">Temat</label><input id="subject" name="subject" maxlength="180" required></div>
+<div class="field"><label for="message">Wiadomość</label><textarea id="message" name="message" maxlength="8000" required></textarea></div>
+<div class="trap" aria-hidden="true"><label for="website">Nie wypełniaj tego pola</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<button class="btn" id="sendBtn" type="submit">Wyślij wiadomość</button><div id="status" class="status" role="status" aria-live="polite"></div>
+</form><p class="hint">Nie wpisuj tutaj haseł, kodów logowania ani innych poufnych danych.</p></section><a class="back" href="/">← Wróć do Love Story</a></main>
+<script>
+const SUPABASE_URL="https://khggputlakhupiypybic.supabase.co";
+const form=document.getElementById("contactForm"),btn=document.getElementById("sendBtn"),statusEl=document.getElementById("status");
+form.addEventListener("submit",async e=>{e.preventDefault();btn.disabled=true;btn.textContent="Wysyłanie…";statusEl.className="status";statusEl.textContent="Przekazuję wiadomość…";
+const payload={name:document.getElementById("name").value.trim(),email:document.getElementById("email").value.trim(),subject:document.getElementById("subject").value.trim(),message:document.getElementById("message").value.trim(),website:document.getElementById("website").value};
+try{const r=await fetch(SUPABASE_URL+"/functions/v1/contact-submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await r.json().catch(()=>({}));if(!r.ok||!data.ok)throw new Error(data.error||"Nie udało się wysłać wiadomości. Spróbuj ponownie.");form.reset();statusEl.className="status good";statusEl.textContent=data.emailSent?"Wiadomość została wysłana. Administrator otrzyma również powiadomienie e-mail.":"Wiadomość trafiła do skrzynki w panelu administratora. Powiadomienie e-mail nie jest jeszcze skonfigurowane."; }catch(err){statusEl.className="status";statusEl.textContent=err.message||"Wystąpił błąd połączenia. Spróbuj ponownie.";}finally{btn.disabled=false;btn.textContent="Wyślij wiadomość";}});
+</script></body></html>
