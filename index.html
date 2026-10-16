@@ -129,6 +129,31 @@ html.privacy-guard input, html.privacy-guard textarea, html.privacy-guard [conte
 #privacyGuardWatermark span { display:flex; align-items:center; justify-content:center; color:#55428a; font:800 14px/1.4 system-ui,sans-serif; letter-spacing:2px; white-space:nowrap; }
 @media print { body * { visibility:hidden!important; } body::after { visibility:visible!important; content:"Treści Love Story są prywatne."; position:fixed; inset:40% 0 auto; text-align:center; font:700 24px system-ui; } #privacyGuardWatermark { display:none!important; } }
 </style>
+
+<style id="luxury-contrast-fix">
+/* Contrast pass: keep every text surface readable in the dark luxury palette */
+html,body{background-color:#100b0d!important;color:#fff4e7!important}
+body :is(p,li,label,small,strong,em,span,div,dt,dd,figcaption,blockquote,summary,legend,td,th,.muted,.hint,.help,.section-sub,.lead,.account,.crumb,.navlabel){opacity:1}
+body :is(p,li,label,small,dt,dd,figcaption,summary,legend,td,th,.muted,.hint,.help,.section-sub,.lead,.account,.crumb){color:#f0e3d7}
+body :is(h1,h2,h3,h4,.brand,.section-title,.stat strong,.eyebrow,.status,.account-id){color:#f4d38a}
+body :is(.panel,.card,.stat,.memory-item,.friend-chat,.friend-list>*,.setting-line,.empty,.tabs,.tab,.date-display,.date-unit,.hero-note,.terms-consent,.friend-messages,.userlist .user,.stack .mail-item,.tablewrap,.quote-card){background-color:#1b1216!important;color:#fff4e7!important;border-color:#60404a}
+body :is(.panel,.card,.stat,.memory-item,.friend-chat,.friend-list>*,.setting-line,.empty,.tabs,.date-display,.date-unit,.hero-note,.terms-consent,.friend-messages,.userlist .user,.stack .mail-item,.tablewrap){background-image:linear-gradient(145deg,#21151a,#171014)!important}
+body :is(.panel,.card,.stat,.memory-item,.friend-chat,.friend-list>*,.setting-line,.empty,.tabs,.date-display,.date-unit,.hero-note,.terms-consent,.friend-messages,.userlist .user,.stack .mail-item,.tablewrap) :is(p,span,small,strong,label,li,td,th,div){color:inherit}
+body :is(input,textarea,select){background:#100b0d!important;color:#fff4e7!important;border:1px solid #77505a!important}
+body :is(input,textarea,select)::placeholder{color:#c7b5b4!important;opacity:1}
+body :is(a,.footer a){color:#f0cf83!important}
+body :is(.btn,.tab){color:#fff0df}
+body :is(.btn.primary,.cookie-accept){background:linear-gradient(135deg,#f0d99c,#c59a55)!important;color:#1b1114!important;border-color:#f0d99c!important}
+body :is(.btn.primary,.cookie-accept) *{color:#1b1114!important}
+body :is(.nav button.active,.tab.active){background:linear-gradient(135deg,#e9cb8b,#c69b56)!important;color:#211317!important}
+body :is(.nav button.active,.tab.active) *{color:#211317!important}
+body :is(.btn.danger,.danger){color:#ffd0d0}
+body :is(.footer,.footer p){color:#d3c1bd!important}
+body :is(.pill,.tag){background:#302027!important;color:#f5dfb9!important;border-color:#77505a!important}
+body :is(.quote-card blockquote,.quote-pop p){color:#fff0df!important}
+body :is(.quote-pop){background:#1b1216!important;color:#fff4e7!important;border-color:#b38a50!important}
+</style>
+
 </head>
 <body>
 <header class="top"><div class="wrap nav"><a class="brand" href="/" style="text-decoration:none;color:inherit"><span class="mark">♡</span><span>Love <em>Story</em></span></a><div class="nav-right"><span id="navEmail" class="hint hidden"></span><button id="navLogout" class="btn hidden">Wyloguj</button><a class="btn admin-link" href="/admin.html" aria-label="Otwórz panel administratora">Panel admina</a><a class="btn" href="/o-tworcy.html">O projekcie</a></div></div></header>
