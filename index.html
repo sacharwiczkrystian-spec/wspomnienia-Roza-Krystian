@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f8f1ec">
+<meta name="theme-color" content="#100b0d">
 <meta name="description" content="Love Story — prywatny pamiętnik wspólnych chwil.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="/site.webmanifest">
-<title>Love Story — Nasz Pamiętnik</title>
+<title>Love Story — Prywatny pamiętnik</title>
 <style>
 :root{--bg:#f8f5f2;--paper:#fffdfb;--ink:#2d2030;--muted:#817181;--line:#e9dfe6;--accent:#bd5279;--accent2:#8d3e69;--soft:#faeaf0;--lilac:#eee8f7;--gold:#c69d60;--shadow:0 18px 52px rgba(67,38,60,.07);--radius:24px}
 *{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 4% 0%,#f5e4ec 0,transparent 32%),radial-gradient(ellipse at 98% 13%,#eee8f7 0,transparent 30%),var(--bg);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}button,input,textarea{font:inherit}a{color:var(--accent2);text-underline-offset:3px}.wrap{width:min(1160px,calc(100% - 40px));margin:0 auto}
@@ -44,6 +44,75 @@ body.theme-midnight #creatorFriendPanel{background:linear-gradient(145deg,#28223
 #creatorFriendPanel .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}
 #creatorFriendPanel .field select{width:100%;border:1px solid #e9dce3;border-radius:13px;padding:12px;background:var(--paper);color:var(--ink)}
 .friend-list{display:grid;gap:8px;margin-top:10px}.profile-avatar{width:44px;height:44px;flex:0 0 44px;object-fit:cover;border-radius:50%;border:2px solid #f0dce4;background:#faeaf0}.profile-avatar.large{width:76px;height:76px;flex-basis:76px}.friend-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:var(--paper)}.friend-item strong{display:block;font-size:13px}.friend-item small{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}.friend-item .btn{flex-shrink:0}.friend-chat{min-width:0}.friend-messages{display:flex;flex-direction:column;gap:9px;max-height:360px;overflow:auto;padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:14px;margin:12px 0}.friend-message{max-width:88%;padding:10px 12px;border-radius:14px;background:var(--paper);border:1px solid var(--line);overflow-wrap:anywhere;white-space:pre-wrap}.friend-message.mine{align-self:flex-end;background:#fcecf3;border-color:#f1ccdc}.friend-message small{display:block;margin-top:5px;font-size:10px;color:var(--muted)}#friendsPanel h3{font-size:15px;margin:10px 0}.friend-chat .section-title{display:flex;justify-content:space-between;align-items:center;gap:8px}@media(max-width:700px){.friend-item{align-items:flex-start}.friend-item .btn{white-space:normal}.friend-messages{max-height:300px}}
+
+/* LUXURY REDESIGN — bordo, nocna czerń i szampańskie złoto */
+:root{color-scheme:dark;--bg:#100b0d;--paper:#1b1216;--ink:#f8eee2;--muted:#b6a4a4;--line:#493039;--accent:#d9b56f;--accent2:#f0d89d;--soft:#38212a;--lilac:#2b1c24;--gold:#e2c27d;--shadow:0 24px 70px rgba(0,0,0,.28);--radius:22px}
+html{background:#100b0d;scroll-padding-top:90px}
+body{color:var(--ink);background:radial-gradient(ellipse at 12% -5%,#4b1728 0,transparent 38%),radial-gradient(ellipse at 96% 18%,#32202a 0,transparent 34%),linear-gradient(160deg,#100b0d,#160d12 60%,#0d090b);background-attachment:fixed}
+a{color:#e8ca88}
+.top{background:rgba(16,10,13,.9);border-bottom:1px solid #60404a;box-shadow:0 10px 35px #0002;backdrop-filter:blur(18px)}
+.brand{color:#f8eee2}.brand em{color:#e4c17b}.mark{background:linear-gradient(135deg,#e8cb8b,#a9783d);color:#160d10;box-shadow:0 4px 22px #d9b56f22}
+.panel{background:linear-gradient(145deg,rgba(34,21,27,.97),rgba(23,14,18,.97));border-color:var(--line);box-shadow:var(--shadow)}
+.hero>.panel:first-child{background:radial-gradient(ellipse at 100% 0%,#5a2335 0,transparent 48%),linear-gradient(145deg,#28151d,#171014 75%);border-color:#67404a}
+.hero>.panel:first-child:after{color:#d9b56f0c}
+.eyebrow{color:#e5c783;letter-spacing:2.4px}
+h1,h2,h3,.quote-card blockquote,.date-display{color:#f8eee2}
+h1,h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.035em}
+h1 span{color:#e6c47c}
+.lead{color:#d5c3c1}
+.hero-note{border-color:#67404a;background:#24161c;color:#d9c9c4}
+.hero-note b{color:#e5c783}
+.quote-card{background:radial-gradient(ellipse at 90% 0%,#562237 0,transparent 58%),linear-gradient(145deg,#2b141d,#140e11)!important;border-color:#79503d;cursor:pointer}
+.quote-card:after{color:#e2bf790c}
+.quote-mark{color:#d9b56f}
+.quote-card blockquote{color:#f6e8d7}
+.quote-card small{color:#e6c47c}
+.quote-pop{background:linear-gradient(145deg,#2b171f,#140e11);color:#f8eee2;border-color:#9a7849;box-shadow:0 24px 100px #000b}
+.quote-pop p{color:#f7e8d6}
+.quote-pop button{background:linear-gradient(135deg,#f0d99c,#c89a4f);color:#1a1013}
+.tabs{background:#140e11;border:1px solid #493039}
+.tab{color:#b9a6a7}.tab.active{background:linear-gradient(135deg,#e9cb8b,#c69b56);color:#211317;box-shadow:0 5px 18px #d9b56f20}
+.field label{color:#e8d8ca}
+input,textarea,select{background:#120c0f!important;color:#f8eee2!important;border-color:#543741!important}
+input::placeholder,textarea::placeholder{color:#8f7c80}
+input:focus,textarea:focus,select:focus{border-color:#d9b56f!important;box-shadow:0 0 0 3px #d9b56f22!important;outline:none}
+input[type=checkbox],input[type=radio]{accent-color:#d9b56f}
+.btn{background:linear-gradient(145deg,#26171d,#1a1115);border-color:#65434c;color:#f3e4d7;box-shadow:0 5px 16px #0002}
+.btn:hover{border-color:#c9a15c;box-shadow:0 8px 24px #d9b56f12}
+.btn.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);border-color:#f0d99c;color:#1b1114;box-shadow:0 8px 24px #d9b56f1c}
+.btn.primary:hover{background:linear-gradient(135deg,#f7e6b8,#d7ae69)}
+.btn.danger{background:#321820;color:#ffc1c1;border-color:#7a3d4b}
+.pill{background:#2a1a20;border-color:#5d3d46;color:#e9d5bd}
+.premium,.creator-badge{background:linear-gradient(135deg,#e9cc8c,#bc8c49)!important;color:#211317!important;border-color:#e9cc8c!important}
+.stats .stat{background:linear-gradient(145deg,#26171d,#171014);border-color:#50323b;box-shadow:0 12px 30px #0002}
+.stat:before{background:linear-gradient(#f0d99c,#a8733c)}
+.stat strong{color:#f0d99c}
+.grid-two>.panel,.memory-list .memory-item,.friend-list>*,.friend-chat,.setting-line{background:linear-gradient(145deg,#21151a,#171014);border-color:#493039;color:#f5e8dc}
+.memory-list .memory-item h3,.friend-list strong{color:#f0d99c}
+.muted,.hint,.section-sub{color:#b6a4a4}
+.divider{background:#493039}
+.empty{background:#1a1115;border-color:#493039;color:#b6a4a4}
+.date-display{background:linear-gradient(135deg,#2a171e,#181014);border-color:#65434c}
+.date-unit{background:#25161b;border-color:#563741;color:#f0d99c}
+.status{color:#e8c987}
+.terms-consent{background:#201319;border-color:#493039;color:#d9c7c2}
+.account-id{color:#e7c986}
+.friend-messages{background:#100b0d;border-color:#493039}
+.friend-message{background:#2a1a20;color:#f5e8dc;border-color:#543741}
+.friend-message.own{background:#4a2030;border-color:#80503d}
+.cookie-banner{background:#1b1216;border-color:#60404a;color:#f5e8dc;box-shadow:0 16px 70px #0009}
+.cookie-copy p{color:#c4b2b1}
+.cookie-actions button{background:#25171d;color:#f5e8dc;border-color:#60404a}
+.cookie-actions .cookie-accept{background:linear-gradient(135deg,#f0d99c,#c59a55);color:#1b1114;border-color:#f0d99c}
+.footer{border-color:#493039;color:#b6a4a4}
+.footer a{color:#e3c27b}
+.maintenance-banner{background:#3a2026;color:#f6d9a2;border-color:#8d6445}
+.floating-heart{color:#e6c47c;text-shadow:0 0 18px #d9b56f55,0 3px 12px #0006}
+#privacyGuardWatermark{opacity:.025!important}
+::selection{background:#a76c52;color:#fff8ec}
+@media(max-width:760px){.wrap{width:min(100% - 24px,1160px)}.top{background:rgba(16,10,13,.96)}.hero{gap:12px}.hero>.panel:first-child{padding:28px 23px}.panel{padding:21px}.quote-card blockquote{font-size:clamp(23px,6vw,31px)}.nav{gap:7px}.nav-right{gap:6px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.panel,.btn{transition:none}}
+
 </style>
 
 <style id="privacy-guard-style">
