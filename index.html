@@ -97,6 +97,7 @@ html.privacy-guard input, html.privacy-guard textarea, html.privacy-guard [conte
 <section id="friendsPanel" class="panel" style="margin-top:18px" aria-labelledby="friendsTitle">
 <div class="section-title"><h2 id="friendsTitle">Znajomi i wiadomości</h2><span class="pill">Prywatny czat</span></div>
 <p class="muted">Wyszukaj znajomą osobę po nazwie użytkownika, wyślij zaproszenie i rozmawiaj po jego zaakceptowaniu.</p>
+<form id="friendProfileForm"><div class="grid-two"><div class="field"><label for="friendDisplayName">Twoja nazwa wyświetlana</label><input id="friendDisplayName" maxlength="60" placeholder="np. Róża" autocomplete="nickname"></div><div class="field"><label for="friendUsername">Nazwa użytkownika (3–24 znaki)</label><input id="friendUsername" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" placeholder="np. roza_123" autocomplete="off"></div></div><button class="btn" type="submit">Zapisz profil</button><div id="friendProfileStatus" class="status" role="status"></div></form><div class="divider"></div>
 <div class="grid-two">
 <div>
 <form id="friendSearchForm"><div class="field"><label for="friendSearch">Znajdź użytkownika</label><input id="friendSearch" maxlength="40" placeholder="Nazwa użytkownika lub imię" autocomplete="off"></div><button class="btn primary" type="submit">Szukaj</button></form>
