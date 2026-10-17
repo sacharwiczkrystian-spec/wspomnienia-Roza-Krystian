@@ -365,13 +365,18 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
 #loveAiInput::placeholder{color:#bca9a0}
 #loveAiSend{border:1px solid #d6b46a;border-radius:12px;background:#d6b46a;color:#211015;padding:11px 13px;font-weight:700;cursor:pointer;min-height:42px}
 #loveAiSend:disabled{opacity:.55;cursor:wait}
+#loveAiQuickActions{display:flex;gap:7px;flex-wrap:wrap;padding:8px 12px 3px;background:#21151b}
+#loveAiQuickActions button{border:1px solid #75505e;border-radius:10px;background:#2c1c23;color:#f3e5dc;padding:7px 9px;font-size:11px;font-weight:700;cursor:pointer}
+#loveAiQuickActions button:hover{border-color:#d6b46a}
+#loveAiQuickActions button:focus-visible{outline:2px solid #d6b46a;outline-offset:2px}
 #loveAiFoot{padding:0 14px 10px;background:#180f13;color:#bdaea4;font-size:10px;line-height:1.4}
 @media(max-width:480px){#loveAiLauncher{right:14px;bottom:14px;padding:12px 15px}#loveAiPanel{right:8px;bottom:72px;width:calc(100vw - 16px);height:min(570px,calc(100dvh - 90px))}}
 </style>
 <button id="loveAiLauncher" type="button" aria-controls="loveAiPanel" aria-expanded="false"><span aria-hidden="true">✦</span> Chat AI</button>
 <section id="loveAiPanel" role="dialog" aria-label="Asystent AI Love Story" aria-modal="false">
   <header id="loveAiHead"><div><strong>Asystent Love Story</strong><small>Porozmawiaj ze mną</small></div><button id="loveAiClose" type="button" aria-label="Zamknij czat">×</button></header>
-  <div id="loveAiMessages" aria-live="polite" aria-relevant="additions text"><div class="love-ai-message bot">Cześć! Jestem asystentem AI Love Story. Mogę pomóc, odpowiedzieć na pytania albo podsunąć pomysł na miły gest. W czym pomóc?</div></div>
+  <div id="loveAiMessages" aria-live="polite" aria-relevant="additions text"><div class="love-ai-message bot">Cześć! Jestem asystentem AI Love Story. Mogę pomóc w obsłudze strony, odpowiedzieć na pytania albo podsunąć pomysł na miły gest. W czym pomóc?</div></div>
+  <div id="loveAiQuickActions" aria-label="Szybka pomoc"><button id="loveAiHelp" type="button">Instrukcja obsługi</button><button id="loveAiSupport" type="button">Potrzebujesz wsparcia?</button></div>
   <form id="loveAiForm"><textarea id="loveAiInput" rows="1" maxlength="2000" aria-label="Wiadomość" placeholder="Napisz wiadomość…" required></textarea><button id="loveAiSend" type="submit">Wyślij</button></form>
   <div id="loveAiFoot">Nie wpisuj haseł ani prywatnych danych. Rozmowa nie jest zapisywana na koncie.</div>
 </section>
@@ -380,16 +385,23 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
   const launcher=document.getElementById("loveAiLauncher"),panel=document.getElementById("loveAiPanel"),close=document.getElementById("loveAiClose"),form=document.getElementById("loveAiForm"),input=document.getElementById("loveAiInput"),send=document.getElementById("loveAiSend"),messagesEl=document.getElementById("loveAiMessages");
   if(!launcher||!panel||!form||!input||!send||!messagesEl)return;
   const history=[];
+  const helpButton=document.getElementById("loveAiHelp"),supportButton=document.getElementById("loveAiSupport");
   function openChat(){panel.classList.add("is-open");launcher.setAttribute("aria-expanded","true");input.focus()}
   function closeChat(){panel.classList.remove("is-open");launcher.setAttribute("aria-expanded","false");launcher.focus()}
   function addMessage(text,role){const el=document.createElement("div");el.className="love-ai-message "+role;el.textContent=text;messagesEl.appendChild(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
+  function showSupport(){openChat();addMessage("Dobrze, że szukasz wsparcia. Nie musisz mierzyć się z tym samodzielnie. Jeśli możesz, odezwij się teraz do zaufanej osoby i powiedz jej wprost, że jest Ci trudno. Jeśli jesteś w bezpośrednim niebezpieczeństwie, zadzwoń pod 112. W Polsce dzieci i młodzież mogą bezpłatnie i całodobowo zadzwonić pod 116 111 lub napisać na https://116111.pl/czatuj/. Dorośli mogą skorzystać z całodobowego Centrum Wsparcia pod 800 70 2222 lub https://centrumwsparcia.pl/. Ten chat nie zastępuje pomocy specjalisty. Jeśli chcesz, możesz napisać, co się dzieje — postaram się odpowiedzieć spokojnie i bez oceniania.","bot")}
+  function showHelp(){openChat();addMessage("Instrukcja obsługi Love Story: 1. Zaloguj się lub utwórz konto. 2. Korzystaj z sekcji wspomnień, aby przeglądać i dodawać dostępne wpisy. 3. Sprawdzaj powiadomienia i ustawienia konta w odpowiednich sekcjach. 4. Nie udostępniaj nikomu hasła ani kodów weryfikacyjnych. Możesz wpisać pytanie tutaj, a pomogę znaleźć właściwy krok.","bot")}
+  function maySignalCrisis(text){const t=String(text||"").toLocaleLowerCase("pl");return /samoboj|samobój|nie chc[eę] [żz]y[cć]|nie chce zyc|chce umrzec|chcę umrzeć|odebrac sobie zycie|odebrać sobie życie|zabic sie|zabić się|zrobic sobie krzywde|zrobić sobie krzywdę|mysli samoboj|myśli samobój|suicid|want to die|kill myself|end my life|hurt myself/i.test(t)}
   launcher.addEventListener("click",()=>panel.classList.contains("is-open")?closeChat():openChat());
   close.addEventListener("click",closeChat);
+  helpButton?.addEventListener("click",showHelp);
+  supportButton?.addEventListener("click",showSupport);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&panel.classList.contains("is-open"))closeChat()});
   input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
   form.addEventListener("submit",async e=>{
     e.preventDefault();const text=input.value.trim();if(!text||send.disabled)return;
     history.push({role:"user",content:text});addMessage(text,"user");input.value="";send.disabled=true;input.disabled=true;
+    if(maySignalCrisis(text)){const support="Dziękuję, że mi o tym piszesz. Przykro mi, że przechodzisz przez coś tak trudnego. Zasługujesz na wsparcie i nie musisz być z tym samodzielnie. Jeśli możesz, skontaktuj się teraz z zaufaną osobą i powiedz jej, że potrzebujesz, by była przy Tobie. Jeśli istnieje bezpośrednie zagrożenie życia lub zdrowia, zadzwoń pod 112. W Polsce dzieci i młodzież mogą bezpłatnie, anonimowo i całodobowo skontaktować się z 116 111: https://116111.pl/ . Dorośli mogą zadzwonić pod 800 70 2222: https://centrumwsparcia.pl/ . Możesz też napisać, co się dzieje — wysłucham bez oceniania, ale nie zastąpię pomocy człowieka.";history.push({role:"assistant",content:support});addMessage(support,"bot");send.disabled=false;input.disabled=false;input.focus();return}
     const status=addMessage("Piszę odpowiedź…","status");
     try{
       const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history.slice(-12)})});
