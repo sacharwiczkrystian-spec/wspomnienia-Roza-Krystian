@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100b0d">
+<title>Love Story — Panel pracownika</title>
+<style>
+:root{color-scheme:dark;--bg:#100b0d;--panel:#21151a;--ink:#fff4e7;--muted:#d0bdb9;--line:#60404a;--gold:#f0d99c;--red:#ffd0d0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 10% 0%,#481728 0,transparent 40%),#100b0d;color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px}button,input{font:inherit}.wrap{width:min(960px,100%);margin:5vh auto}.panel{background:linear-gradient(145deg,#21151a,#171014);border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,42px);box-shadow:0 18px 50px #0005}.brand{font-weight:900;letter-spacing:-.8px;font-size:21px}.brand span{color:var(--gold)}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:800;margin-top:24px}h1,h2{font-family:Georgia,"Times New Roman",serif;line-height:1.2}h1{font-size:clamp(30px,5vw,44px);margin:8px 0 12px;color:var(--gold)}h2{font-size:22px;margin:0 0 10px}p{margin:7px 0}.muted{color:var(--muted)}.field{display:grid;gap:7px;margin:15px 0}.field label{font-weight:750;font-size:13px}.field input{width:100%;padding:12px;border-radius:11px;background:#100b0d;border:1px solid #77505a;color:var(--ink)}.btn{border:1px solid #77505a;border-radius:11px;padding:11px 15px;background:#2a1a20;color:var(--ink);font-weight:800;cursor:pointer}.btn.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);color:#1b1114;border-color:#f0d99c}.btn:disabled{opacity:.6;cursor:wait}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.status{min-height:24px;color:var(--red);font-size:13px;margin-top:10px}.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:24px}.role{border:1px solid var(--line);background:#1a1115;border-radius:16px;padding:20px}.role .tag{display:inline-block;border:1px solid #77505a;background:#302027;color:var(--gold);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:850;margin-bottom:12px}.role p{color:var(--muted);font-size:13px}.hidden{display:none!important}.note{border-left:3px solid var(--gold);padding:12px 15px;background:#302027;border-radius:0 10px 10px 0;color:#f5dfb9;font-size:13px;margin-top:22px}a{color:var(--gold)}@media(max-width:560px){body{padding:12px}.wrap{margin:2vh auto}.top{align-items:flex-start}.top .btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section id="loginPanel" class="panel">
+<div class="brand">Love <span>Story</span></div>
+<div class="eyebrow">Strefa zespołu</div>
+<h1>Panel pracownika</h1>
+<p class="muted">Zaloguj się swoim istniejącym kontem Love Story. Dostęp jest przyznawany przez administratora.</p>
+<form id="loginForm">
+<div class="field"><label for="email">Adres e-mail</label><input id="email" type="email" autocomplete="username" required></div>
+<div class="field"><label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" required></div>
+<button id="loginBtn" class="btn primary" type="submit">Zaloguj się</button>
+<div id="loginStatus" class="status" role="status"></div>
+</form>
+</section>
+<section id="staffPanel" class="panel hidden">
+<div class="top"><div><div class="brand">Love <span>Story</span></div><div class="eyebrow">Strefa zespołu</div></div><button id="logoutBtn" class="btn" type="button">Wyloguj</button></div>
+<h1>Twoje uprawnienia</h1>
+<p id="staffEmail" class="muted"></p>
+<p class="muted">Poniżej widzisz wyłącznie role przypisane do Twojego konta.</p>
+<div id="roles" class="roles"></div>
+<div class="note">Działaj z szacunkiem i nie udostępniaj danych użytkowników poza zakresem swoich obowiązków. Ten panel pokazuje nadane role; funkcje operacyjne będą dostępne tylko wtedy, gdy zostaną osobno wdrożone.</div>
+<div id="panelStatus" class="status" role="status"></div>
+</section>
+</main>
+<script>
+(function(){
+"use strict";
+const URL="https://khggputlakhupiypybic.supabase.co";
+const KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+const $=id=>document.getElementById(id);
+let sb=null, currentUser=null, busy=false;
+const roleInfo={
+ chat_moderator:{title:"Moderator chatu",description:"Zakres: wspieranie bezpiecznej i kulturalnej rozmowy. Wiadomości czatu nie są obecnie zapisywane w panelu, więc nie ma tu jeszcze narzędzi do przeglądania ani moderowania rozmów."},
+ content_moderator:{title:"Moderator treści",description:"Zakres: rola przeznaczona do przeglądu zgłoszonych treści. Narzędzia operacyjne pojawią się po ich osobnym wdrożeniu."},
+ support_moderator:{title:"Pracownik wsparcia",description:"Zakres: udzielanie podstawowych informacji i kierowanie użytkowników do odpowiednich kanałów pomocy. Nie oznacza dostępu administratora ani do prywatnych danych."}
+};
+function status(id,text){$(id).textContent=text||"";}
+function showPanel(id){$("loginPanel").classList.toggle("hidden",id!=="login");$("staffPanel").classList.toggle("hidden",id!=="staff");}
+function loadLibrary(){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";s.onload=resolve;s.onerror=()=>reject(new Error("Nie udało się załadować logowania. Odśwież stronę."));document.head.appendChild(s);});}
+async function init(){try{if(!window.supabase?.createClient)await loadLibrary();sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const r=await sb.auth.getSession();if(r.error)throw r.error;if(r.data.session)await enter(r.data.session.user);else showPanel("login");}catch(e){showPanel("login");status("loginStatus",e.message||"Nie udało się uruchomić panelu.");}}
+async function enter(u){currentUser=u;const r=await sb.from("staff_permissions").select("permission,created_at").eq("user_id",u.id).order("created_at",{ascending:false});if(r.error)throw r.error;if(!r.data?.length){await sb.auth.signOut({scope:"local"});currentUser=null;showPanel("login");status("loginStatus","To konto nie ma aktywnych uprawnień pracowniczych. Poproś administratora o przyznanie dostępu.");return;}const container=$("roles");container.replaceChildren();for(const item of r.data){const info=roleInfo[item.permission];if(!info)continue;const card=document.createElement("article");card.className="role";const tag=document.createElement("div");tag.className="tag";tag.textContent="AKTYWNE UPRAWNIENIE";const title=document.createElement("h2");title.textContent=info.title;const desc=document.createElement("p");desc.textContent=info.description;const granted=document.createElement("p");granted.textContent="Nadano: "+new Date(item.created_at).toLocaleDateString("pl-PL");card.append(tag,title,desc,granted);container.appendChild(card);}if(!container.children.length){await sb.auth.signOut({scope:"local"});currentUser=null;showPanel("login");status("loginStatus","Nie rozpoznano żadnego aktywnego uprawnienia.");return;}$("staffEmail").textContent="Zalogowano jako "+(u.email||"pracownik");status("loginStatus","");showPanel("staff");}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(busy)return;busy=true;$("loginBtn").disabled=true;status("loginStatus","Sprawdzanie konta…");try{const r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(r.error)throw r.error;await enter(r.data.user);}catch(e){status("loginStatus",e.message||"Nie udało się zalogować.");}finally{busy=false;$("loginBtn").disabled=false;}});
+$("logoutBtn").addEventListener("click",async()=>{if(sb)await sb.auth.signOut({scope:"local"});currentUser=null;showPanel("login");$("password").value="";status("loginStatus","Wylogowano.");});
+init();
+})();
+</script>
+</body>
+</html>
