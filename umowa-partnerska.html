@@ -17,12 +17,14 @@
 <div class="eyebrow">Love Story · dokument roboczy</div>
 <h1>Umowa partnerska</h1>
 <p class="muted">Wersja robocza do uzupełnienia i uzgodnienia przez strony.</p>
+<p class="muted" id="saveStatus" role="status" aria-live="polite">Automatyczny zapis lokalny jest uruchamiany…</p>
 <div class="notice"><strong>Ważne:</strong> To jest edytowalny wzór, a nie podpisana ani zatwierdzona umowa. Uzupełnij pola, uzgodnij warunki z drugą stroną i przed podpisaniem poproś zaufaną osobę dorosłą lub prawnika o sprawdzenie dokumentu. Samo otwarcie tej strony niczego nie podpisuje ani nie wysyła.</div>
 <p>zawarta dnia <span class="field" contenteditable="true">[data]</span> w <span class="field" contenteditable="true">[miejscowość]</span>, pomiędzy:</p>
-<p><strong>1. Partnerem / Partnerką A:</strong> <span class="field" contenteditable="true">[imię i nazwisko lub nazwa]</span>, dane kontaktowe: <span class="field" contenteditable="true">[opcjonalnie]</span>,</p>
+<p><strong>1. Założyciel Love Story / Partner A:</strong> <span class="field" contenteditable="true">[Twoje imię i nazwisko]</span>, działający jako założyciel strony internetowej Love Story, dane kontaktowe: <span class="field" contenteditable="true">[opcjonalnie]</span>,</p>
 <p>oraz <strong>2. Partnerem / Partnerką B:</strong> <span class="field" contenteditable="true">[imię i nazwisko lub nazwa]</span>, dane kontaktowe: <span class="field" contenteditable="true">[opcjonalnie]</span>,</p>
 <p>zwanymi dalej łącznie „Stronami”.</p>
 <h2>§ 1. Cel współpracy</h2>
+<p>Założyciel Love Story oświadcza, że zamierza nawiązać współpracę z <span class="field" contenteditable="true">[nazwa partnera / firmy]</span> dotyczącą strony internetowej Love Story. Współpraca zostaje uzgodniona dopiero po zaakceptowaniu warunków przez obie Strony i podpisaniu dokumentu, jeśli podpis jest wymagany.</p>
 <p>Strony uzgadniają współpracę dotyczącą: <span class="field" contenteditable="true">[opisz cel i zakres partnerstwa]</span>. Szczegółowe zadania i oczekiwane rezultaty: <span class="field" contenteditable="true">[uzgodnione działania]</span>.</p>
 <h2>§ 2. Obowiązki Stron</h2>
 <ul><li>Partner A zobowiązuje się do: <span class="field" contenteditable="true">[obowiązki Partnera A]</span>.</li><li>Partner B zobowiązuje się do: <span class="field" contenteditable="true">[obowiązki Partnera B]</span>.</li><li>Strony będą komunikować się w uzgodniony sposób i niezwłocznie informować o przeszkodach w realizacji ustaleń.</li></ul>
@@ -39,9 +41,26 @@
 <h2>§ 8. Postanowienia końcowe</h2>
 <p>Strony potwierdzają, że zapoznały się z treścią dokumentu i rozumieją jego postanowienia. Przed podpisaniem należy zweryfikować, czy wszystkie warunki są kompletne, zgodne z prawem i odpowiednie do konkretnej współpracy.</p>
 <div class="signature"><div class="sig">Partner / Partnerka A<br><span class="field" contenteditable="true">[imię i nazwisko, data, podpis]</span></div><div class="sig">Partner / Partnerka B<br><span class="field" contenteditable="true">[imię i nazwisko, data, podpis]</span></div></div>
-<p class="muted" style="margin-top:30px">Wskazówka: pola w nawiasach można kliknąć i uzupełnić przed wydrukiem. Zmiany pozostają w tej karcie przeglądarki; nie są zapisywane na serwerze.</p>
+<p class="muted" style="margin-top:30px">Wskazówka: pola w nawiasach można kliknąć i uzupełnić. Zmiany zapisują się automatycznie w pamięci tej przeglądarki na tym urządzeniu. Nie są wysyłane na serwer i nie synchronizują się między urządzeniami. Wyczyść zapis, jeśli chcesz zacząć od nowa.</p>
 </main>
 <div class="back"><a class="btn" href="/">← Wróć do Love Story</a></div>
 </div>
+<script>
+(function(){
+ const fields=Array.from(document.querySelectorAll(".field[contenteditable=\"true\"]"));
+ const key="love-story-umowa-partnerska-v1";
+ const status=document.getElementById("saveStatus");
+ function say(t){if(status)status.textContent=t;}
+ try{
+  const saved=localStorage.getItem(key);
+  if(saved){const values=JSON.parse(saved);fields.forEach((el,i)=>{if(typeof values[i]==="string")el.textContent=values[i];});say("Przywrócono ostatni zapis z tej przeglądarki. Zmiany zapisują się automatycznie.");}
+  else say("Automatyczny zapis lokalny aktywny — zmiany zapisują się podczas edycji.");
+  fields.forEach(el=>el.addEventListener("input",()=>{try{localStorage.setItem(key,JSON.stringify(fields.map(x=>x.textContent)));say("Zapisano automatycznie na tym urządzeniu.");}catch(e){say("Nie udało się zapisać lokalnie. Wydrukuj lub zapisz dokument jako PDF.");}}));
+  window.addEventListener("beforeprint",()=>{try{localStorage.setItem(key,JSON.stringify(fields.map(x=>x.textContent)));}catch(e){}});
+ }catch(e){say("Ta przeglądarka blokuje zapis lokalny. Użyj opcji Drukuj / Zapisz PDF, aby zachować dokument.");}
+ const clear=document.createElement("button");clear.type="button";clear.className="btn";clear.textContent="Wyczyść zapis lokalny";clear.addEventListener("click",()=>{if(confirm("Usunąć zapis tej umowy z tej przeglądarki?")){try{localStorage.removeItem(key);location.reload();}catch(e){say("Nie udało się wyczyścić zapisu.");}}});
+ document.querySelector(".actions").appendChild(clear);
+})();
+</script>
 </body>
 </html>
