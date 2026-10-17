@@ -38,12 +38,6 @@ module.exports = async function handler(req, res) {
   recent.push(now);
   requestsByIp.set(ip, recent);
 
-  if (!process.env.AI_GATEWAY_API_KEY) {
-    return json(res, 503, {
-      error: "Czat AI jest już dodany, ale wymaga skonfigurowania klucza AI Gateway w ustawieniach środowiska Vercel."
-    });
-  }
-
   try {
     const body = req.body && typeof req.body === "object" ? req.body : {};
     if (!Array.isArray(body.messages) || body.messages.length === 0 || body.messages.length > 12) {
@@ -63,6 +57,24 @@ module.exports = async function handler(req, res) {
     }
     if (messages[messages.length - 1].role !== "user") {
       return json(res, 400, { error: "Ostatnia wiadomość musi pochodzić od użytkownika." });
+    }
+
+    // Bez klucza API działa lokalny tryb pomocy oparty na gotowych odpowiedziach.
+    // Nie udaje generatywnego AI; zapewnia instrukcje strony i podstawowe wskazówki.
+    if (!process.env.AI_GATEWAY_API_KEY) {
+      const question = messages[messages.length - 1].content.toLocaleLowerCase("pl")
+        .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").replace(/ł/g, "l");
+      let reply;
+      if (/samoboj|nie chce zyc|chce umrzec|odebrac sobie zycie|zabic sie|krzywde|suicid|kill myself|end my life|want to die|kryzys|nie daje rady|nie mam sily/.test(question)) {
+        reply = "Przykro mi, że jest Ci tak trudno. Dziękuję, że napisałeś/aś. Nie musisz mierzyć się z tym samodzielnie — jeśli możesz, odezwij się teraz do zaufanej osoby i powiedz jej, że potrzebujesz wsparcia. Jeśli istnieje bezpośrednie zagrożenie życia lub zdrowia, zadzwoń pod 112. W Polsce dzieci i młodzież mogą bezpłatnie i całodobowo skontaktować się z 116 111: https://116111.pl/ . Dorośli mogą zadzwonić pod 800 70 2222: https://centrumwsparcia.pl/ . Ten chat nie zastępuje pomocy człowieka, ale możesz napisać, czego teraz potrzebujesz.";
+      } else if (/instrukcj|jak korzystac|jak uzyc|pomoc|obsluga|wspomnien/.test(question)) {
+        reply = "Instrukcja obsługi Love Story:\n1. Zaloguj się na swoje konto lub utwórz konto, jeśli ta opcja jest dostępna.\n2. Otwórz sekcję wspomnień, aby przeglądać dostępne wpisy.\n3. Korzystaj z widocznych na stronie przycisków i formularzy, aby dodawać lub edytować treści, jeśli masz do tego uprawnienia.\n4. Nie udostępniaj nikomu hasła ani kodów logowania.\nNapisz, z którą funkcją masz problem, a podpowiem następny krok.";
+      } else if (/czesc|hej|witaj|dzien dobry|dobry wieczor|hello|hi\b/.test(question)) {
+        reply = "Cześć! Jestem pomocnikiem Love Story. Mogę podać instrukcję obsługi strony lub podstawowe wskazówki. Napisz, czego szukasz, albo kliknij przycisk „Instrukcja obsługi” lub „Potrzebujesz wsparcia?”.";
+      } else {
+        reply = "Mogę pomóc w podstawowej obsłudze Love Story, ale pełne odpowiedzi generowane przez AI wymagają konfiguracji usługi AI. Na razie napisz „instrukcja obsługi” lub „potrzebuję wsparcia”, a podam gotowe wskazówki. Jeśli sprawa dotyczy kryzysu, napisz do zaufanej osoby; w bezpośrednim zagrożeniu dzwoń pod 112.";
+      }
+      return json(res, 200, { reply });
     }
 
     const upstream = await fetch("https://ai-gateway.vercel.sh/v1/chat/completions", {
