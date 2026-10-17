@@ -131,6 +131,7 @@
  applyLock();
  const clear=document.createElement("button");clear.type="button";clear.className="btn";clear.textContent="Wyczyść zapis lokalny";clear.dataset.localClear="true";clear.addEventListener("click",()=>{if(confirm("Usunąć zapis tej umowy z tej przeglądarki?")){try{localStorage.removeItem(key);location.reload();}catch(e){say("Nie udało się wyczyścić zapisu.");}}});
  document.querySelector(".actions").appendChild(clear);
+ applyLock();
 })();
 </script>
 </body>
