@@ -63,10 +63,12 @@ module.exports = async function handler(req, res) {
     // Nie udaje generatywnego AI; zapewnia instrukcje strony i podstawowe wskazówki.
     if (!process.env.AI_GATEWAY_API_KEY) {
       const question = messages[messages.length - 1].content.toLocaleLowerCase("pl")
-        .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").replace(/ł/g, "l");
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ł/g, "l");
       let reply;
       if (/samoboj|nie chce zyc|chce umrzec|odebrac sobie zycie|zabic sie|krzywde|suicid|kill myself|end my life|want to die|kryzys|nie daje rady|nie mam sily/.test(question)) {
         reply = "Przykro mi, że jest Ci tak trudno. Dziękuję, że napisałeś/aś. Nie musisz mierzyć się z tym samodzielnie — jeśli możesz, odezwij się teraz do zaufanej osoby i powiedz jej, że potrzebujesz wsparcia. Jeśli istnieje bezpośrednie zagrożenie życia lub zdrowia, zadzwoń pod 112. W Polsce dzieci i młodzież mogą bezpłatnie i całodobowo skontaktować się z 116 111: https://116111.pl/ . Dorośli mogą zadzwonić pod 800 70 2222: https://centrumwsparcia.pl/ . Ten chat nie zastępuje pomocy człowieka, ale możesz napisać, czego teraz potrzebujesz.";
+      } else if (/zle sie czuje|czuje sie zle|jest mi zle|smutno mi|jestem smutn|jestem przygnebion|samotn|czuje sie samotn|mam ciezki dzien|ciezki dzien|stresuje sie|jestem zestresowan|boje sie|martwie sie|nie wiem co robic|mam problem|potrzebuje pogadac|chce pogadac|jest mi ciezko|wszystko mnie przerasta/.test(question)) {
+        reply = "Przykro mi, że tak się czujesz. Pamiętaj, że nie jesteś sam/sama — wiele osób przechodzi przez trudniejsze chwile i zasługujesz na życzliwość oraz wsparcie. Nie musisz od razu rozwiązywać wszystkiego. Jeśli możesz, porozmawiaj z kimś, komu ufasz, i powiedz wprost, co się dzieje. Możesz też napisać mi trochę więcej o tym, co Cię martwi — postaram się wysłuchać i pomóc Ci znaleźć następny mały krok.";
       } else if (/instrukcj|jak korzystac|jak uzyc|pomoc|obsluga|wspomnien/.test(question)) {
         reply = "Instrukcja obsługi Love Story:\n1. Zaloguj się na swoje konto lub utwórz konto, jeśli ta opcja jest dostępna.\n2. Otwórz sekcję wspomnień, aby przeglądać dostępne wpisy.\n3. Korzystaj z widocznych na stronie przycisków i formularzy, aby dodawać lub edytować treści, jeśli masz do tego uprawnienia.\n4. Nie udostępniaj nikomu hasła ani kodów logowania.\nNapisz, z którą funkcją masz problem, a podpowiem następny krok.";
       } else if (/czesc|hej|witaj|dzien dobry|dobry wieczor|hello|hi\b/.test(question)) {
