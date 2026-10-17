@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100b0d">
+<meta name="description" content="Formularz rekrutacyjny Love Story.">
+<title>Love Story — Formularz rekrutacyjny</title>
+<style>
+:root{color-scheme:dark;--bg:#100b0d;--panel:#21151a;--ink:#fff4e7;--muted:#d0bdb9;--line:#60404a;--gold:#f0d99c;--red:#ffd0d0}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 10% 0%,#481728 0,transparent 40%),var(--bg);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:20px}.wrap{width:min(900px,100%);margin:3vh auto}.panel{background:linear-gradient(145deg,#21151a,#171014);border:1px solid var(--line);border-radius:24px;padding:clamp(20px,4vw,40px);box-shadow:0 18px 50px #0005}.brand{font-weight:900;letter-spacing:-.8px;font-size:21px}.brand span{color:var(--gold)}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:800;margin-top:24px}h1,h2{font-family:Georgia,"Times New Roman",serif;line-height:1.2}h1{font-size:clamp(30px,5vw,44px);margin:8px 0 12px;color:var(--gold)}h2{font-size:23px;margin:0 0 14px;color:var(--gold)}p{margin:8px 0}.muted{color:var(--muted)}.section{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.field{display:grid;gap:7px;margin:13px 0}.field.full{grid-column:1/-1}.field label,.question{font-weight:750;font-size:13px}.field input,.field select,.field textarea{width:100%;padding:12px;border-radius:11px;background:#100b0d;border:1px solid #77505a;color:var(--ink);font:inherit}.field textarea{min-height:94px;resize:vertical}.field select option{background:#100b0d}.checks{display:grid;gap:9px;margin:12px 0}.check{display:flex;gap:10px;align-items:flex-start;font-size:14px}.check input{margin-top:5px;accent-color:#f0d99c}.btn{border:1px solid #77505a;border-radius:11px;padding:12px 16px;background:#2a1a20;color:var(--ink);font:inherit;font-weight:800;cursor:pointer}.btn.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);color:#1b1114;border-color:#f0d99c}.btn:disabled{opacity:.6;cursor:wait}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.status{min-height:25px;margin-top:15px;color:var(--gold);overflow-wrap:anywhere}.notice{border-left:3px solid var(--gold);padding:12px 15px;background:#302027;border-radius:0 10px 10px 0;color:#f5dfb9;font-size:13px;margin-top:20px}.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}a{color:var(--gold)}.required{color:var(--gold)}@media(max-width:620px){body{padding:10px}.grid{grid-template-columns:1fr}.actions .btn{width:100%}.wrap{margin:1vh auto}}
+</style>
+</head>
+<body><main class="wrap"><section class="panel">
+<div class="brand">Love <span>Story</span></div><div class="eyebrow">Dołącz do zespołu</div>
+<h1>Formularz rekrutacyjny</h1>
+<p class="muted">Odpowiedz na pytania, abyśmy mogli poznać Twoje zainteresowania, umiejętności i dostępność. Po wysłaniu zgłoszenie zostanie przygotowane jako PDF i przesłane do skrzynki rekrutacyjnej.</p>
+<form id="applicationForm">
+<div class="hp" aria-hidden="true"><label>Nie wypełniaj tego pola<input name="website" tabindex="-1" autocomplete="off"></label></div>
+<div class="section"><h2>1. Dane kontaktowe</h2><div class="grid">
+<div class="field"><label for="name">Imię i nazwisko lub imię używane w projekcie <span class="required">*</span></label><input id="name" name="name" maxlength="120" autocomplete="name" required></div>
+<div class="field"><label for="email">Adres e-mail <span class="required">*</span></label><input id="email" name="email" type="email" maxlength="254" autocomplete="email" required></div>
+<div class="field"><label for="contact">Preferowany kontakt (opcjonalnie)</label><input id="contact" name="contact" maxlength="160" placeholder="Np. Discord — nazwa użytkownika"></div>
+<div class="field"><label for="age">Przedział wiekowy (opcjonalnie)</label><select id="age" name="age"><option value="">Wybierz, jeśli chcesz</option><option>Poniżej 18 lat</option><option>18 lat lub więcej</option><option>Wolę nie podawać</option></select></div>
+</div></div>
+<div class="section"><h2>2. Stanowisko</h2><div class="grid">
+<div class="field"><label for="role">Na jakie stanowisko aplikujesz? <span class="required">*</span></label><select id="role" name="role" required><option value="">Wybierz stanowisko</option><option>Rekruter</option><option>Moderator czatu</option><option>Moderator treści</option><option>Pracownik wsparcia</option><option>Inne</option></select></div>
+<div class="field"><label for="referral">Skąd dowiedziałeś/aś się o rekrutacji?</label><input id="referral" name="referral" maxlength="200"></div>
+</div></div>
+<div class="section"><h2>3. Zainteresowania i motywacja</h2><div class="grid">
+<div class="field full"><label for="hobbies">Jakie masz hobby i zainteresowania? <span class="required">*</span></label><textarea id="hobbies" name="hobbies" maxlength="2000" required placeholder="Napisz o swoich zainteresowaniach i tym, co lubisz robić w wolnym czasie."></textarea></div>
+<div class="field full"><label for="motivation">Dlaczego chcesz dołączyć do Love Story? <span class="required">*</span></label><textarea id="motivation" name="motivation" maxlength="3000" required></textarea></div>
+<div class="field"><label for="strengths">Jakie są Twoje mocne strony?</label><textarea id="strengths" name="strengths" maxlength="2000"></textarea></div>
+<div class="field"><label for="improve">Czego chcesz się nauczyć?</label><textarea id="improve" name="improve" maxlength="2000"></textarea></div>
+</div></div>
+<div class="section"><h2>4. Doświadczenie i umiejętności</h2><div class="grid">
+<div class="field"><label for="experience">Czy masz doświadczenie w podobnej roli?</label><textarea id="experience" name="experience" maxlength="3000" placeholder="Możesz opisać również doświadczenie szkolne, hobbystyczne lub wolontariackie."></textarea></div>
+<div class="field"><label for="skills">Jakie umiejętności wnosisz do zespołu?</label><textarea id="skills" name="skills" maxlength="3000" placeholder="Np. komunikacja, organizacja, pisanie, rozwiązywanie problemów."></textarea></div>
+<div class="field"><label for="conflict">Jak zareagujesz na konflikt w zespole?</label><textarea id="conflict" name="conflict" maxlength="2000"></textarea></div>
+<div class="field"><label for="rulebreak">Co zrobisz, jeśli zauważysz złamanie zasad projektu?</label><textarea id="rulebreak" name="rulebreak" maxlength="2000"></textarea></div>
+<div class="field full"><label for="portfolio">Portfolio lub przykłady pracy (opcjonalnie)</label><input id="portfolio" name="portfolio" type="url" maxlength="500" placeholder="https://..."></div>
+</div></div>
+<div class="section"><h2>5. Odpowiedzialność i bezpieczeństwo</h2>
+<div class="field"><label for="privacy">Co oznacza dla Ciebie poufność danych użytkowników?</label><textarea id="privacy" name="privacy" maxlength="2000" required></textarea></div>
+<div class="field"><label for="mistake">Co zrobisz, jeśli popełnisz błąd lub nie będziesz znać odpowiedzi?</label><textarea id="mistake" name="mistake" maxlength="2000"></textarea></div>
+<div class="field"><label for="feedback">Jak przyjmujesz konstruktywną krytykę?</label><textarea id="feedback" name="feedback" maxlength="2000"></textarea></div>
+<div class="checks">
+<label class="check"><input type="checkbox" name="rules" required><span>Zobowiązuję się przestrzegać regulaminu Love Story, szanować innych i nie nadużywać przyznanych uprawnień. <span class="required">*</span></span></label>
+<label class="check"><input type="checkbox" name="truth" required><span>Potwierdzam, że odpowiedzi w zgłoszeniu są zgodne z prawdą. <span class="required">*</span></span></label>
+</div>
+<p class="muted">Formularz nie pyta o karalność. Informacje o wyrokach są prawnie szczególnie chronione i mogą być zbierane tylko wtedy, gdy istnieje do tego odpowiednia podstawa prawna.</p>
+</div>
+<div class="section"><h2>6. Dostępność i organizacja</h2><div class="grid">
+<div class="field"><label for="availability">W jakich dniach i godzinach jesteś dostępny/a?</label><textarea id="availability" name="availability" maxlength="1500"></textarea></div>
+<div class="field"><label for="hours">Ile czasu możesz poświęcić tygodniowo?</label><select id="hours" name="hours"><option value="">Wybierz odpowiedź</option><option>1–3 godziny</option><option>4–7 godzin</option><option>8 lub więcej godzin</option><option>To zależy od obowiązków</option></select></div>
+<div class="field"><label for="duration">Jak długo planujesz współpracować?</label><select id="duration" name="duration"><option value="">Wybierz odpowiedź</option><option>Krótkoterminowo</option><option>Przez kilka miesięcy</option><option>Długoterminowo</option><option>Nie wiem jeszcze</option></select></div>
+<div class="field"><label for="meetings">Czy możesz brać udział w spotkaniach zespołu?</label><select id="meetings" name="meetings"><option value="">Wybierz odpowiedź</option><option>Tak</option><option>Czasami</option><option>Wolę kontakt pisemny</option></select></div>
+<div class="field full"><label for="extra">Dodatkowe informacje lub pytania (opcjonalnie)</label><textarea id="extra" name="extra" maxlength="3000"></textarea></div>
+</div></div>
+<div class="section"><h2>7. Informacja o danych</h2>
+<p class="muted">Dane z formularza będą przekazane do skrzynki rekrutacyjnej wyłącznie w celu rozpatrzenia zgłoszenia. Przed uruchomieniem zbierania zgłoszeń administrator projektu powinien uzupełnić i opublikować pełną informację o administratorze danych, podstawie prawnej, okresie przechowywania i prawach kandydata. Nie wpisuj haseł, kodów logowania, numerów dokumentów ani danych wrażliwych.</p>
+<label class="check"><input type="checkbox" name="privacyNotice" required><span>Zapoznałem/am się z informacją powyżej i chcę przesłać zgłoszenie rekrutacyjne. <span class="required">*</span></span></label>
+<div class="actions"><button class="btn primary" id="submitBtn" type="submit">Wyślij zgłoszenie jako PDF</button><button class="btn" type="button" id="downloadBtn">Pobierz PDF bez wysyłania</button></div><div id="status" class="status" role="status" aria-live="polite"></div>
+</div>
+</form>
+<div class="notice">Nie wysyłaj danych, których nie chcesz udostępniać zespołowi. Dostęp do zgłoszeń powinny mieć wyłącznie upoważnione osoby.</div>
+<p class="muted" style="margin-top:24px"><a href="/">← Wróć na stronę Love Story</a> · <a href="/polityka-prywatnosci.html">Polityka prywatności</a> · <a href="/staff.html">Panel pracownika</a></p>
+</section></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDFIChbcXk2UL3j2O8lR8R2jNwT3hLkP5yqjQp7Y3F4W8Q5Xh2z5m0f0y3Rzj1u6kN1Z1Q1s4W3h6j8F0h3Vw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+(function(){
+const form=document.getElementById('applicationForm'),status=document.getElementById('status'),submit=document.getElementById('submitBtn');
+const labels={name:'Imię i nazwisko / imię używane',email:'E-mail',contact:'Preferowany kontakt',age:'Przedział wiekowy',role:'Stanowisko',referral:'Źródło rekrutacji',hobbies:'Hobby i zainteresowania',motivation:'Motywacja',strengths:'Mocne strony',improve:'Czego chce się nauczyć',experience:'Doświadczenie',skills:'Umiejętności',conflict:'Reakcja na konflikt',rulebreak:'Reakcja na złamanie zasad',portfolio:'Portfolio',privacy:'Poufność danych',mistake:'Reakcja na błąd',feedback:'Konstruktywna krytyka',availability:'Dostępność',hours:'Czas tygodniowo',duration:'Planowany okres współpracy',meetings:'Spotkania zespołu',extra:'Dodatkowe informacje'};
+function collect(){const data={};for(const [key,label] of Object.entries(labels)){const el=form.elements.namedItem(key);data[label]=(el?.value||'').trim()||'—';}data['Data zgłoszenia']=new Date().toLocaleString('pl-PL');return data;}
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function makePdf(){if(typeof html2pdf!=='function')throw new Error('Nie udało się załadować generatora PDF. Sprawdź połączenie i spróbuj ponownie.');const data=collect();const root=document.createElement('div');root.style.cssText='font-family:Arial,sans-serif;color:#24161b;background:#fff;padding:28px;width:720px;font-size:12px;line-height:1.45';root.innerHTML='<h1 style="color:#6b2037;font-size:24px">Love Story — zgłoszenie rekrutacyjne</h1><p>Dokument zawiera odpowiedzi podane przez kandydata.</p>'+Object.entries(data).map(([k,v])=>'<div style="margin:0 0 12px;break-inside:avoid"><strong>'+escapeHtml(k)+'</strong><div style="white-space:pre-wrap;overflow-wrap:anywhere">'+escapeHtml(v)+'</div></div>').join('')+'<hr><small>Dokument wygenerowany automatycznie. Dostęp powinny mieć wyłącznie osoby upoważnione.</small>';const opts={margin:10,filename:'Love-Story-zgloszenie-rekrutacyjne.pdf',image:{type:'jpeg',quality:0.96},html2canvas:{scale:1.7,useCORS:true,backgroundColor:'#ffffff'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};return html2pdf().set(opts).from(root).outputPdf('blob');}
+async function download(){status.textContent='Przygotowuję PDF…';try{const blob=await makePdf();const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Love-Story-zgloszenie-rekrutacyjne.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);status.textContent='PDF został przygotowany do pobrania.';}catch(e){status.textContent=e.message||'Nie udało się utworzyć PDF.';}}
+document.getElementById('downloadBtn').addEventListener('click',download);
+form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const website=form.elements.namedItem('website');if(website?.value)return;submit.disabled=true;status.textContent='Tworzę PDF i wysyłam zgłoszenie…';try{const blob=await makePdf();if(blob.size>5*1024*1024)throw new Error('PDF jest zbyt duży. Skróć odpowiedzi i spróbuj ponownie.');const b64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(blob);});const response=await fetch('/api/recruitment-application',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({applicantName:form.elements.name.value.trim(),applicantEmail:form.elements.email.value.trim(),role:form.elements.role.value,pdfBase64:b64,website:website?.value||''})});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'Nie udało się wysłać zgłoszenia.');status.textContent='Zgłoszenie zostało wysłane do skrzynki rekrutacyjnej. Dziękujemy!';}catch(err){status.textContent=(err.message||'Wystąpił błąd.')+' Możesz pobrać PDF przyciskiem „Pobierz PDF bez wysyłania” i skontaktować się z administratorem.';}finally{submit.disabled=false;}});
+})();
+</script></body></html>
