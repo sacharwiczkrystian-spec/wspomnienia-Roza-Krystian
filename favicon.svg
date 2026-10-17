@@ -1,6 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-<defs><linearGradient id="g" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse"><stop stop-color="#ff6b9d"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
-<rect width="64" height="64" rx="16" fill="#0d0b12"/>
-<path d="M32 50S10 37 10 22c0-8 5-13 12-13 5 0 8 3 10 7 2-4 5-7 10-7 7 0 12 5 12 13 0 15-22 28-22 28Z" fill="url(#g)"/>
-<path d="M32 46S15 35 15 23c0-5 3-9 8-9 4 0 7 2 9 7 2-5 5-7 9-7 5 0 8 4 8 9 0 12-17 23-17 23Z" fill="#fff" opacity=".14"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#16091f"/><stop offset="1" stop-color="#08050e"/></linearGradient>
+ <linearGradient id="heart" x1="100" y1="90" x2="410" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#ff9bbf"/><stop offset=".34" stop-color="#f044a4"/><stop offset=".68" stop-color="#bc22df"/><stop offset="1" stop-color="#6500a8"/></linearGradient>
+ <linearGradient id="shine" x1="140" y1="95" x2="270" y2="290" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <linearGradient id="rim" x1="80" y1="50" x2="430" y2="470" gradientUnits="userSpaceOnUse"><stop stop-color="#f88dff"/><stop offset=".5" stop-color="#8e21ce"/><stop offset="1" stop-color="#3d075f"/></linearGradient>
+</defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<path d="M256 438C225 408 65 290 65 178 65 108 109 68 166 68c42 0 72 24 90 60 18-36 48-60 90-60 57 0 101 40 101 110 0 112-160 230-191 260Z" fill="url(#rim)" stroke="#a52cd2" stroke-width="8" stroke-linejoin="round"/>
+<path d="M256 418C224 389 83 282 83 181c0-58 34-94 83-94 41 0 70 26 90 66 20-40 49-66 90-66 49 0 83 36 83 94 0 101-141 208-173 237Z" fill="url(#heart)"/>
+<path d="M103 176c0-48 26-72 62-72 28 0 50 14 67 41-14 37-13 67-1 99-48-4-128-14-128-68Z" fill="url(#shine)"/>
+<path d="M109 176c0-44 24-65 55-65 20 0 37 8 52 26" fill="none" stroke="#ffd8f0" stroke-opacity=".65" stroke-width="8" stroke-linecap="round"/>
 </svg>
