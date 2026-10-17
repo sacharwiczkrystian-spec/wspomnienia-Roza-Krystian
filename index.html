@@ -345,5 +345,63 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
 })();
 </script>
 <aside id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Ustawienia plików cookies" aria-live="polite"><div class="cookie-copy"><strong>Twoja prywatność ma znaczenie</strong><p>Używamy technologii niezbędnych do działania serwisu. Obecnie nie uruchamiamy własnych narzędzi analitycznych ani reklamowych. <a href="/cookies.html">Przeczytaj informację o cookies</a>.</p><label style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:12px"><input id="cookieOptional" type="checkbox" style="margin-top:4px"><span>Zezwalam na opcjonalne pliki cookies, jeśli zostaną wdrożone. Wybór można zmienić później.</span></label></div><div class="cookie-actions"><button id="cookieReject" type="button">Odrzuć opcjonalne</button><button id="cookieCustomize" type="button">Zapisz wybór</button><button id="cookieAccept" class="cookie-accept" type="button">Akceptuj opcjonalne</button></div></aside>
+
+<style id="love-ai-chat-style">
+#loveAiLauncher{position:fixed;right:22px;bottom:22px;z-index:10020;border:1px solid #d7b66c;border-radius:999px;background:linear-gradient(135deg,#5c1429,#1a0d12);color:#fff3d7;padding:13px 18px;font:600 14px/1.2 inherit;box-shadow:0 8px 30px #0008;cursor:pointer;display:flex;align-items:center;gap:9px}
+#loveAiLauncher:focus-visible,#loveAiSend:focus-visible,#loveAiClose:focus-visible{outline:2px solid #f2d58a;outline-offset:3px}
+#loveAiPanel{position:fixed;right:22px;bottom:82px;z-index:10021;width:min(390px,calc(100vw - 28px));height:min(560px,calc(100dvh - 115px));display:none;flex-direction:column;overflow:hidden;border:1px solid #9d7845;border-radius:20px;background:#130d10;color:#f7ecd7;box-shadow:0 20px 70px #000b;font-family:inherit}
+#loveAiPanel.is-open{display:flex}
+#loveAiHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px;background:linear-gradient(120deg,#491326,#211015);border-bottom:1px solid #67432d}
+#loveAiHead strong{display:block;color:#f1d18a;font-size:15px;letter-spacing:.04em}
+#loveAiHead small{display:block;margin-top:4px;color:#d9c9b9;font-size:12px}
+#loveAiClose{border:1px solid #866b4d;background:#26151b;color:#fff0d5;border-radius:10px;width:34px;height:34px;font-size:20px;cursor:pointer}
+#loveAiMessages{flex:1;min-height:0;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.love-ai-message{max-width:88%;padding:11px 13px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.love-ai-message.bot{align-self:flex-start;background:#24171c;border:1px solid #4b3435;color:#f5e8d5;border-bottom-left-radius:5px}
+.love-ai-message.user{align-self:flex-end;background:#6b2339;border:1px solid #a56b53;color:#fff5e5;border-bottom-right-radius:5px}
+.love-ai-message.status{color:#c9b6a1;font-style:italic;background:transparent;border:0;padding:0}
+#loveAiForm{display:flex;align-items:flex-end;gap:9px;padding:12px;border-top:1px solid #493139;background:#180f13}
+#loveAiInput{flex:1;min-width:0;max-height:110px;resize:vertical;border:1px solid #6b4a4a;border-radius:12px;background:#0e090b;color:#fff1df;padding:11px 12px;font:inherit;font-size:14px;line-height:1.4}
+#loveAiInput::placeholder{color:#bca9a0}
+#loveAiSend{border:1px solid #d6b46a;border-radius:12px;background:#d6b46a;color:#211015;padding:11px 13px;font-weight:700;cursor:pointer;min-height:42px}
+#loveAiSend:disabled{opacity:.55;cursor:wait}
+#loveAiFoot{padding:0 14px 10px;background:#180f13;color:#bdaea4;font-size:10px;line-height:1.4}
+@media(max-width:480px){#loveAiLauncher{right:14px;bottom:14px;padding:12px 15px}#loveAiPanel{right:8px;bottom:72px;width:calc(100vw - 16px);height:min(570px,calc(100dvh - 90px))}}
+</style>
+<button id="loveAiLauncher" type="button" aria-controls="loveAiPanel" aria-expanded="false"><span aria-hidden="true">✦</span> Chat AI</button>
+<section id="loveAiPanel" role="dialog" aria-label="Asystent AI Love Story" aria-modal="false">
+  <header id="loveAiHead"><div><strong>Asystent Love Story</strong><small>Porozmawiaj ze mną</small></div><button id="loveAiClose" type="button" aria-label="Zamknij czat">×</button></header>
+  <div id="loveAiMessages" aria-live="polite" aria-relevant="additions text"><div class="love-ai-message bot">Cześć! Jestem asystentem AI Love Story. Mogę pomóc, odpowiedzieć na pytania albo podsunąć pomysł na miły gest. W czym pomóc?</div></div>
+  <form id="loveAiForm"><textarea id="loveAiInput" rows="1" maxlength="2000" aria-label="Wiadomość" placeholder="Napisz wiadomość…" required></textarea><button id="loveAiSend" type="submit">Wyślij</button></form>
+  <div id="loveAiFoot">Nie wpisuj haseł ani prywatnych danych. Rozmowa nie jest zapisywana na koncie.</div>
+</section>
+<script id="love-ai-chat-script">
+(function(){
+  const launcher=document.getElementById("loveAiLauncher"),panel=document.getElementById("loveAiPanel"),close=document.getElementById("loveAiClose"),form=document.getElementById("loveAiForm"),input=document.getElementById("loveAiInput"),send=document.getElementById("loveAiSend"),messagesEl=document.getElementById("loveAiMessages");
+  if(!launcher||!panel||!form||!input||!send||!messagesEl)return;
+  const history=[];
+  function openChat(){panel.classList.add("is-open");launcher.setAttribute("aria-expanded","true");input.focus()}
+  function closeChat(){panel.classList.remove("is-open");launcher.setAttribute("aria-expanded","false");launcher.focus()}
+  function addMessage(text,role){const el=document.createElement("div");el.className="love-ai-message "+role;el.textContent=text;messagesEl.appendChild(el);messagesEl.scrollTop=messagesEl.scrollHeight;return el}
+  launcher.addEventListener("click",()=>panel.classList.contains("is-open")?closeChat():openChat());
+  close.addEventListener("click",closeChat);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&panel.classList.contains("is-open"))closeChat()});
+  input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+  form.addEventListener("submit",async e=>{
+    e.preventDefault();const text=input.value.trim();if(!text||send.disabled)return;
+    history.push({role:"user",content:text});addMessage(text,"user");input.value="";send.disabled=true;input.disabled=true;
+    const status=addMessage("Piszę odpowiedź…","status");
+    try{
+      const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history.slice(-12)})});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.error||"Nie udało się połączyć z asystentem.");
+      if(typeof data.reply!=="string"||!data.reply.trim())throw new Error("Asystent nie zwrócił odpowiedzi. Spróbuj ponownie.");
+      status.remove();history.push({role:"assistant",content:data.reply});addMessage(data.reply,"bot");
+    }catch(err){status.textContent=err.message||"Wystąpił błąd. Spróbuj ponownie.";}
+    finally{send.disabled=false;input.disabled=false;input.focus()}
+  });
+})();
+</script>
+
 </body>
 </html>
