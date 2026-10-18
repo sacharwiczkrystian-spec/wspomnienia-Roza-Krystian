@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#991b1b">
+<meta name="description" content="Prywatny pamiętnik strażaka — Twoje osobiste wspomnienia, zdjęcia i ważne chwile.">
+<title>Moje wspomnienia strażackie</title>
+<style>
+:root{color-scheme:dark;--bg:#100b0b;--panel:#1d1413;--ink:#fff5ec;--muted:#c7b7ae;--line:#54312c;--red:#ff6258;--red2:#b91c1c;--gold:#ffc857;--green:#a7f3c4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#7f1d1d 0,transparent 48%),radial-gradient(ellipse at 100% 100%,#3f1d14 0,transparent 35%),var(--bg);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:20px}button,input,textarea{font:inherit}a{color:var(--gold);text-underline-offset:3px}.wrap{width:min(1000px,100%);margin:2vh auto}.card{background:linear-gradient(145deg,#241715,#17100f);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,4vw,34px);box-shadow:0 22px 65px #0007;margin-bottom:18px}.header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px;font-weight:950;letter-spacing:-.4px}.emblem{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,var(--red),#7f1d1d);border:1px solid #ff8d72;font-size:23px}.eyebrow{font-size:10px;letter-spacing:2.3px;text-transform:uppercase;color:var(--gold);font-weight:900;margin-top:22px}h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin:7px 0 10px;letter-spacing:-1px}h1 span{color:var(--red)}h2{font-size:19px;margin:0 0 12px}.muted{color:var(--muted)}p{margin:7px 0}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:12px;font-weight:800}.field input,.field textarea{width:100%;padding:12px 13px;border-radius:11px;background:#100b0b;border:1px solid #6a4139;color:var(--ink)}.field textarea{resize:vertical;min-height:125px}.field input:focus,.field textarea:focus{outline:2px solid #ff625866;border-color:var(--red)}.btn{border:1px solid #75433a;border-radius:11px;padding:10px 14px;background:#30201d;color:var(--ink);font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.btn.primary{background:linear-gradient(135deg,#ef4444,#991b1b);border-color:#f87171;color:white}.btn:disabled{opacity:.6;cursor:wait}.full{width:100%;margin-top:7px}.status{min-height:22px;margin-top:10px;color:#ffaaa1;font-size:13px;overflow-wrap:anywhere}.status.good{color:var(--green)}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px}.memory{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#18100f;min-width:0}.memory img{display:block;width:100%;max-height:340px;object-fit:cover;background:#0b0808}.memory-body{padding:16px}.memory time{font-size:12px;color:var(--gold)}.memory h3{margin:5px 0 8px;font-size:18px;overflow-wrap:anywhere}.memory p{white-space:pre-wrap;overflow-wrap:anywhere;color:#eee0d6}.empty{padding:22px;text-align:center;border:1px dashed #6a4139;border-radius:14px;color:var(--muted)}.note{border-left:3px solid var(--gold);background:#2c2016;padding:12px 14px;border-radius:0 10px 10px 0;margin-top:15px;font-size:12px;color:#f5dca9}.footer{text-align:center;color:#927e77;font-size:11px;padding:12px}@media(max-width:520px){body{padding:10px}.wrap{margin:1vh auto}.header .btn{flex:1}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section id="loginCard" class="card">
+<div class="brand"><div class="emblem" aria-hidden="true">✚</div><div>KRONIKA STRAŻAKA<div style="font-size:10px;color:var(--muted);letter-spacing:1.7px">OSOBISTE WSPOMNIENIA</div></div></div>
+<div class="eyebrow">Twoja służba · Twoja historia</div>
+<h1>Twoje <span>wspomnienia</span></h1>
+<p class="muted">Zaloguj się kontem z przyznaną rolą strażaka, aby zapisywać własne wspomnienia, zdjęcia i ważne chwile. Wpisy są prywatne — inni strażacy ich nie zobaczą.</p>
+<form id="loginForm">
+<div class="field"><label for="email">Adres e-mail</label><input id="email" type="email" autocomplete="username" required></div>
+<div class="field"><label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" required></div>
+<button id="loginBtn" class="btn primary full" type="submit">Zaloguj się</button><div id="loginStatus" class="status" role="status"></div>
+</form>
+</section>
+<section id="appCard" class="hidden">
+<div class="card">
+<div class="header"><div class="brand"><div class="emblem" aria-hidden="true">✚</div><div>MOJA KRONIKA<div style="font-size:10px;color:var(--muted);letter-spacing:1.7px">PRYWATNA KOLEKCJA</div></div></div><button id="logoutBtn" class="btn" type="button">Wyloguj</button></div>
+<div class="eyebrow">Witaj w swojej kronice</div><h1>Moje <span>wspomnienia</span></h1><p id="accountEmail" class="muted"></p>
+<div class="note">To Twoja prywatna przestrzeń. Dodawaj własne wpisy i zdjęcia. Nie publikuj danych wrażliwych, szczegółów akcji ratowniczych ani zdjęć innych osób bez ich zgody.</div>
+</div>
+<div class="card">
+<h2>＋ Dodaj wspomnienie</h2>
+<form id="memoryForm">
+<div class="field"><label for="title">Tytuł wspomnienia</label><input id="title" maxlength="120" placeholder="Np. Pierwsze ćwiczenia w nowej jednostce" required></div>
+<div class="field"><label for="memoryDate">Data</label><input id="memoryDate" type="date" required></div>
+<div class="field"><label for="memoryText">Opis / notatka</label><textarea id="memoryText" maxlength="10000" placeholder="Zapisz, co chcesz zapamiętać…" required></textarea></div>
+<div class="field"><label for="memoryImage">Zdjęcie (opcjonalnie, maks. 3 MB)</label><input id="memoryImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></div>
+<button id="saveBtn" class="btn primary" type="submit">Zapisz wspomnienie</button><div id="memoryStatus" class="status" role="status"></div>
+</form>
+</div>
+<div class="card">
+<div class="header"><h2>Twoje zapisane wspomnienia</h2><button id="refreshBtn" class="btn" type="button">Odśwież</button></div>
+<p id="countText" class="muted">Ładowanie…</p><div id="memories" class="grid"><div class="empty">Ładowanie wspomnień…</div></div>
+</div>
+</section>
+<div class="footer"><a href="/strazacy.html">← Wróć do strefy strażaka</a> · <a href="/">Strona główna</a></div>
+</main>
+<script>
+(function(){
+"use strict";
+const SUPABASE_URL="https://khggputlakhupiypybic.supabase.co";
+const SUPABASE_KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+const $=id=>document.getElementById(id);
+let sb=null,user=null,busy=false;
+const today=()=>new Date().toISOString().slice(0,10);
+$("memoryDate").value=today();
+function status(id,msg,good=false){const el=$(id);el.textContent=msg||"";el.classList.toggle("good",good)}
+function loadLibrary(){return new Promise((resolve,reject)=>{if(window.supabase?.createClient)return resolve();const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2";s.onload=resolve;s.onerror=()=>reject(new Error("Nie udało się uruchomić logowania. Odśwież stronę."));document.head.appendChild(s)})}
+function showApp(on){$("loginCard").classList.toggle("hidden",on);$("appCard").classList.toggle("hidden",!on)}
+async function verifyFirefighter(candidate){const r=await sb.from("staff_permissions").select("permission").eq("user_id",candidate.id).eq("permission","firefighter").maybeSingle();if(r.error)throw r.error;if(!r.data){await sb.auth.signOut({scope:"local"});user=null;showApp(false);status("loginStatus","To konto nie ma uprawnień strażaka.");return false}user=candidate;$("accountEmail").textContent="Zalogowano jako: "+(user.email||"konto strażaka");showApp(true);await loadMemories();return true}
+function errorText(e){if(e?.code==="42501")return "Brak uprawnień. Sprawdź, czy administrator przyznał Ci rolę strażaka.";return e?.message||"Wystąpił błąd. Spróbuj ponownie."}
+function escapeHtml(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
+async function loadMemories(){if(!user)return;const box=$("memories");box.replaceChildren();box.append(Object.assign(document.createElement("div"),{className:"empty",textContent:"Wczytywanie…"}));const r=await sb.from("firefighter_memories").select("id,title,memory_date,memory_text,image_data,created_at").eq("user_id",user.id).order("memory_date",{ascending:false}).order("created_at",{ascending:false});if(r.error){status("memoryStatus",errorText(r.error));$("countText").textContent="Nie udało się wczytać wspomnień.";return}const rows=r.data||[];$("countText").textContent="Zapisane wpisy: "+rows.length;box.replaceChildren();if(!rows.length){box.innerHTML='<div class="empty">Nie masz jeszcze wspomnień. Dodaj pierwszy wpis powyżej.</div>';return}for(const m of rows){const card=document.createElement("article");card.className="memory";if(m.image_data){const img=document.createElement("img");img.src=m.image_data;img.alt="Zdjęcie do wspomnienia";img.loading="lazy";card.appendChild(img)}const body=document.createElement("div");body.className="memory-body";const time=document.createElement("time");time.textContent=m.memory_date?new Date(m.memory_date+"T12:00:00").toLocaleDateString("pl-PL"):"Bez daty";const title=document.createElement("h3");title.textContent=m.title||"Wspomnienie";const desc=document.createElement("p");desc.textContent=m.memory_text||"";const del=document.createElement("button");del.className="btn";del.type="button";del.textContent="Usuń wspomnienie";del.onclick=()=>deleteMemory(m.id,del);body.append(time,title,desc,del);card.appendChild(body);box.appendChild(card)}}
+async function deleteMemory(id,btn){if(!confirm("Usunąć to wspomnienie? Tej operacji nie można cofnąć."))return;btn.disabled=true;const r=await sb.from("firefighter_memories").delete().eq("id",id).eq("user_id",user.id);if(r.error){btn.disabled=false;status("memoryStatus",errorText(r.error));return}status("memoryStatus","Wspomnienie usunięte.",true);await loadMemories()}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(busy)return;busy=true;$("loginBtn").disabled=true;status("loginStatus","Logowanie…");try{await loadLibrary();sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(r.error)throw r.error;await verifyFirefighter(r.data.user)}catch(e){status("loginStatus",errorText(e))}finally{busy=false;$("loginBtn").disabled=false}});
+$("logoutBtn").addEventListener("click",async()=>{try{await sb.auth.signOut({scope:"local"})}finally{user=null;showApp(false);$("password").value="";status("loginStatus","Wylogowano.");}});
+$("memoryForm").addEventListener("submit",async e=>{e.preventDefault();if(!user)return;const btn=$("saveBtn");btn.disabled=true;status("memoryStatus","Zapisywanie…");try{const file=$("memoryImage").files?.[0];let image_data=null;if(file){if(file.size>3*1024*1024)throw new Error("Zdjęcie może mieć maksymalnie 3 MB.");if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type))throw new Error("Wybierz zdjęcie JPG, PNG, WEBP lub GIF.");image_data=await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=()=>reject(new Error("Nie udało się odczytać zdjęcia."));fr.readAsDataURL(file)})}const r=await sb.from("firefighter_memories").insert({user_id:user.id,title:$("title").value.trim(),memory_date:$("memoryDate").value||null,memory_text:$("memoryText").value.trim(),image_data});if(r.error)throw r.error;$("memoryForm").reset();$("memoryDate").value=today();status("memoryStatus","Wspomnienie zapisane tylko na Twoim koncie.",true);await loadMemories()}catch(e){status("memoryStatus",errorText(e))}finally{btn.disabled=false}});
+$("refreshBtn").addEventListener("click",loadMemories);
+async function init(){try{await loadLibrary();sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const r=await sb.auth.getSession();if(r.error)throw r.error;if(r.data.session)await verifyFirefighter(r.data.session.user)}catch(e){status("loginStatus",errorText(e))}}
+init();
+})();
+</script>
+</body>
+</html>
