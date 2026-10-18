@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#991b1b">
+<meta name="description" content="Dedykowana strefa kont strażackich.">
+<title>Strefa Strażaka — Panel</title>
+<style>
+:root{color-scheme:dark;--bg:#100b0b;--panel:#1d1413;--ink:#fff5ec;--muted:#c7b7ae;--line:#54312c;--red:#ff6258;--red2:#b91c1c;--gold:#ffc857;--green:#a7f3c4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#7f1d1d 0,transparent 48%),radial-gradient(ellipse at 100% 100%,#3f1d14 0,transparent 35%),var(--bg);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:22px}button,input{font:inherit}a{color:var(--gold);text-underline-offset:3px}.wrap{width:min(900px,100%);margin:4vh auto}.card{background:linear-gradient(145deg,#241715,#17100f);border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,42px);box-shadow:0 22px 65px #0007}.brand{display:flex;align-items:center;gap:13px;font-weight:950;letter-spacing:-.4px;font-size:18px}.emblem{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,var(--red),#7f1d1d);border:1px solid #ff8d72;box-shadow:0 8px 24px #991b1b55}.emblem svg{width:29px;height:29px}.eyebrow{font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:var(--gold);font-weight:900;margin-top:24px}h1,h2{line-height:1.2}h1{font-size:clamp(30px,5vw,45px);margin:8px 0 12px;letter-spacing:-1px}h1 span{color:var(--red)}h2{font-size:19px;margin:0 0 8px}.muted{color:var(--muted)}p{margin:7px 0}.field{display:grid;gap:7px;margin:16px 0}.field label{font-size:12px;font-weight:800}.field input{width:100%;padding:12px 13px;border-radius:11px;background:#100b0b;border:1px solid #6a4139;color:var(--ink)}.field input:focus{outline:2px solid #ff625866;border-color:var(--red)}.btn{border:1px solid #75433a;border-radius:11px;padding:11px 15px;background:#30201d;color:var(--ink);font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.btn.primary{background:linear-gradient(135deg,#ef4444,#991b1b);border-color:#f87171;color:white}.btn:disabled{opacity:.6;cursor:wait}.full{width:100%;margin-top:7px}.status{min-height:24px;margin-top:12px;color:#ffaaa1;font-size:13px;overflow-wrap:anywhere}.hidden{display:none!important}.header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #4b6b4e;background:#1b3022;color:var(--green);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900}.dot{width:7px;height:7px;border-radius:50%;background:currentColor}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px;margin-top:24px}.tile{border:1px solid var(--line);border-radius:16px;background:#18100f;padding:18px}.tile-icon{font-size:23px;margin-bottom:10px;color:var(--gold)}.tile p{font-size:13px;color:var(--muted)}.note{border-left:3px solid var(--gold);background:#2c2016;padding:12px 14px;border-radius:0 10px 10px 0;margin-top:23px;font-size:12px;color:#f5dca9}.footer{margin-top:20px;text-align:center;color:#927e77;font-size:11px}@media(max-width:520px){body{padding:11px}.wrap{margin:2vh auto}.header .btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section id="loginCard" class="card">
+<div class="brand"><div class="emblem" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="M13 6c1 3-2 3-1 6 1-1 2-1 2-3 3 3 3 5 1 7-2 2-6 1-6-2 0-2 2-4 4-8Z"/></svg></div><div>STREFA STRAŻAKA<div style="font-size:10px;color:var(--muted);letter-spacing:1.8px">PANEL DOSTĘPU</div></div></div>
+<div class="eyebrow">Służba · gotowość · współpraca</div>
+<h1>Witaj w <span>strefie strażaka</span></h1>
+<p class="muted">Zaloguj się kontem, któremu administrator przyznał rolę strażaka. To oddzielny portal z motywem strażackim.</p>
+<form id="loginForm">
+<div class="field"><label for="email">Adres e-mail</label><input id="email" type="email" autocomplete="username" required></div>
+<div class="field"><label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" required></div>
+<button id="loginBtn" class="btn primary full" type="submit">Zaloguj do strefy</button>
+<div id="loginStatus" class="status" role="status"></div>
+</form>
+<p class="muted" style="font-size:12px">Nie masz jeszcze dostępu? Poproś administratora o utworzenie/przygotowanie konta i przypisanie roli „Strażak”.</p>
+</section>
+<section id="dashboard" class="card hidden">
+<div class="header"><div class="brand"><div class="emblem" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="M13 6c1 3-2 3-1 6 1-1 2-1 2-3 3 3 3 5 1 7-2 2-6 1-6-2 0-2 2-4 4-8Z"/></svg></div><div>STREFA STRAŻAKA<div style="font-size:10px;color:var(--muted);letter-spacing:1.8px">PANEL DOSTĘPU</div></div></div><button id="logoutBtn" class="btn" type="button">Wyloguj</button></div>
+<div class="eyebrow">Dostęp potwierdzony</div><h1>Panel <span>strażaka</span></h1>
+<p id="accountEmail" class="muted"></p><p class="pill"><span class="dot"></span> Rola strażaka aktywna</p>
+<div class="grid">
+<article class="tile"><div class="tile-icon">▤</div><h2>Dokumenty i umowy</h2><p>Otwórz dokumenty przypisane do Twojego konta w panelu pracownika.</p><a href="/staff.html">Przejdź do dokumentów →</a></article>
+<article class="tile"><div class="tile-icon">✚</div><h2>Szkolenia</h2><p>Przejdź do strefy materiałów szkoleniowych, jeśli masz do niej przyznany dostęp.</p><a href="/szkolenia.html">Otwórz szkolenia →</a></article>
+<article class="tile"><div class="tile-icon">✓</div><h2>Bezpieczeństwo konta</h2><p>Nie udostępniaj hasła i korzystaj z tego konta wyłącznie osobiście.</p><span class="muted" style="font-size:12px">Dostęp kontrolowany przez administratora</span></article>
+</div>
+<div class="note">Ten portal nie zastępuje systemu alarmowania ani oficjalnych procedur jednostki. W sytuacji zagrożenia stosuj lokalne procedury i polecenia uprawnionych służb.</div>
+<div id="dashboardStatus" class="status" role="status"></div>
+</section>
+<div class="footer">Strefa strażaka · dostęp wyłącznie dla upoważnionych kont</div>
+</main>
+<script>
+(function(){
+"use strict";
+const URL="https://khggputlakhupiypybic.supabase.co";
+const KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+const $=id=>document.getElementById(id);
+let sb=null,busy=false;
+function status(id,message){$(id).textContent=message||"";}
+function showDashboard(show){$("loginCard").classList.toggle("hidden",show);$("dashboard").classList.toggle("hidden",!show);}
+function loadLibrary(){return new Promise((resolve,reject)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";s.onload=resolve;s.onerror=()=>reject(new Error("Nie udało się uruchomić logowania. Odśwież stronę."));document.head.appendChild(s);});}
+async function verifyUser(user){const r=await sb.from("staff_permissions").select("permission").eq("user_id",user.id).eq("permission","firefighter").maybeSingle();if(r.error)throw r.error;if(!r.data){await sb.auth.signOut({scope:"local"});showDashboard(false);status("loginStatus","To konto nie ma roli „Strażak”. Poproś administratora o nadanie dostępu.");return;}$("accountEmail").textContent="Zalogowano jako: "+(user.email||"konto strażaka");showDashboard(true);}
+async function init(){try{if(!window.supabase?.createClient)await loadLibrary();sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const r=await sb.auth.getSession();if(r.error)throw r.error;if(r.data.session)await verifyUser(r.data.session.user);}catch(e){showDashboard(false);status("loginStatus",e.message||"Nie udało się uruchomić panelu.");}}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();if(busy)return;busy=true;$("loginBtn").disabled=true;status("loginStatus","Logowanie…");try{const r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(r.error)throw r.error;await verifyUser(r.data.user);}catch(e){status("loginStatus",e.message||"Nie udało się zalogować.");}finally{busy=false;$("loginBtn").disabled=false;}});
+$("logoutBtn").addEventListener("click",async()=>{try{await sb.auth.signOut();}finally{showDashboard(false);$("password").value="";status("loginStatus","Wylogowano.");}});
+init();
+})();
+</script>
+</body>
+</html>
