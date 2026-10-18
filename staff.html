@@ -45,7 +45,8 @@ const roleInfo={
  chat_moderator:{title:"Moderator chatu",description:"Zakres: wspieranie bezpiecznej i kulturalnej rozmowy. Wiadomości czatu nie są obecnie zapisywane w panelu, więc nie ma tu jeszcze narzędzi do przeglądania ani moderowania rozmów."},
  content_moderator:{title:"Moderator treści",description:"Zakres: rola przeznaczona do przeglądu zgłoszonych treści. Narzędzia operacyjne pojawią się po ich osobnym wdrożeniu."},
  support_moderator:{title:"Pracownik wsparcia",description:"Zakres: udzielanie podstawowych informacji i kierowanie użytkowników do odpowiednich kanałów pomocy. Nie oznacza dostępu administratora ani do prywatnych danych."},
- recruiter:{title:"Rekruter",description:"Zakres: wspieranie rekrutacji zespołu Love Story zgodnie z opublikowaną umową rekrutacyjną."}
+ recruiter:{title:"Rekruter",description:"Zakres: wspieranie rekrutacji zespołu Love Story zgodnie z opublikowaną umową rekrutacyjną."},
+ firefighter:{title:"Strażak",description:"Dostęp do strefy strażaka. Dokumenty i szkolenia są widoczne wyłącznie zgodnie z uprawnieniami przypisanymi do konta."}
 };
 function status(id,text){$(id).textContent=text||"";}
 function showPanel(id){$("loginPanel").classList.toggle("hidden",id!=="login");$("staffPanel").classList.toggle("hidden",id!=="staff");}
