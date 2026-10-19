@@ -134,6 +134,8 @@ input[type=checkbox],input[type=radio]{accent-color:#d9b56f}
 .icon-link{display:inline-flex;align-items:center;gap:.45em}
 @media(max-width:600px){.btn .ui-icon{width:1em;height:1em}}
 
+
+.dream-book{background:linear-gradient(145deg,#fffdfb,#f2f7f4);border-color:#dce9df}.dream-book .section-title h2{font-size:25px}.dream-book .field input{width:100%}.dream-progress{margin:20px 0 12px;padding:15px 16px;border:1px solid #dce9df;border-radius:15px;background:#fbfffc}.dream-progress>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.dream-progress strong{font-size:13px}.dream-progress>div:first-child span{font-size:11px;color:var(--muted)}.dream-progress-track{height:7px;margin-top:12px;border-radius:999px;background:#e8eee9;overflow:hidden}.dream-progress-track span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#8fb59a,#4d8964);transition:width .25s}.dream-list{list-style:none;padding:0;margin:0;display:grid;gap:9px}.dream-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid #e5e9e4;border-radius:14px;background:#fff;min-width:0}.dream-item input[type=checkbox]{width:19px;height:19px;flex:0 0 auto;accent-color:#548a66}.dream-item-copy{flex:1;min-width:0;overflow-wrap:anywhere}.dream-item-copy strong{display:block;font-size:13px;font-weight:750}.dream-item-copy small{display:block;margin-top:3px;color:var(--muted);font-size:11px}.dream-item.is-done{background:#f5faf6}.dream-item.is-done .dream-item-copy strong{text-decoration:line-through;color:#718578}.dream-delete{border:1px solid #eadfe4;background:#fff9fb;color:#8d3e69;border-radius:10px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto}.dream-delete:focus-visible,.dream-item input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}@media(max-width:560px){.dream-item{align-items:flex-start;gap:9px;padding:11px}.dream-delete{padding:7px;font-size:10px}.dream-progress{padding:12px}}
 </style>
 
 <style id="privacy-guard-style">
@@ -212,6 +214,22 @@ body :is(.quote-pop){background:#1b1216!important;color:#fff4e7!important;border
   </form>
   <div id="capsulePreview" class="capsule-preview hidden" aria-live="polite"></div>
   <p class="hint">Ważne: kapsuła jest przechowywana tylko w tej przeglądarce na tym urządzeniu — nie synchronizuje się z kontem ani z innymi urządzeniami. Nie zapisuj w niej poufnych danych.</p>
+</section>
+<section class="panel dream-book" aria-labelledby="dreamBookTitle" style="margin-bottom:20px">
+  <div class="section-title"><h2 id="dreamBookTitle">Nasza księga marzeń</h2><span class="pill">Małe kroki, wspólne plany</span></div>
+  <p class="muted">Zapisujcie rzeczy, które chcecie kiedyś zrobić razem. Od małych przyjemności po wielkie wyprawy — a potem odhaczajcie spełnione marzenia.</p>
+  <form id="dreamBookForm">
+    <div class="grid-two">
+      <div class="field"><label for="dreamText">Wasze marzenie</label><input id="dreamText" maxlength="180" required placeholder="Np. zobaczyć morze o wschodzie słońca"></div>
+      <div class="field"><label for="dreamDate">Planowana data (opcjonalnie)</label><input id="dreamDate" type="date"></div>
+    </div>
+    <div class="form-actions"><button class="btn primary" type="submit">Dodaj do księgi +</button></div>
+    <div id="dreamBookStatus" class="status" role="status" aria-live="polite"></div>
+  </form>
+  <div class="dream-progress" aria-live="polite"><div><strong id="dreamProgressText">0 spełnionych marzeń</strong><span id="dreamProgressCount">0 na liście</span></div><div class="dream-progress-track"><span id="dreamProgressBar"></span></div></div>
+  <ul id="dreamBookList" class="dream-list" aria-label="Lista wspólnych marzeń"></ul>
+  <p id="dreamBookEmpty" class="hint">Wasza księga jest jeszcze pusta. Dodajcie pierwsze marzenie i zacznijcie planować.</p>
+  <p class="hint">Lista zapisuje się lokalnie w tej przeglądarce na tym urządzeniu. Nie synchronizuje się z kontem ani z innymi urządzeniami.</p>
 </section>
 <section class="panel" aria-labelledby="trainingHomeTitle" style="margin-bottom:20px;background:linear-gradient(145deg,#28151d,#171014);border-color:#67404a">
   <div class="section-title"><h2 id="trainingHomeTitle">Szkolenia Love Story</h2><span class="pill">Dla zespołu</span></div>
@@ -589,5 +607,58 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
  render();
 })();
 </script>
+
+<script id="dream-book-script">
+(()=> {
+ const form=document.getElementById('dreamBookForm');
+ const list=document.getElementById('dreamBookList');
+ if(!form||!list)return;
+ const text=document.getElementById('dreamText');
+ const date=document.getElementById('dreamDate');
+ const status=document.getElementById('dreamBookStatus');
+ const empty=document.getElementById('dreamBookEmpty');
+ const progressText=document.getElementById('dreamProgressText');
+ const progressCount=document.getElementById('dreamProgressCount');
+ const progressBar=document.getElementById('dreamProgressBar');
+ const key='love-story-dream-book-v1';
+ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+ date.min=today();
+ function read(){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value.filter(x=>x&&typeof x.id==='string'&&typeof x.text==='string'):[]}catch{return []}}
+ function persist(items){try{localStorage.setItem(key,JSON.stringify(items));return true}catch{return false}}
+ function formatDate(value){if(!value)return 'Bez ustalonej daty';const parts=value.split('-');return parts.length===3?'Plan: '+parts[2]+'.'+parts[1]+'.'+parts[0]:'Plan: '+value}
+ function render(){
+   const items=read(),done=items.filter(x=>x.done).length;
+   list.replaceChildren();empty.classList.toggle('hidden',items.length>0);
+   progressText.textContent=done+' z '+items.length+' spełnionych marzeń';
+   progressCount.textContent=items.length+' '+(items.length===1?'marzenie':(items.length%10>=2&&items.length%10<=4&&!(items.length%100>=12&&items.length%100<=14)?'marzenia':'marzeń'));
+   progressBar.style.width=(items.length?Math.round(done/items.length*100):0)+'%';
+   for(const item of items){
+     const li=document.createElement('li');li.className='dream-item'+(item.done?' is-done':'');
+     const check=document.createElement('input');check.type='checkbox';check.checked=!!item.done;check.setAttribute('aria-label','Oznacz jako spełnione: '+item.text);
+     check.addEventListener('change',()=>{
+       const updated=read().map(x=>x.id===item.id?{...x,done:check.checked,doneAt:check.checked?today():''}:x);
+       if(!persist(updated)){status.textContent='Nie udało się zapisać zmiany. Sprawdź ustawienia przeglądarki.';render();return}
+       status.textContent=check.checked?'Piękne! Marzenie oznaczone jako spełnione.':'Marzenie wróciło na listę planów.';render();
+     });
+     const copy=document.createElement('div');copy.className='dream-item-copy';
+     const name=document.createElement('strong');name.textContent=item.text;
+     const meta=document.createElement('small');meta.textContent=item.done?'Spełnione'+(item.doneAt?' · '+formatDate(item.doneAt).replace('Plan: ',''):''):formatDate(item.date);
+     copy.append(name,meta);
+     const del=document.createElement('button');del.type='button';del.className='dream-delete';del.textContent='Usuń';del.setAttribute('aria-label','Usuń marzenie: '+item.text);
+     del.addEventListener('click',()=>{const updated=read().filter(x=>x.id!==item.id);if(!persist(updated)){status.textContent='Nie udało się usunąć marzenia.';return}status.textContent='Marzenie usunięte z księgi.';render()});
+     li.append(check,copy,del);list.append(li);
+   }
+ }
+ form.addEventListener('submit',e=>{
+   e.preventDefault();const value=text.value.trim();
+   if(!value){status.textContent='Wpisz marzenie, zanim dodasz je do księgi.';return}
+   const items=read();items.unshift({id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9),text:value,date:date.value||'',done:false,doneAt:''});
+   if(!persist(items)){status.textContent='Nie udało się zapisać listy. Sprawdź ustawienia prywatności przeglądarki.';return}
+   form.reset();date.min=today();status.textContent='Marzenie dodane do Waszej księgi.';render();text.focus();
+ });
+ render();
+})();
+</script>
+
 </body>
 </html>
