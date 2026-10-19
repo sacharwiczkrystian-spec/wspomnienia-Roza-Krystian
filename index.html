@@ -565,7 +565,11 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
    message.value=item.message||'';date.value=item.date||'';title.value=item.title||'';
    save.textContent='Zaktualizuj kapsułę';preview.classList.remove('hidden');
    if(today()<item.date){
-     preview.innerHTML='<div class="capsule-sealed"><span aria-hidden="true" style="font-size:30px">✉</span><div><strong>Kapsuła zamknięta</strong><span>Wiadomość otworzy się '+item.date.split('-').reverse().join('.')+'. Wróć wtedy, żeby ją przeczytać.</span></div></div>';
+     const sealed=document.createElement('div');sealed.className='capsule-sealed';
+     const envelope=document.createElement('span');envelope.setAttribute('aria-hidden','true');envelope.style.fontSize='30px';envelope.textContent='✉';
+     const copy=document.createElement('div');const heading=document.createElement('strong');heading.textContent='Kapsuła zamknięta';
+     const detail=document.createElement('span');detail.textContent='Wiadomość otworzy się '+String(item.date||'').split('-').reverse().join('.')+'. Wróć wtedy, żeby ją przeczytać.';
+     copy.append(heading,detail);sealed.append(envelope,copy);preview.replaceChildren(sealed);
    }else{
      const h=document.createElement('h3');h.textContent=item.title||'Wiadomość z przeszłości';
      const meta=document.createElement('div');meta.className='capsule-meta';meta.textContent='Zapisano '+(item.savedAt||'');
