@@ -22,6 +22,7 @@ main{padding:42px 0 72px}.panel{position:relative;background:rgba(255,253,251,.9
 .top .nav-right>a.training-nav-link{display:inline-flex!important;align-items:center;justify-content:center;padding:9px 13px;font-size:12px}
 .wrap{width:calc(100% - 24px)}.nav{min-height:66px}.brand{font-size:18px}.mark{width:35px;height:35px;border-radius:12px}.nav-right{gap:6px}.nav-right .btn{padding:8px 10px;font-size:11px}.nav-right .hint{max-width:100px;overflow:hidden;text-overflow:ellipsis}.top .nav-right>a:not(.admin-link){display:none}main{padding:23px 0 45px}.panel{padding:19px;border-radius:20px}.hero{gap:12px;margin-bottom:14px}.hero>.panel:first-child{padding:26px 22px}.hero h1{font-size:42px;margin:14px 0}.lead{font-size:14px}.hero-note{font-size:11px;padding:12px}.quote-card{min-height:225px;padding:24px}.quote-card blockquote{font-size:26px}.auth{padding:21px 18px}.form-actions .btn{flex:1}.stats{gap:8px;margin:15px 0}.stat{padding:13px 9px;border-radius:15px}.stat strong{font-size:23px}.stat span{font-size:10px;line-height:1.4}.memory-list{grid-template-columns:1fr}.memory img{height:225px}.date-display{gap:5px}.date-unit{padding:11px 2px}.date-unit strong{font-size:20px}.date-unit span{font-size:9px}.section-title{align-items:flex-start}.section-title h2{font-size:19px}.footer-inner{align-items:flex-start;flex-direction:column}.setting-line{align-items:flex-start}.setting-line .btn{flex-shrink:0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+.date-idea{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center;background:linear-gradient(120deg,#fffdfb 0%,#fff5f8 62%,#f0e8f7 100%)}.date-idea-copy{position:relative;z-index:1}.date-idea h2{font-size:clamp(24px,3vw,34px);margin:13px 0 10px}.date-idea .muted{max-width:540px;font-size:13px}.date-idea-result{margin:20px 0;padding:18px 20px;border-left:3px solid var(--accent);border-radius:0 14px 14px 0;background:#fffdfbcc;color:#5f4657;font:italic 20px/1.55 Georgia,"Times New Roman",serif;box-shadow:0 8px 24px #6b36550b}.date-idea-art{position:relative;display:grid;place-items:center;min-height:230px;overflow:hidden;border:1px solid #ecd5e0;border-radius:22px;background:radial-gradient(circle at 50% 44%,#fff 0,#f9e2ec 42%,#e8ddf3 100%)}.date-idea-orbit{position:absolute;width:190px;height:190px;border:1px solid #c56b8d66;border-radius:50%;box-shadow:0 0 0 22px #fff4,0 0 0 45px #fff3}.date-idea-heart{position:relative;color:#b74673;font:130px/.9 Georgia,serif;text-shadow:0 10px 35px #b7467333;animation:date-heart-pulse 3s ease-in-out infinite}.date-idea-star{position:absolute;top:25%;right:22%;font-size:28px;color:#b18b51}.date-idea-caption{position:absolute;bottom:20px;left:0;right:0;text-align:center;color:#80556c;font:italic 17px/1.25 Georgia,serif;letter-spacing:1px}.date-idea-caption small{font:800 8px/1.8 system-ui,sans-serif;text-transform:uppercase;letter-spacing:2px;color:#9b8295}@keyframes date-heart-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}@media(max-width:650px){.date-idea{grid-template-columns:1fr;gap:12px}.date-idea-art{min-height:175px;grid-row:1}.date-idea-heart{font-size:95px}.date-idea-orbit{width:135px;height:135px}.date-idea-result{font-size:18px;margin:15px 0;padding:15px}}@media(prefers-reduced-motion:reduce){.date-idea-heart{animation:none}}
 .cookie-banner{position:fixed;z-index:10010;left:18px;right:18px;bottom:18px;margin:auto;max-width:980px;display:none;gap:18px;align-items:center;justify-content:space-between;padding:20px 22px;border:1px solid #ead8e0;border-radius:20px;background:#fffdfb;box-shadow:0 18px 70px #32152b2e;color:#2c1f2b}.cookie-banner.visible{display:flex}.cookie-copy{max-width:620px}.cookie-copy strong{display:block;font-size:15px;margin-bottom:4px}.cookie-copy p{margin:0;color:#806e7a;font-size:12px;line-height:1.6}.cookie-actions{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0}.cookie-actions button{font:inherit;font-size:12px;font-weight:800;padding:10px 13px;border-radius:11px;border:1px solid #eadde4;background:#fff;color:#604c5a;cursor:pointer}.cookie-actions .cookie-accept{background:#a64069;border-color:#a64069;color:#fff}.terms-consent{display:flex;align-items:flex-start;gap:10px;margin:18px 0 6px;padding:14px;border:1px solid #efdae3;background:#fff8fb;border-radius:14px;font-size:12px;line-height:1.6;color:#6d5966}.terms-consent input{margin-top:4px;accent-color:#a64069;flex:0 0 auto}.terms-consent a{font-weight:800}
 @media(max-width:650px){.cookie-banner.visible{display:grid;gap:12px;left:10px;right:10px;bottom:10px;padding:16px}.cookie-actions{display:grid;grid-template-columns:1fr 1fr}.cookie-actions button{padding:10px 8px}.cookie-actions .cookie-accept{grid-column:1/-1}}
 
@@ -185,6 +186,16 @@ body :is(.quote-pop){background:#1b1216!important;color:#fff4e7!important;border
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       allowfullscreen></iframe>
   </div>
+</section>
+<section class="panel date-idea" aria-labelledby="dateIdeaTitle" style="margin-bottom:20px">
+  <div class="date-idea-copy">
+    <div class="eyebrow">Mały pomysł, wielkie wspomnienie</div>
+    <h2 id="dateIdeaTitle">Co fajnego możecie zrobić razem?</h2>
+    <p class="muted">Wylosujcie małą inspirację na wspólną chwilę — bez wielkich planów i bez wydawania pieniędzy.</p>
+    <div class="date-idea-result" id="dateIdeaResult" aria-live="polite" aria-atomic="true">Zróbcie sobie wieczór bez telefonów i opowiedzcie sobie po jednej rzeczy, która ostatnio Was ucieszyła.</div>
+    <button class="btn primary" id="drawDateIdea" type="button">Wylosuj kolejny pomysł ↗</button>
+  </div>
+  <div class="date-idea-art" aria-hidden="true"><span class="date-idea-orbit"></span><span class="date-idea-heart">♡</span><span class="date-idea-star">✦</span><span class="date-idea-caption">just us<br><small>one moment at a time</small></span></div>
 </section>
 <section class="panel" aria-labelledby="trainingHomeTitle" style="margin-bottom:20px;background:linear-gradient(145deg,#28151d,#171014);border-color:#67404a">
   <div class="section-title"><h2 id="trainingHomeTitle">Szkolenia Love Story</h2><span class="pill">Dla zespołu</span></div>
@@ -479,6 +490,42 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
   });
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',decorate);else decorate();
+})();
+</script>
+<script>
+(()=> {
+ const ideas = [
+  "Zróbcie sobie mini piknik w domu — koc, ulubione przekąski i muzyka.",
+  "Wybierzcie po trzy piosenki, które przypominają Wam o wspólnych chwilach, i opowiedzcie dlaczego.",
+  "Przygotujcie sobie nawzajem coś ciepłego do picia i zróbcie 20 minut przerwy od telefonów.",
+  "Wybierzcie stare zdjęcie i odtwórzcie je po swojemu — dla zabawy.",
+  "Idźcie na spacer bez konkretnego celu i skręćcie w uliczkę, na której jeszcze nie byliście.",
+  "Zagrajcie w pytania: co było Twoim najmilszym momentem tego tygodnia?",
+  "Zróbcie listę pięciu rzeczy, które chcecie kiedyś wspólnie przeżyć.",
+  "Przygotujcie sobie nawzajem małą niespodziankę za maksymalnie 10 zł albo całkiem za darmo.",
+  "Obejrzyjcie film, który jedna osoba kocha, a druga jeszcze go nie widziała.",
+  "Zróbcie wspólną playlistę na deszczowy dzień.",
+  "Ugotujcie coś z trzech składników, które już macie w domu.",
+  "Zostawcie sobie krótką, miłą wiadomość do przeczytania jutro rano.",
+  "Zróbcie zdjęcie, które będzie pamiątką zwykłego, ale dobrego dnia.",
+  "Każde z Was niech opowie jedno wspomnienie, do którego lubi wracać.",
+  "Wybierzcie sobie nawzajem deser lub przekąskę, której dawno nie jedliście.",
+  "Zróbcie wieczór wspomnień: po jednym zabawnym, wzruszającym i zaskakującym momencie.",
+  "Narysujcie sobie nawzajem portret w 60 sekund — liczy się śmiech, nie talent.",
+  "Wybierzcie miejsce w okolicy, do którego chcielibyście wrócić razem.",
+  "Przez pięć minut powiedzcie sobie po jednej rzeczy, którą w sobie doceniacie.",
+  "Zaplanujcie wymarzoną wspólną wycieczkę, nawet jeśli na razie zostanie tylko marzeniem."
+ ];
+ const button = document.getElementById('drawDateIdea');
+ const result = document.getElementById('dateIdeaResult');
+ let last = 0;
+ if (!button || !result) return;
+ button.addEventListener('click', () => {
+   let next = Math.floor(Math.random() * ideas.length);
+   if (ideas.length > 1 && next === last) next = (next + 1 + Math.floor(Math.random() * (ideas.length - 1))) % ideas.length;
+   last = next;
+   result.textContent = ideas[next];
+ });
 })();
 </script>
 </body>
