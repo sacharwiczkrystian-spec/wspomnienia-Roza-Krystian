@@ -424,14 +424,14 @@ $("adminNoteClear")?.addEventListener("click",()=>{$("adminQuickNote").value="";
 try{$("adminQuickNote").value=localStorage.getItem(ADMIN_NOTE_KEY)||"";}catch{}
 renderAdminTasks();
 
-init();
-})();
-
 const IT_KRYSTIAN_CONSENT_KEY="loveStoryITKrystianConsentDraftV1";
 const itKrystianConsentDefault=$("itKrystianConsentText").value;
 try{const saved=localStorage.getItem(IT_KRYSTIAN_CONSENT_KEY);if(saved)$("itKrystianConsentText").value=saved;}catch(e){}
 $("itKrystianConsentSave").addEventListener("click",()=>{try{localStorage.setItem(IT_KRYSTIAN_CONSENT_KEY,$("itKrystianConsentText").value);msg("itKrystianConsentStatus","Wersję roboczą zapisano w tej przeglądarce.","good");}catch(e){msg("itKrystianConsentStatus","Nie udało się zapisać wersji roboczej w pamięci przeglądarki.");}});
 $("itKrystianConsentReset").addEventListener("click",()=>{if(!confirm("Przywrócić wzór? Aktualna treść dokumentu zostanie zastąpiona."))return;$("itKrystianConsentText").value=itKrystianConsentDefault;try{localStorage.removeItem(IT_KRYSTIAN_CONSENT_KEY);}catch(e){}msg("itKrystianConsentStatus","Przywrócono domyślny wzór.","info");});
 $("itKrystianConsentPrint").addEventListener("click",()=>{const w=window.open("","_blank");if(!w){msg("itKrystianConsentStatus","Przeglądarka zablokowała okno wydruku. Zezwól na wyskakujące okna i spróbuj ponownie.");return;}w.document.write("<!doctype html><html lang='pl'><meta charset='utf-8'><title>Wniosek — LOVE Story i IT Krystian</title><style>body{font:15px/1.75 Arial,sans-serif;max-width:850px;margin:36px auto;padding:0 20px;white-space:pre-wrap;color:#111}@media print{body{margin:15mm auto}}</style><body></body></html>");w.document.body.textContent=$("itKrystianConsentText").value;w.document.close();w.focus();w.print();});
+
+init();
+})();
 </script>
 </body></html>
