@@ -570,7 +570,12 @@ async function getClient(){
  if(!window.supabase?.createClient)throw new Error("Biblioteka Supabase nie jest dostępna. Odśwież panel.");
  if(!client)client=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  const {data,error}=await client.auth.getSession();if(error)throw error;
- if(!data.session)throw new Error("Zaloguj się jako administrator.");
+ if(!data.session){
+  const next=new URL(window.location.href);
+  next.searchParams.set("reauth","1");
+  window.location.replace(next.pathname+next.search);
+  throw new Error("Przekierowuję do logowania administratora…");
+ }
  return client;
 }
 async function load(){
