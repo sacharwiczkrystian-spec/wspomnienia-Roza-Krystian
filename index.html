@@ -137,16 +137,6 @@ input[type=checkbox],input[type=radio]{accent-color:#d9b56f}
 
 .dream-book{background:linear-gradient(145deg,#fffdfb,#f2f7f4);border-color:#dce9df}.dream-book .section-title h2{font-size:25px}.dream-book .field input{width:100%}.dream-progress{margin:20px 0 12px;padding:15px 16px;border:1px solid #dce9df;border-radius:15px;background:#fbfffc}.dream-progress>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.dream-progress strong{font-size:13px}.dream-progress>div:first-child span{font-size:11px;color:var(--muted)}.dream-progress-track{height:7px;margin-top:12px;border-radius:999px;background:#e8eee9;overflow:hidden}.dream-progress-track span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#8fb59a,#4d8964);transition:width .25s}.dream-list{list-style:none;padding:0;margin:0;display:grid;gap:9px}.dream-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid #e5e9e4;border-radius:14px;background:#fff;min-width:0}.dream-item input[type=checkbox]{width:19px;height:19px;flex:0 0 auto;accent-color:#548a66}.dream-item-copy{flex:1;min-width:0;overflow-wrap:anywhere}.dream-item-copy strong{display:block;font-size:13px;font-weight:750}.dream-item-copy small{display:block;margin-top:3px;color:var(--muted);font-size:11px}.dream-item.is-done{background:#f5faf6}.dream-item.is-done .dream-item-copy strong{text-decoration:line-through;color:#718578}.dream-delete{border:1px solid #eadfe4;background:#fff9fb;color:#8d3e69;border-radius:10px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto}.dream-delete:focus-visible,.dream-item input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}@media(max-width:560px){.dream-item{align-items:flex-start;gap:9px;padding:11px}.dream-delete{padding:7px;font-size:10px}.dream-progress{padding:12px}}
 
-/* Różowe tło wyłącznie pod tekstem — bez zmiany tła całej strony ani kart. */
-h1,h2,h3,h4,p,li,label,small,.eyebrow,.brand,.muted,.lead,.section-title,.nav a,footer {
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-h1,h2,h3,h4,p,li,label,small,.eyebrow,.lead,.section-title,footer p {
-  background-color: #faeaf0;
-  border-radius: 4px;
-  padding: 0 .14em;
-}
 </style>
 
 <style id="privacy-guard-style">
@@ -315,6 +305,14 @@ body :is(.quote-pop){background:#1b1216!important;color:#fff4e7!important;border
 </section>
 </main>
 <section aria-label="Panele służb" style="padding:0 20px 34px;text-align:center"><div style="width:min(1160px,100%);margin:0 auto;padding:22px 24px;border:1px solid #493039;border-radius:20px;background:linear-gradient(135deg,#1b1216,#34232a);color:#f8eee2"><h2 style="margin:0 0 8px;font-size:20px">Strefy służb</h2><p style="margin:0 0 18px;color:#b6a4a4;font-size:13px">Wybierz panel odpowiedni dla swojej służby. Dostęp mają wyłącznie konta upoważnione przez administratora.</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px"><a href="/funkcjonariusze.html" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border:1px solid #dfbd76;border-radius:12px;background:#dfbd76;color:#211015;font-weight:850;text-decoration:none">Panel funkcjonariusza →</a><a href="/pogotowie.html" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border:1px solid #e58d76;border-radius:12px;background:#7e2e25;color:#fff4e7;font-weight:850;text-decoration:none">Panel pogotowia →</a><a href="/policja.html" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border:1px solid #80b8e8;border-radius:12px;background:#173b61;color:#fff4e7;font-weight:850;text-decoration:none">Panel policji →</a></div></div></section>
+<section aria-label="Pobierz dokument" style="padding:0 20px 34px;text-align:center">
+  <div style="width:min(1160px,100%);margin:0 auto;padding:22px 24px;border:1px solid #e9bfd0;border-radius:20px;background:#fff7fa;color:#342431">
+    <h2 style="margin:0 0 8px;font-size:20px">Pobierz dokument</h2>
+    <p style="margin:0 0 14px;font-size:14px">Procedura postępowania w sytuacji zagrożenia życia i zdrowia</p>
+    <p style="margin:0 0 16px;font-size:12px">Numer dokumentu: LS-BHP-2026-001</p>
+    <a href="https://love-story-nowa-b76byv8o4-love-story2.vercel.app/procedura-zagrozenie.pdf" download="LS-BHP-2026-001-procedura-zagrozenie.pdf" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border:1px solid #b94d76;border-radius:12px;background:#f8dce8;color:#702647;font-weight:850;text-decoration:none">Pobierz dokument PDF ↓</a>
+  </div>
+</section>
 <footer class="footer"><div class="wrap footer-inner"><div class="footer-brand"><strong>Love Story · Nasz Pamiętnik</strong><span>Wasze wspomnienia, w jednym prywatnym miejscu.</span><span>Kontakt: <a href="mailto:lovestory.developer@gmail.com">lovestory.developer@gmail.com</a></span><span>Kontakt kadry: <a href="mailto:kadra.lovestory@gmail.com">kadra.lovestory@gmail.com</a></span>
 <span>RODO i sprawy prawne: <a href="mailto:rodo.prawo.lovestory@gmail.com">rodo.prawo.lovestory@gmail.com</a></span><small>© <span id="year"></span> Love Story. Wszelkie prawa zastrzeżone.</small></div><nav class="footer-links" aria-label="Linki w stopce"><a href="/regulamin.html">Regulamin</a><a href="/umowa-partnerska.html">Umowa partnerska</a><a href="/staff.html">Panel pracownika</a><a href="/szkolenia.html">Szkolenia zespołu</a><a href="/strazacy.html">Portal strażaków</a><a href="/rekrutacja.html">Rekrutacja do zespołu</a><a href="/polityka-prywatnosci.html">Polityka prywatności</a><a href="/polityka-prywatnosci.html">RODO i dane osobowe</a><a href="/o-tworcy.html">O twórcy</a><a href="/kontakt.html">Kontakt</a><a href="/cookies.html">Pliki cookies</a><button id="cookieSettings" class="footer-cookie-settings" type="button">Ustawienia cookies</button></nav></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
