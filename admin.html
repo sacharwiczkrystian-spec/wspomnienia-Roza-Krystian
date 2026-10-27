@@ -217,6 +217,7 @@ async function logout(){try{if(sb)await wait(sb.auth.signOut({scope:"local"}),"W
 $("logout").addEventListener("click",logout);$("mobileLogout").addEventListener("click",logout);$("deniedLogout").addEventListener("click",logout);$("retryInit").addEventListener("click",init);
 function go(id){const el=$(id);if(!el)return;el.scrollIntoView({behavior:"smooth",block:"start"});document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.target===id));const b=document.querySelector('.nav button[data-target="'+id+'"]');$("crumbTitle").textContent=b?b.textContent.trim():id;if(id==="training")loadTrainingAccess();}
 document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.target)));document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.goto)));
+window.__loveStoryAdminNavReady=true;
 const uuid=s=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 function date(s){if(!s)return "Bezterminowo";const d=new Date(s);return Number.isNaN(d.getTime())?"Nieznana":d.toLocaleDateString("pl-PL",{year:"numeric",month:"short",day:"numeric"});}
 function isActive(r){return !r.expires_at||new Date(r.expires_at).getTime()>Date.now();}
@@ -436,6 +437,7 @@ $("adminNoteSave")?.addEventListener("click",()=>{const ok=(()=>{try{localStorag
 $("adminNoteClear")?.addEventListener("click",()=>{$("adminQuickNote").value="";try{localStorage.removeItem(ADMIN_NOTE_KEY);}catch{}$("adminNoteStatus").textContent="Notatka wyczyszczona.";$("adminNoteStatus").className="status good";});
 try{$("adminQuickNote").value=localStorage.getItem(ADMIN_NOTE_KEY)||"";}catch{}
 renderAdminTasks();
+window.__loveStoryAdminWorkspaceReady=true;
 // Kopia zapasowa lokalnego notatnika — eksport i przywracanie tylko po świadomym działaniu administratora.
 $("adminBackupExport")?.addEventListener("click",()=>{
  const payload={format:"love-story-admin-workspace",version:1,exportedAt:new Date().toISOString(),tasks:adminLocalRead(ADMIN_TASKS_KEY,[]),note:(()=>{try{return localStorage.getItem(ADMIN_NOTE_KEY)||"";}catch{return "";}})()};
@@ -501,6 +503,44 @@ $("quickOpenPortal")?.addEventListener("click",()=>{window.open(quickPortalUrl,"
 $("quickCopyPortal")?.addEventListener("click",async()=>{const s=$("quickLinksStatus");try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(quickPortalUrl);}else{const field=document.createElement("textarea");field.value=quickPortalUrl;field.style.position="fixed";field.style.opacity="0";document.body.appendChild(field);field.select();const copied=document.execCommand("copy");field.remove();if(!copied)throw new Error("copy failed");}if(s){s.textContent="Adres portalu skopiowany.";s.className="status good";}}catch(e){if(s){s.textContent="Nie udało się skopiować automatycznie. Adres portalu: "+quickPortalUrl;s.className="status info";}}});
 
 init();
+})();
+</script>
+
+<script id="admin-workspace-rescue">
+/* Izolowany bezpiecznik: notatnik i nawigacja nadal działają, jeśli wcześniejszy skrypt panelu przerwie inicjalizację. */
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+if(!window.__loveStoryAdminNavReady){
+ document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>{const el=$(b.dataset.target);if(!el)return;el.scrollIntoView({behavior:"smooth",block:"start"});document.querySelectorAll(".nav button").forEach(n=>n.classList.toggle("active",n===b));const crumb=$("crumbTitle");if(crumb)crumb.textContent=b.textContent.trim();}));
+ document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.goto,el=$(id);if(!el)return;el.scrollIntoView({behavior:"smooth",block:"start"});document.querySelectorAll(".nav button").forEach(n=>n.classList.toggle("active",n.dataset.target===id));const nav=document.querySelector('.nav button[data-target="'+id+'"]');const crumb=$("crumbTitle");if(crumb)crumb.textContent=nav?nav.textContent.trim():id;}));
+}
+if(window.__loveStoryAdminWorkspaceReady)return;
+const TASKS="loveStoryAdminTasksV1",NOTE="loveStoryAdminQuickNoteV1";
+let memoryTasks=[],memoryNote="";
+function read(key,fallback){try{const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw);}catch{return key===TASKS?memoryTasks:key===NOTE?memoryNote:fallback;}}
+function write(key,value){try{localStorage.setItem(key,typeof value==="string"?value:JSON.stringify(value));return true;}catch{if(key===TASKS)memoryTasks=value;else if(key===NOTE)memoryNote=value;return false;}}
+function noteStatus(text,good){const el=$("adminNoteStatus");if(el){el.textContent=text;el.className="status"+(good?" good":"");}}
+function taskStatus(text,good){const el=$("adminTaskStatus");if(el){el.textContent=text;el.className="status"+(good?" good":"");}}
+function render(){
+ const list=$("adminTaskList"),summary=$("adminTaskSummary");if(!list||!summary)return;
+ const tasks=read(TASKS,[]);list.replaceChildren();summary.textContent=tasks.length+" zadań · "+tasks.filter(t=>!t.done).length+" do zrobienia";
+ const reminderList=$("adminReminderList"),reminderSummary=$("adminReminderSummary");
+ if(reminderList&&reminderSummary){const today=new Date();today.setHours(0,0,0,0);const due=tasks.filter(t=>!t.done&&t.due).map(t=>({...t,days:Math.round((new Date(t.due+"T00:00:00")-today)/86400000)})).filter(t=>t.days<=7).sort((a,b)=>a.days-b.days);reminderList.replaceChildren();reminderSummary.textContent=due.length?due.length+" przypomnień · "+due.filter(t=>t.days<0).length+" zaległych":"Brak zaległych zadań i terminów w najbliższych 7 dniach.";reminderSummary.className="status"+(due.some(t=>t.days<0)?"":" good");if(!due.length){const e=document.createElement("div");e.className="empty";e.textContent="Dodaj zadanie z terminem, aby zobaczyć przypomnienie.";reminderList.appendChild(e);}else due.forEach(t=>{const e=document.createElement("div");e.className="useroption";const label=document.createElement("span");label.textContent=t.title+" — "+(t.days<0?"po terminie":t.days===0?"dzisiaj":t.days===1?"jutro":"za "+t.days+" dni");const b=document.createElement("button");b.type="button";b.className="btn small";b.textContent="Pokaż zadania";b.onclick=()=>{const target=document.querySelector('[data-goto="adminWorkspace"]');if(target)target.click();else $("adminWorkspace")?.scrollIntoView({behavior:"smooth"});};e.append(label,b);reminderList.appendChild(e);});}
+ if(!tasks.length){const e=document.createElement("div");e.className="empty";e.textContent="Lista jest pusta — dodaj pierwsze zadanie.";list.appendChild(e);return;}
+ tasks.sort((a,b)=>(a.done?1:0)-(b.done?1:0)||(a.due||"9999").localeCompare(b.due||"9999")||(b.created||0)-(a.created||0));
+ tasks.forEach(t=>{const row=document.createElement("div");row.className="useroption";row.style.alignItems="flex-start";const left=document.createElement("div");left.style.display="flex";left.style.gap="10px";left.style.minWidth="0";const check=document.createElement("input");check.type="checkbox";check.checked=!!t.done;check.setAttribute("aria-label","Oznacz zadanie jako wykonane");check.onchange=()=>{const all=read(TASKS,[]),found=all.find(x=>x.id===t.id);if(found)found.done=check.checked;write(TASKS,all);render();};const label=document.createElement("div");label.style.overflowWrap="anywhere";label.textContent=t.title;if(t.done)label.style.textDecoration="line-through";if(t.due){const small=document.createElement("small");small.style.display="block";small.textContent="Termin: "+new Date(t.due+"T12:00:00").toLocaleDateString("pl-PL");label.appendChild(small);}left.append(check,label);const del=document.createElement("button");del.type="button";del.className="btn danger small";del.textContent="Usuń";del.onclick=()=>{write(TASKS,read(TASKS,[]).filter(x=>x.id!==t.id));render();};row.append(left,del);list.appendChild(row);});
+}
+const form=$("adminTaskForm");if(form)form.addEventListener("submit",e=>{e.preventDefault();const title=$("adminTaskTitle")?.value.trim();if(!title)return;const tasks=read(TASKS,[]);tasks.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),title,due:$("adminTaskDue")?.value||"",done:false,created:Date.now()});write(TASKS,tasks);$("adminTaskTitle").value="";$("adminTaskDue").value="";taskStatus("Zadanie zapisane.",true);render();});
+$("adminTaskClearDone")?.addEventListener("click",()=>{write(TASKS,read(TASKS,[]).filter(t=>!t.done));taskStatus("Usunięto wykonane zadania.",true);render();});
+$("adminNoteSave")?.addEventListener("click",()=>{const ok=write(NOTE,$("adminQuickNote")?.value||"");noteStatus(ok?"Notatka zapisana w tej przeglądarce.":"Pamięć przeglądarki jest niedostępna — notatka działa tylko tymczasowo do odświeżenia.",ok);});
+$("adminNoteClear")?.addEventListener("click",()=>{try{localStorage.removeItem(NOTE);}catch{}memoryNote="";if($("adminQuickNote"))$("adminQuickNote").value="";noteStatus("Notatka wyczyszczona.",true);});
+try{if($("adminQuickNote"))$("adminQuickNote").value=localStorage.getItem(NOTE)||"";}catch{if($("adminQuickNote"))$("adminQuickNote").value=memoryNote;}
+$("adminBackupExport")?.addEventListener("click",()=>{const payload={format:"love-story-admin-workspace",version:1,exportedAt:new Date().toISOString(),tasks:read(TASKS,[]),note:read(NOTE,"")};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="love-story-notatnik-kopia.json";a.click();URL.revokeObjectURL(url);taskStatus("Przygotowano kopię notatnika.",true);});
+$("adminBackupImportTrigger")?.addEventListener("click",()=>$("adminBackupFile")?.click());
+$("adminBackupFile")?.addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;try{const d=JSON.parse(await file.text());if(d?.format!=="love-story-admin-workspace"||d?.version!==1||!Array.isArray(d.tasks)||typeof d.note!=="string")throw Error("Nieprawidłowy plik kopii.");if(!confirm("Przywrócić kopię i zastąpić aktualne zadania oraz notatkę?"))return;write(TASKS,d.tasks);write(NOTE,d.note);if($("adminQuickNote"))$("adminQuickNote").value=d.note;render();taskStatus("Przywrócono kopię notatnika.",true);}catch(err){taskStatus(err.message||"Nie udało się przywrócić kopii.",false);}finally{e.target.value="";}});
+render();
+window.__loveStoryAdminWorkspaceRescueReady=true;
 })();
 </script>
 </body></html>
