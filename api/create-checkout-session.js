@@ -1,6 +1,6 @@
 // Vercel serverless function: create a Stripe Checkout subscription session.
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
+const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID || "price_1UWZrYC074K6xfn90Qn34mCM";
 const APP_URL = process.env.APP_URL || "https://love-story-nowa.vercel.app";
 
