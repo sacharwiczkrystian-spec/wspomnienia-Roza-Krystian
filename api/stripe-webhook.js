@@ -2,7 +2,7 @@
 const crypto = require("crypto");
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 
-export const config = { api: { bodyParser: false } };
+module.exports.config = { api: { bodyParser: false } };
 
 function reply(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
