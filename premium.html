@@ -15,7 +15,7 @@
 <section class="hero"><div class="eyebrow">Więcej możliwości, ta sama historia</div><h1>LOVE Story <span style="color:var(--accent)">Premium</span></h1><p>Wybierz wariant, który najlepiej pasuje do Waszego sposobu tworzenia wspomnień. Na razie możesz spokojnie obejrzeć ofertę i zaznaczyć interesujące dodatki.</p></section>
 <section class="grid" aria-label="Plany">
 <article class="card"><span class="tag">Zawsze bezpłatny</span><h2>Free</h2><p class="sub">Na dobry początek i codzienne wspomnienia.</p><div class="price">0 zł <small>/ na zawsze</small></div><ul class="features"><li>Podstawowy pamiętnik wspomnień</li><li>Dodawanie zdjęć i ważnych dat</li><li>Podstawowe ustawienia konta</li><li>Dostęp do standardowego wyglądu</li></ul><button class="btn" type="button" data-plan="Free">Wybierz Free</button></article>
-<article class="card featured"><span class="tag">Rozszerzony wariant</span><h2>Premium</h2><p class="sub">Więcej personalizacji i narzędzi do wspólnej historii.</p><div class="price">30 zł <small>/ miesiąc</small></div><ul class="features"><li>Dodatkowe motywy i personalizacja</li><li>Rozszerzone układy galerii</li><li>Dodatkowe animacje i efekty</li><li>Więcej opcji organizacji wspomnień</li><li>Nowe funkcje dodawane w przyszłości</li></ul><button class="btn primary" type="button" data-plan="Premium">Wybierz Premium</button></article>
+<article class="card featured"><span class="tag">Rozszerzony wariant</span><h2>Premium</h2><p class="sub">Więcej personalizacji i narzędzi do wspólnej historii.</p><div class="price">30 zł <small>/ miesiąc</small></div><ul class="features"><li>Dodatkowe motywy i personalizacja</li><li>Rozszerzone układy galerii</li><li>Dodatkowe animacje i efekty</li><li>Więcej opcji organizacji wspomnień</li><li>Nowe funkcje dodawane w przyszłości</li></ul><button class="btn primary" type="button" id="buyPremiumBtn">Przejdź do płatności — 30 zł/mies.</button><p id="paymentStatus" class="sub" role="status" aria-live="polite">Płatności zostaną udostępnione po skonfigurowaniu bezpiecznych kluczy serwerowych.</p></article>
 </section>
 <section class="addons"><div class="eyebrow">Dopasuj swój pakiet</div><h2>Dodatkowe funkcje</h2><p class="sub">Zaznacz dodatki, które chciał(a)byś zobaczyć w LOVE Story.</p><div class="addon-grid">
 <div class="addon"><label><input type="checkbox" value="Motywy premium"> Motywy premium</label><p>Więcej kolorów, teł i stylów pamiętnika.</p></div>
@@ -26,10 +26,36 @@
 <div class="addon"><label><input type="checkbox" value="Personalizacja profilu"> Personalizacja profilu</label><p>Dodatkowe ustawienia wyglądu profilu.</p></div>
 </div></section>
 <section class="selection" aria-live="polite"><strong>Twój wybór:</strong> <span id="chosenPlan">nie wybrano planu</span><p id="chosenAddons" class="sub">Nie zaznaczono dodatków.</p><button id="clearChoice" class="btn" type="button">Wyczyść wybór</button></section>
-<div class="notice"><strong>Ważne:</strong> To obecnie katalog i podgląd oferty. Zakupy, subskrypcje i płatności nie są aktywne, a zaznaczenie opcji niczego nie kupuje ani nie odblokowuje. Nie wpisuj tutaj danych karty ani innych danych płatniczych. Cena Premium została ustalona na 30 zł miesięcznie. Płatności i automatyczne odnawianie subskrypcji zostaną uruchomione dopiero po przygotowaniu bezpiecznego systemu płatności i przedstawieniu pełnych warunków.</div>
+<div class="notice"><strong>Ważne:</strong> Cena Premium wynosi 30 zł miesięcznie. Płatność jest obsługiwana na bezpiecznej stronie Stripe. Dostęp Premium jest przyznawany dopiero po potwierdzeniu zdarzenia przez podpisany webhook. Jeśli płatności nie są jeszcze skonfigurowane, przycisk poinformuje o tym bez pobierania pieniędzy. Przed uruchomieniem sprzedaży na żywo opiekun powinien zatwierdzić warunki subskrypcji, anulowania i zwrotów.</div>
 </main>
 <footer class="wrap">LOVE Story · Premium i dodatki · <a href="/regulamin.html" style="color:inherit">Regulamin</a></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
 <script>
-const plan=document.getElementById('chosenPlan'),addons=document.getElementById('chosenAddons');let selected='';function render(){plan.textContent=selected||'nie wybrano planu';const values=[...document.querySelectorAll('.addon input:checked')].map(x=>x.value);addons.textContent=values.length?'Dodatki: '+values.join(', '):'Nie zaznaczono dodatków.'}document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.plan;render()}));document.querySelectorAll('.addon input').forEach(x=>x.addEventListener('change',render));document.getElementById('clearChoice').addEventListener('click',()=>{selected='';document.querySelectorAll('.addon input').forEach(x=>x.checked=false);render()});render();
+const plan=document.getElementById('chosenPlan'),addons=document.getElementById('chosenAddons');
+let selected='';
+function render(){plan.textContent=selected||'nie wybrano planu';const values=[...document.querySelectorAll('.addon input:checked')].map(x=>x.value);addons.textContent=values.length?'Dodatki: '+values.join(', '):'Nie zaznaczono dodatków.'}
+document.querySelectorAll('[data-plan="Free"]').forEach(b=>b.addEventListener('click',()=>{selected='Free';render()}));
+document.querySelectorAll('.addon input').forEach(x=>x.addEventListener('change',render));
+document.getElementById('clearChoice').addEventListener('click',()=>{selected='';document.querySelectorAll('.addon input').forEach(x=>x.checked=false);render()});
+const paymentStatus=document.getElementById('paymentStatus');
+const supabaseClient=window.supabase.createClient('https://khggputlakhupiypybic.supabase.co','sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const checkoutState=new URLSearchParams(location.search).get('checkout');
+if(checkoutState==='success')paymentStatus.textContent='Stripe zakończył proces. Dostęp Premium pojawi się po potwierdzeniu webhooka; odśwież konto za chwilę.';
+if(checkoutState==='cancelled')paymentStatus.textContent='Płatność została anulowana. Nie pobrano opłaty.';
+document.getElementById('buyPremiumBtn').addEventListener('click',async function(){
+ const button=this;button.disabled=true;paymentStatus.textContent='Sprawdzam sesję i przygotowuję bezpieczną płatność…';
+ try{
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error)throw error;
+  if(!data.session){paymentStatus.textContent='Zaloguj się na swoje konto LOVE Story, a następnie wróć tutaj.';return;}
+  const response=await fetch('/api/create-checkout-session',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token,'Content-Type':'application/json'},body:'{}'});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||'Płatności są obecnie niedostępne.');
+  if(!result.url||!result.url.startsWith('https://checkout.stripe.com/'))throw new Error('Nie udało się bezpiecznie otworzyć Stripe Checkout.');
+  location.assign(result.url);
+ }catch(error){paymentStatus.textContent=error.message||'Nie udało się rozpocząć płatności.';}
+ finally{button.disabled=false;}
+});
+render();
 </script>
 </body></html>
