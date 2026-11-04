@@ -59,9 +59,10 @@ async function createActivationRequest(session, subscription) {
   if (!validUserId(userId)) throw new Error("Invalid Supabase user id in Stripe metadata");
   const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
   if (!subscriptionId) throw new Error("Checkout session has no subscription id");
-  const expiresAt = subscription.current_period_end
+  const subscriptionActive = subscription.status === "active" || subscription.status === "trialing";
+  const expiresAt = subscriptionActive && subscription.current_period_end
     ? new Date(subscription.current_period_end * 1000).toISOString()
-    : null;
+    : new Date().toISOString();
   const existing = await supabaseRequest(`premium_access_requests?stripe_subscription_id=eq.${encodeURIComponent(subscriptionId)}&select=id,status`);
   if (existing.length) {
     await supabaseRequest(`premium_access_requests?id=eq.${encodeURIComponent(existing[0].id)}`, {
