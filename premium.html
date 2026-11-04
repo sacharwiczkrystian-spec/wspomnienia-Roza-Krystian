@@ -26,7 +26,7 @@
 <div class="addon"><label><input type="checkbox" value="Personalizacja profilu"> Personalizacja profilu</label><p>Dodatkowe ustawienia wyglądu profilu.</p></div>
 </div></section>
 <section class="selection" aria-live="polite"><strong>Twój wybór:</strong> <span id="chosenPlan">nie wybrano planu</span><p id="chosenAddons" class="sub">Nie zaznaczono dodatków.</p><button id="clearChoice" class="btn" type="button">Wyczyść wybór</button></section>
-<div class="notice"><strong>Ważne:</strong> Cena Premium wynosi 30 zł miesięcznie. Płatność jest obsługiwana na bezpiecznej stronie Stripe. Dostęp Premium jest przyznawany dopiero po potwierdzeniu zdarzenia przez podpisany webhook. Jeśli płatności nie są jeszcze skonfigurowane, przycisk poinformuje o tym bez pobierania pieniędzy. Przed uruchomieniem sprzedaży na żywo opiekun powinien zatwierdzić warunki subskrypcji, anulowania i zwrotów.</div>
+<div class="notice"><strong>Ważne:</strong> Cena Premium wynosi 30 zł miesięcznie. Płatność jest obsługiwana na bezpiecznej stronie Stripe. Po potwierdzeniu płatności Stripe tworzy prośbę o aktywację. Dostęp Premium zostanie przyznany dopiero po ręcznym zatwierdzeniu przez administratora. Jeśli płatności nie są jeszcze skonfigurowane, przycisk poinformuje o tym bez pobierania pieniędzy. Przed uruchomieniem sprzedaży na żywo opiekun powinien zatwierdzić warunki subskrypcji, anulowania i zwrotów.</div>
 </main>
 <footer class="wrap">LOVE Story · Premium i dodatki · <a href="/regulamin.html" style="color:inherit">Regulamin</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
@@ -40,7 +40,7 @@ document.getElementById('clearChoice').addEventListener('click',()=>{selected=''
 const paymentStatus=document.getElementById('paymentStatus');
 const supabaseClient=window.supabase.createClient('https://khggputlakhupiypybic.supabase.co','sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const checkoutState=new URLSearchParams(location.search).get('checkout');
-if(checkoutState==='success')paymentStatus.textContent='Stripe zakończył proces. Dostęp Premium pojawi się po potwierdzeniu webhooka; odśwież konto za chwilę.';
+if(checkoutState==='success')paymentStatus.textContent='Płatność została potwierdzona. Twoja prośba o aktywację Premium czeka teraz na zatwierdzenie administratora.';
 if(checkoutState==='cancelled')paymentStatus.textContent='Płatność została anulowana. Nie pobrano opłaty.';
 document.getElementById('buyPremiumBtn').addEventListener('click',async function(){
  const button=this;button.disabled=true;paymentStatus.textContent='Sprawdzam sesję i przygotowuję bezpieczną płatność…';
