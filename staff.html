@@ -47,7 +47,12 @@ const roleInfo={
  content_moderator:{title:"Moderator treści",description:"Zakres: rola przeznaczona do przeglądu zgłoszonych treści. Narzędzia operacyjne pojawią się po ich osobnym wdrożeniu."},
  support_moderator:{title:"Pracownik wsparcia",description:"Zakres: udzielanie podstawowych informacji i kierowanie użytkowników do odpowiednich kanałów pomocy. Nie oznacza dostępu administratora ani do prywatnych danych."},
  recruiter:{title:"Rekruter",description:"Zakres: wspieranie rekrutacji zespołu Love Story zgodnie z opublikowaną umową rekrutacyjną."},
- firefighter:{title:"Strażak",description:"Dostęp do strefy strażaka. Dokumenty i szkolenia są widoczne wyłącznie zgodnie z uprawnieniami przypisanymi do konta."}
+ firefighter:{title:"Strażak",description:"Dostęp do strefy strażaka. Dokumenty i szkolenia są widoczne wyłącznie zgodnie z uprawnieniami przypisanymi do konta."},
+ pani_prezes:{title:"Pani Prezes",description:"Dostęp do strefy Pani Prezes."},
+ prezes:{title:"Prezes",description:"Dostęp do strefy Prezesa."},
+ wiceprezes:{title:"Wiceprezes",description:"Dostęp do strefy Wiceprezesa."},
+ dyrektor:{title:"Dyrektor",description:"Dostęp do strefy Dyrektora."},
+ partner_company:{title:"Firma współpracująca",description:"Dostęp do strefy przedstawiciela zatwierdzonej firmy."}
 };
 function status(id,text){$(id).textContent=text||"";}
 function showPanel(id){$("loginPanel").classList.toggle("hidden",id!=="login");$("staffPanel").classList.toggle("hidden",id!=="staff");}
