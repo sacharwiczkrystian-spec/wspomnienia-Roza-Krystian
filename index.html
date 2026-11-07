@@ -183,6 +183,9 @@ body :is(.quote-card blockquote,.quote-pop p){color:#fff0df!important}
 body :is(.quote-pop){background:#1b1216!important;color:#fff4e7!important;border-color:#b38a50!important}
 </style>
 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Love Story">
 </head>
 <body>
 <header class="top"><div class="wrap nav"><a class="brand" href="/" style="text-decoration:none;color:inherit"><span class="mark">♡</span><span>Love <em>Story</em></span></a><div class="nav-right"><span id="navEmail" class="hint hidden"></span><button id="navLogout" class="btn hidden">Wyloguj</button><a class="btn training-nav-link" href="/szkolenia.html" aria-label="Przejdź do szkoleń zespołu">Szkolenia</a><a class="btn admin-link" href="/admin.html" aria-label="Otwórz panel administratora">Panel admina</a><a class="btn admin-link" href="/staff.html" aria-label="Przejdź do logowania pracownika">Panel pracownika / logowanie</a><a class="btn admin-link" href="/komunikator-pracownikow.html" aria-label="Otwórz komunikator pracowników">Komunikator pracowników</a><a class="btn admin-link" href="/umowa-partnerska.html" aria-label="Otwórz umowę partnerską">Umowa partnerska</a><a class="btn admin-link partners-nav-link" href="/firmy-wspolpracujace.html" aria-label="Zobacz firmy współpracujące">Firmy współpracujące</a><a class="btn partners-nav-link" href="/panel-firmy.html" aria-label="Zaloguj się do panelu firmy">Logowanie firm</a><a class="btn admin-link" href="/pani-prezes.html">Pani Prezes</a><a class="btn admin-link" href="/prezes.html">Prezes</a><a class="btn admin-link" href="/wiceprezes.html">Wiceprezes</a><a class="btn admin-link" href="/dyrektor.html">Dyrektor</a><a class="btn" href="/premium.html">Premium i dodatki</a><a class="btn" href="/o-tworcy.html">O projekcie</a></div></div></header>
@@ -759,5 +762,85 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
 })();
 </script>
 
+
+<style>
+#loveInstallButton{position:fixed;right:16px;bottom:18px;z-index:9990;display:none;align-items:center;gap:9px;padding:13px 17px;border:1px solid #d9b56f;border-radius:999px;background:linear-gradient(135deg,#f0d99c,#c59a55);color:#1b1114;font:800 13px/1.2 system-ui,sans-serif;box-shadow:0 10px 30px #0006;cursor:pointer}
+#loveInstallButton.visible{display:flex}
+#loveInstallButton svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#loveInstallDialog{position:fixed;inset:0;z-index:10020;display:none;place-items:center;padding:18px;background:#080508c9}
+#loveInstallDialog.visible{display:grid}
+#loveInstallDialog .install-card{width:min(440px,100%);padding:24px;border:1px solid #8d6849;border-radius:22px;background:linear-gradient(145deg,#2b171f,#140e11);color:#f8eee2;box-shadow:0 24px 80px #0009}
+#loveInstallDialog h2{margin:0 0 10px;color:#f0d99c;font:700 24px Georgia,serif}
+#loveInstallDialog p,#loveInstallDialog li{color:#e5d6ce;font-size:14px;line-height:1.65}
+#loveInstallDialog ol{padding-left:22px}
+#loveInstallDialog .install-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+#loveInstallDialog button{border:1px solid #8d6849;border-radius:11px;padding:10px 14px;background:#2a1a20;color:#f8eee2;font:700 13px system-ui;cursor:pointer}
+#loveInstallDialog button.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);color:#1b1114;border-color:#f0d99c}
+@media(max-width:540px){#loveInstallButton{right:12px;bottom:14px;padding:12px 14px}}
+</style>
+<button id="loveInstallButton" type="button" aria-label="Dodaj LOVE Story do ekranu głównego">
+<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M12 7v7m-3-3 3 3 3-3M9 18h6"/></svg>
+<span>Dodaj do ekranu</span>
+</button>
+<div id="loveInstallDialog" role="dialog" aria-modal="true" aria-labelledby="loveInstallTitle">
+ <div class="install-card">
+  <h2 id="loveInstallTitle">LOVE Story na ekranie głównym</h2>
+  <p id="loveInstallIntro">Dodaj skrót do LOVE Story, aby szybciej otwierać stronę.</p>
+  <ol id="loveInstallSteps"></ol>
+  <div class="install-actions">
+   <button class="primary" id="loveInstallConfirm" type="button">Rozumiem</button>
+   <button id="loveInstallClose" type="button">Zamknij</button>
+  </div>
+ </div>
+</div>
+<script>
+(()=> {
+ const button=document.getElementById("loveInstallButton");
+ const dialog=document.getElementById("loveInstallDialog");
+ const steps=document.getElementById("loveInstallSteps");
+ const intro=document.getElementById("loveInstallIntro");
+ const close=()=>dialog.classList.remove("visible");
+ let installPrompt=null;
+ const ua=navigator.userAgent||"";
+ const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+ const isSafari=isIOS&&/Safari/.test(ua)&&!/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+ const standalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+ function showGuide(){
+  steps.replaceChildren();
+  if(isIOS){
+   intro.textContent=isSafari?"W Safari wykonaj te dwa kroki:":"Aby dodać stronę na iPhonie lub iPadzie, otwórz ją w Safari:";
+   ["Naciśnij przycisk Udostępnij (kwadrat ze strzałką).","Wybierz „Dodaj do ekranu początkowego”, a następnie „Dodaj”."].forEach(t=>{const li=document.createElement("li");li.textContent=t;steps.append(li)});
+  }else{
+   intro.textContent="W menu przeglądarki wybierz opcję instalacji lub dodania strony do ekranu głównego.";
+   ["Otwórz menu przeglądarki (trzy kropki lub menu udostępniania).","Wybierz „Zainstaluj aplikację” albo „Dodaj do ekranu głównego”.","Potwierdź dodanie LOVE Story."].forEach(t=>{const li=document.createElement("li");li.textContent=t;steps.append(li)});
+  }
+  dialog.classList.add("visible");
+ }
+ window.addEventListener("beforeinstallprompt",event=>{
+  event.preventDefault();installPrompt=event;
+  if(!standalone)button.classList.add("visible");
+ });
+ window.addEventListener("appinstalled",()=>{
+  installPrompt=null;button.classList.remove("visible");
+ });
+ if(!standalone){
+  button.classList.add("visible");
+  if(isIOS||!installPrompt)button.addEventListener("click",showGuide);
+  else button.addEventListener("click",async()=>{
+   if(!installPrompt){showGuide();return}
+   installPrompt.prompt();
+   await installPrompt.userChoice;
+   installPrompt=null;
+  });
+ }
+ document.getElementById("loveInstallClose").addEventListener("click",close);
+ document.getElementById("loveInstallConfirm").addEventListener("click",close);
+ dialog.addEventListener("click",event=>{if(event.target===dialog)close()});
+ document.addEventListener("keydown",event=>{if(event.key==="Escape")close()});
+ if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+ }
+})();
+</script>
 </body>
 </html>
