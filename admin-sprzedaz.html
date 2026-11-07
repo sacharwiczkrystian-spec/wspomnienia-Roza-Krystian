@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100b0d">
+<title>LOVE Story — Sprzedaż i faktury</title>
+<style>
+:root{color-scheme:dark;--bg:#100b0d;--panel:#1b1216;--ink:#f8eee2;--muted:#c5b1ad;--line:#60404a;--gold:#dfbd76;--gold2:#f0d99c;--red:#ffb6b6}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 8% 0%,#481728 0,transparent 36%),radial-gradient(ellipse at 100% 8%,#2c1d25 0,transparent 35%),var(--bg);color:var(--ink);font:14px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--line)}.brand{font-weight:900;letter-spacing:.5px}.brand span{color:var(--gold)}.links{display:flex;gap:8px;flex-wrap:wrap}
+a,.btn{color:var(--gold2);text-decoration:none}.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid var(--line);border-radius:10px;background:#24171d;font-weight:800;font-size:12px}.btn.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);border-color:#e9cc8c;color:#1b1114}.hero{padding:38px 0 25px}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:900}.hero h1{font: bold clamp(30px,5vw,46px)/1.1 Georgia,serif;margin:9px 0;color:#f8eee2}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:linear-gradient(145deg,#21151a,#171014);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}.card h2{font: bold 21px Georgia,serif;margin:0 0 8px;color:var(--gold2)}.card p{color:var(--muted);margin:0 0 16px}.icon{font-size:25px;color:var(--gold);margin-bottom:14px}.status{min-height:20px;color:var(--red);margin-top:12px;font-size:12px}.hidden{display:none!important}.gate{max-width:480px;margin:9vh auto;background:linear-gradient(145deg,#21151a,#171014);border:1px solid #76513e;border-radius:20px;padding:28px}.gate h1{font: bold 27px Georgia,serif;color:var(--gold2)}.foot{margin-top:28px;color:#b6a4a4;font-size:11px}.notice{margin-top:18px;padding:15px;border:1px solid #8b6940;border-radius:13px;background:#302319;color:#f0dfbd;font-size:12px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.wrap{padding:18px 13px 40px}.hero{padding-top:28px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<section id="loading" class="gate"><div class="brand">LOVE <span>Story</span></div><h1>Sprawdzam uprawnienia</h1><p class="muted">Trwa weryfikacja sesji administratora…</p><p id="bootStatus" class="status"></p></section>
+<section id="denied" class="gate hidden"><div class="brand">LOVE <span>Story</span></div><h1>Brak dostępu</h1><p class="muted">Ta część panelu jest przeznaczona dla kont z uprawnieniami administratora.</p><div class="links"><a class="btn primary" href="/admin.html">Wróć do logowania administratora</a><a class="btn" href="/">Strona główna</a></div></section>
+<main id="app" class="wrap hidden">
+<header class="top"><div class="brand">LOVE <span>Story</span> <span class="muted">/ Centrum administracyjne</span></div><nav class="links"><a class="btn" href="/admin.html">Główny panel</a><a class="btn" href="/admin-firmy.html">Firmy i reklamy</a><button class="btn" id="logout" type="button">Wyloguj</button></nav></header>
+<section class="hero"><div class="eyebrow">Strefa administracyjna</div><h1>Firmy, sprzedaż i faktury</h1><p class="muted">Jedno miejsce do obsługi partnerów oraz przyszłej ewidencji sprzedaży i dokumentów.</p></section>
+<section class="grid">
+<article class="card"><div class="icon">▤</div><h2>Firmy</h2><p>Zakładanie kont firmowych, przegląd reklam i moderacja publikacji.</p><a class="btn primary" href="/admin-firmy.html">Otwórz zarządzanie firmami</a></article>
+<article class="card"><div class="icon">◇</div><h2>Sprzedaż</h2><p>Przestrzeń na rejestr zamówień, płatności, statusy transakcji i zestawienia.</p><span class="btn" aria-disabled="true">Moduł w przygotowaniu</span></article>
+<article class="card"><div class="icon">▧</div><h2>Faktury</h2><p>Przestrzeń na rejestr dokumentów, numery faktur, kwoty, terminy i statusy płatności.</p><span class="btn" aria-disabled="true">Moduł w przygotowaniu</span></article>
+</section>
+<div class="notice"><strong>Ważne:</strong> sprzedaż i faktury nie są jeszcze podłączone do bazy ani systemu księgowego. Panel nie wystawia dokumentów, nie nalicza VAT i nie zapisuje płatności. Przed uruchomieniem trzeba ustalić źródło zamówień i płatności, dane sprzedawcy, zasady numeracji oraz sposób wystawiania dokumentów z osobą odpowiedzialną za księgowość.</div>
+<p class="foot">Dostęp do widoku jest pokazywany dopiero po sprawdzeniu zalogowanej sesji i wpisu w tabeli admin_users. Nie wpisuj tu danych kart płatniczych ani haseł.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0"></script>
+<script>
+(()=>{"use strict";
+const URL="https://khggputlakhupiypybic.supabase.co",KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+const $=id=>document.getElementById(id);
+const sb=supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+async function boot(){try{const result=await sb.auth.getSession();if(result.error)throw result.error;const session=result.data.session;if(!session){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
+const userResponse=await fetch(URL+"/auth/v1/user",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
+if(!userResponse.ok)throw new Error("Sesja wygasła. Zaloguj się ponownie.");
+const user=await userResponse.json();
+const check=await fetch(URL+"/rest/v1/admin_users?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id&limit=1",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
+if(!check.ok)throw new Error("Nie udało się potwierdzić uprawnień administratora.");
+const rows=await check.json();if(!Array.isArray(rows)||!rows.length){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
+$("app").classList.remove("hidden");$("loading").classList.add("hidden");
+}catch(error){$("bootStatus").textContent=error.message||"Nie udało się sprawdzić dostępu.";$("denied").classList.remove("hidden");$("loading").classList.add("hidden");}}
+$("logout").addEventListener("click",async()=>{await sb.auth.signOut({scope:"local"});location.href="/admin.html"});
+boot();
+})();
+</script>
+</body></html>
