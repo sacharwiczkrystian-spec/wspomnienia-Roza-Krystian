@@ -825,12 +825,16 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
  });
  if(!standalone){
   button.classList.add("visible");
-  if(isIOS||!installPrompt)button.addEventListener("click",showGuide);
-  else button.addEventListener("click",async()=>{
-   if(!installPrompt){showGuide();return}
-   installPrompt.prompt();
-   await installPrompt.userChoice;
-   installPrompt=null;
+  button.addEventListener("click",async()=>{
+   if(installPrompt){
+    const promptEvent=installPrompt;
+    installPrompt=null;
+    await promptEvent.prompt();
+    const choice=await promptEvent.userChoice;
+    if(choice&&choice.outcome==="accepted")button.classList.remove("visible");
+    return;
+   }
+   showGuide();
   });
  }
  document.getElementById("loveInstallClose").addEventListener("click",close);
