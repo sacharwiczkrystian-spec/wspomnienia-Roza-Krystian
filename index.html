@@ -138,6 +138,16 @@ input[type=checkbox],input[type=radio]{accent-color:#d9b56f}
 
 .dream-book{background:linear-gradient(145deg,#fffdfb,#f2f7f4);border-color:#dce9df}.dream-book .section-title h2{font-size:25px}.dream-book .field input{width:100%}.dream-progress{margin:20px 0 12px;padding:15px 16px;border:1px solid #dce9df;border-radius:15px;background:#fbfffc}.dream-progress>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.dream-progress strong{font-size:13px}.dream-progress>div:first-child span{font-size:11px;color:var(--muted)}.dream-progress-track{height:7px;margin-top:12px;border-radius:999px;background:#e8eee9;overflow:hidden}.dream-progress-track span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#8fb59a,#4d8964);transition:width .25s}.dream-list{list-style:none;padding:0;margin:0;display:grid;gap:9px}.dream-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid #e5e9e4;border-radius:14px;background:#fff;min-width:0}.dream-item input[type=checkbox]{width:19px;height:19px;flex:0 0 auto;accent-color:#548a66}.dream-item-copy{flex:1;min-width:0;overflow-wrap:anywhere}.dream-item-copy strong{display:block;font-size:13px;font-weight:750}.dream-item-copy small{display:block;margin-top:3px;color:var(--muted);font-size:11px}.dream-item.is-done{background:#f5faf6}.dream-item.is-done .dream-item-copy strong{text-decoration:line-through;color:#718578}.dream-delete{border:1px solid #eadfe4;background:#fff9fb;color:#8d3e69;border-radius:10px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 auto}.dream-delete:focus-visible,.dream-item input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}@media(max-width:560px){.dream-item{align-items:flex-start;gap:9px;padding:11px}.dream-delete{padding:7px;font-size:10px}.dream-progress{padding:12px}}
 
+
+.home-partner-ads{margin:0 0 20px;border-color:#e7c6d5;background:linear-gradient(135deg,#fffdfb,#fff5f8 65%,#f4eff9)}
+.home-partner-intro{margin:0 0 17px;font-size:13px}
+.home-partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.home-partner-card,.home-partner-empty{min-width:0;padding:17px;border:1px solid #eedce5;border-radius:15px;background:#fffdfd}
+.home-partner-card h3{margin:0 0 6px;color:var(--accent2);font-size:16px;line-height:1.35}
+.home-partner-card strong{display:block;margin-bottom:7px;font-size:13px}
+.home-partner-card p{margin:0 0 12px;color:#796b76;font-size:12px;overflow-wrap:anywhere;white-space:pre-wrap}
+.home-partner-card .btn{margin:4px 5px 0 0}
+.home-partner-empty{grid-column:1/-1;color:var(--muted);font-size:13px;text-align:center}
 </style>
 
 <style id="privacy-guard-style">
@@ -188,6 +198,12 @@ body :is(.quote-pop){background:#1b1216!important;color:#fff4e7!important;border
     <a class="btn primary" href="/premium.html" aria-label="Zobacz pakiety LOVE Story Premium">Poznaj Premium →</a>
   </div>
 </section>
+<section class="panel home-partner-ads" id="homePartnerAds" aria-labelledby="homePartnerAdsTitle">
+  <div class="section-title"><div><div class="eyebrow">Wspieramy lokalne marki</div><h2 id="homePartnerAdsTitle">Partnerzy LOVE Story</h2></div><a class="btn" href="/firmy-wspolpracujace.html">Wszyscy partnerzy →</a></div>
+  <p class="muted home-partner-intro">Poznaj firmy współpracujące z LOVE Story. Wyświetlamy wyłącznie reklamy zatwierdzone przez administratora.</p>
+  <div class="home-partner-grid" id="homePartnerAdsList" aria-live="polite"><div class="home-partner-empty">Ładowanie reklam partnerów…</div></div>
+</section>
+
 <section class="panel" id="procedure-life-health" aria-labelledby="lifeHealthTitle" style="margin-bottom:20px;border-color:#e8b6b6;background:linear-gradient(145deg,#fffdfb,#fff3f2)">
   <div class="section-title"><h2 id="lifeHealthTitle">Procedura: zagrożenie życia i zdrowia</h2><span class="pill" style="background:#fee2e2;color:#991b1b">Dokument nr LS-BHP-2026-001</span></div>
   <p class="muted">Instrukcja dla pracowników i współpracowników LOVE Story. W sytuacji bezpośredniego zagrożenia najważniejsze są bezpieczeństwo, szybkie wezwanie służb i wykonywanie poleceń dyspozytora.</p>
@@ -698,6 +714,35 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
    form.reset();date.min=today();status.textContent='Marzenie dodane do Waszej księgi.';render();text.focus();
  });
  render();
+})();
+</script>
+
+
+<script id="home-partner-ads-script">
+(()=> {
+ const box=document.getElementById("homePartnerAdsList");
+ if(!box)return;
+ const endpoint="https://khggputlakhupiypybic.supabase.co/rest/v1/company_ads?select=id,company_name,title,description,website_url,contact_email,phone&status=eq.approved&order=created_at.desc";
+ fetch(endpoint,{headers:{apikey:"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe"}})
+  .then(response=>{if(!response.ok)throw new Error("Nie udało się pobrać reklam.");return response.json()})
+  .then(rows=>{
+   box.replaceChildren();
+   if(!Array.isArray(rows)||!rows.length){
+    const empty=document.createElement("div");empty.className="home-partner-empty";empty.textContent="Wkrótce pojawią się tutaj reklamy firm współpracujących z LOVE Story.";box.append(empty);return;
+   }
+   rows.forEach(ad=>{
+    const card=document.createElement("article");card.className="home-partner-card";
+    const name=document.createElement("h3");name.textContent=ad.company_name||"Partner LOVE Story";
+    const title=document.createElement("strong");title.textContent=ad.title||"Oferta partnera";
+    const description=document.createElement("p");description.textContent=ad.description||"";
+    card.append(name,title,description);
+    if(ad.website_url){const link=document.createElement("a");link.className="btn";link.href=ad.website_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Odwiedź stronę";card.append(link)}
+    if(ad.contact_email){const link=document.createElement("a");link.className="btn";link.href="mailto:"+ad.contact_email;link.textContent="Kontakt";card.append(link)}
+    if(ad.phone){const phone=document.createElement("p");phone.style.marginTop="10px";phone.textContent="Telefon: "+ad.phone;card.append(phone)}
+    box.append(card);
+   });
+  })
+  .catch(()=>{box.textContent="Nie udało się teraz wczytać reklam partnerów."});
 })();
 </script>
 
