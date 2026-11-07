@@ -4,13 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#100b0d">
-<title>LOVE Story — Sprzedaż i faktury</title>
+<title>LOVE Story — Sprzedaż i dokumenty</title>
 <style>
-:root{color-scheme:dark;--bg:#100b0d;--panel:#1b1216;--ink:#f8eee2;--muted:#c5b1ad;--line:#60404a;--gold:#dfbd76;--gold2:#f0d99c;--red:#ffb6b6}
+:root{color-scheme:dark;--bg:#100b0d;--panel:#1b1216;--ink:#f8eee2;--muted:#c5b1ad;--line:#60404a;--gold:#dfbd76;--gold2:#f0d99c;--red:#ffb6b6;--green:#a7dfb6}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 8% 0%,#481728 0,transparent 36%),radial-gradient(ellipse at 100% 8%,#2c1d25 0,transparent 35%),var(--bg);color:var(--ink);font:14px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--line)}.brand{font-weight:900;letter-spacing:.5px}.brand span{color:var(--gold)}.links{display:flex;gap:8px;flex-wrap:wrap}
-a,.btn{color:var(--gold2);text-decoration:none}.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid var(--line);border-radius:10px;background:#24171d;font-weight:800;font-size:12px}.btn.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);border-color:#e9cc8c;color:#1b1114}.hero{padding:38px 0 25px}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:900}.hero h1{font: bold clamp(30px,5vw,46px)/1.1 Georgia,serif;margin:9px 0;color:#f8eee2}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:linear-gradient(145deg,#21151a,#171014);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}.card h2{font: bold 21px Georgia,serif;margin:0 0 8px;color:var(--gold2)}.card p{color:var(--muted);margin:0 0 16px}.icon{font-size:25px;color:var(--gold);margin-bottom:14px}.status{min-height:20px;color:var(--red);margin-top:12px;font-size:12px}.hidden{display:none!important}.gate{max-width:480px;margin:9vh auto;background:linear-gradient(145deg,#21151a,#171014);border:1px solid #76513e;border-radius:20px;padding:28px}.gate h1{font: bold 27px Georgia,serif;color:var(--gold2)}.foot{margin-top:28px;color:#b6a4a4;font-size:11px}.notice{margin-top:18px;padding:15px;border:1px solid #8b6940;border-radius:13px;background:#302319;color:#f0dfbd;font-size:12px}
-@media(max-width:800px){.grid{grid-template-columns:1fr}.wrap{padding:18px 13px 40px}.hero{padding-top:28px}.card{padding:18px}}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid var(--line)}.brand{font-weight:900;letter-spacing:.5px}.brand span{color:var(--gold)}.links{display:flex;gap:8px;flex-wrap:wrap}
+a,.btn{color:var(--gold2);text-decoration:none}.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid var(--line);border-radius:10px;background:#24171d;font-weight:800;font-size:12px;cursor:pointer}.btn.primary{background:linear-gradient(135deg,#f0d99c,#c59a55);border-color:#e9cc8c;color:#1b1114}.btn.danger{color:#ffb6b6;border-color:#75434b}.btn:disabled{opacity:.55;cursor:not-allowed}
+.hero{padding:30px 0 20px}.eyebrow{color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:900}.hero h1{font:bold clamp(30px,5vw,44px)/1.1 Georgia,serif;margin:9px 0;color:#f8eee2}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{background:linear-gradient(145deg,#21151a,#171014);border:1px solid var(--line);border-radius:18px;padding:20px;min-width:0}.card h2{font:bold 20px Georgia,serif;margin:0 0 8px;color:var(--gold2)}.card p{color:var(--muted);margin:0 0 14px}.icon{font-size:24px;color:var(--gold);margin-bottom:10px}.status{min-height:20px;color:var(--red);margin-top:12px;font-size:12px;overflow-wrap:anywhere}.status.good{color:var(--green)}.hidden{display:none!important}.gate{max-width:480px;margin:9vh auto;background:linear-gradient(145deg,#21151a,#171014);border:1px solid #76513e;border-radius:20px;padding:28px}.gate h1{font:bold 27px Georgia,serif;color:var(--gold2)}.foot{margin-top:28px;color:#b6a4a4;font-size:11px}.notice{margin-top:18px;padding:14px 16px;border:1px solid #8b6940;border-radius:13px;background:#302319;color:#f0dfbd;font-size:12px}
+.section{margin-top:18px;background:linear-gradient(145deg,#21151a,#171014);border:1px solid var(--line);border-radius:18px;padding:22px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:15px}.section h2{font: bold 23px Georgia,serif;color:var(--gold2);margin:0}.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{display:grid;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:11px;font-weight:800;color:#dfcbb7}.field input,.field select,.field textarea{width:100%;min-width:0;border:1px solid #60404a;border-radius:10px;background:#120d10;color:var(--ink);padding:11px;font:inherit}.field textarea{min-height:78px;resize:vertical}.field input[type=file]{font-size:12px}.form-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}.filters{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 16px}.filters input,.filters select{border:1px solid #60404a;border-radius:10px;background:#120d10;color:var(--ink);padding:10px;font:inherit}.docs{display:grid;gap:10px}.doc{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px;border:1px solid #4c333b;border-radius:13px;background:#191116}.doc-main{min-width:0}.doc-title{font-weight:850;color:#f7e9d8;overflow-wrap:anywhere}.doc-meta{font-size:11px;color:var(--muted);overflow-wrap:anywhere}.doc-actions{display:flex;gap:7px;flex-wrap:wrap;flex-shrink:0}.empty{padding:22px;text-align:center;border:1px dashed #60404a;border-radius:12px;color:var(--muted)}.domain-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.domain-name{font-weight:900;color:var(--gold2);font-size:16px;overflow-wrap:anywhere}.pill{font-size:10px;border:1px solid #46664c;color:#b8e4c2;background:#1a2a20;border-radius:30px;padding:5px 9px;font-weight:900;text-transform:uppercase;letter-spacing:.6px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr 1fr}.wrap{padding:18px 13px 40px}.section{padding:17px}.doc{align-items:flex-start;flex-direction:column}.doc-actions{width:100%}}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.top{align-items:flex-start}.links{width:100%}.links .btn{flex:1}.doc-actions .btn{flex:1}}
 </style>
 </head>
 <body>
@@ -18,30 +21,119 @@ a,.btn{color:var(--gold2);text-decoration:none}.btn{display:inline-flex;align-it
 <section id="denied" class="gate hidden"><div class="brand">LOVE <span>Story</span></div><h1>Brak dostępu</h1><p class="muted">Ta część panelu jest przeznaczona dla kont z uprawnieniami administratora.</p><div class="links"><a class="btn primary" href="/admin.html">Wróć do logowania administratora</a><a class="btn" href="/">Strona główna</a></div></section>
 <main id="app" class="wrap hidden">
 <header class="top"><div class="brand">LOVE <span>Story</span> <span class="muted">/ Centrum administracyjne</span></div><nav class="links"><a class="btn" href="/admin.html">Główny panel</a><a class="btn" href="/admin-firmy.html">Firmy i reklamy</a><button class="btn" id="logout" type="button">Wyloguj</button></nav></header>
-<section class="hero"><div class="eyebrow">Strefa administracyjna</div><h1>Firmy, sprzedaż i faktury</h1><p class="muted">Jedno miejsce do obsługi partnerów oraz przyszłej ewidencji sprzedaży i dokumentów.</p></section>
+<section class="hero"><div class="eyebrow">Strefa administracyjna</div><h1>Dokumenty i domena</h1><p class="muted">Prywatna ewidencja załączonych paragonów i faktur oraz podgląd domeny strony.</p></section>
 <section class="grid">
 <article class="card"><div class="icon">▤</div><h2>Firmy</h2><p>Zakładanie kont firmowych, przegląd reklam i moderacja publikacji.</p><a class="btn primary" href="/admin-firmy.html">Otwórz zarządzanie firmami</a></article>
-<article class="card"><div class="icon">◇</div><h2>Sprzedaż</h2><p>Przestrzeń na rejestr zamówień, płatności, statusy transakcji i zestawienia.</p><span class="btn" aria-disabled="true">Moduł w przygotowaniu</span></article>
-<article class="card"><div class="icon">▧</div><h2>Faktury</h2><p>Przestrzeń na rejestr dokumentów, numery faktur, kwoty, terminy i statusy płatności.</p><span class="btn" aria-disabled="true">Moduł w przygotowaniu</span></article>
+<article class="card"><div class="icon">▧</div><h2>Dokumenty</h2><p id="docCount">Ładowanie ewidencji…</p><span class="muted">Pliki są prywatne i dostępne wyłącznie administratorom.</span></article>
+<article class="card"><div class="icon">◇</div><h2>Domena</h2><p>Podgląd bieżącej domeny produkcyjnej. Konfiguracja DNS pozostaje bez zmian.</p><a class="btn" href="https://love-story-nowa.vercel.app/" target="_blank" rel="noopener">Otwórz stronę</a></article>
 </section>
-<div class="notice"><strong>Ważne:</strong> sprzedaż i faktury nie są jeszcze podłączone do bazy ani systemu księgowego. Panel nie wystawia dokumentów, nie nalicza VAT i nie zapisuje płatności. Przed uruchomieniem trzeba ustalić źródło zamówień i płatności, dane sprzedawcy, zasady numeracji oraz sposób wystawiania dokumentów z osobą odpowiedzialną za księgowość.</div>
-<p class="foot">Dostęp do widoku jest pokazywany dopiero po sprawdzeniu zalogowanej sesji i wpisu w tabeli admin_users. Nie wpisuj tu danych kart płatniczych ani haseł.</p>
+<section class="section">
+<div class="section-head"><h2>Dodaj dokument</h2></div>
+<form id="docForm">
+<div class="form-grid">
+<div class="field"><label for="docType">Rodzaj dokumentu *</label><select id="docType" required><option value="receipt">Paragon</option><option value="invoice">Faktura</option></select></div>
+<div class="field"><label for="docTitle">Nazwa / opis *</label><input id="docTitle" maxlength="160" required placeholder="Np. Zakup materiałów"></div>
+<div class="field"><label for="docNumber">Numer dokumentu</label><input id="docNumber" maxlength="100" placeholder="Opcjonalnie"></div>
+<div class="field"><label for="issuer">Wystawca / sklep</label><input id="issuer" maxlength="160" placeholder="Nazwa wystawcy"></div>
+<div class="field"><label for="docDate">Data dokumentu</label><input id="docDate" type="date"></div>
+<div class="field"><label for="amount">Kwota</label><input id="amount" type="number" min="0" max="9999999999.99" step="0.01" placeholder="0,00"></div>
+<div class="field"><label for="currency">Waluta</label><select id="currency"><option value="PLN">PLN</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></div>
+<div class="field full"><label for="docFile">Plik (PDF, JPG, PNG lub WEBP; maks. 15 MB) *</label><input id="docFile" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" required></div>
+<div class="field full"><label for="notes">Notatka</label><textarea id="notes" maxlength="2000" placeholder="Dodatkowe informacje (opcjonalnie)"></textarea></div>
+</div>
+<div class="form-actions"><button class="btn primary" id="saveDoc" type="submit">Zapisz dokument</button><span id="formStatus" class="status" aria-live="polite"></span></div>
+</form>
+</section>
+<section class="section">
+<div class="section-head"><h2>Historia dokumentów</h2><button class="btn" id="refreshDocs" type="button">Odśwież</button></div>
+<div class="filters"><input id="searchDocs" type="search" placeholder="Szukaj po nazwie, numerze, wystawcy…"><select id="filterType"><option value="">Wszystkie typy</option><option value="receipt">Paragony</option><option value="invoice">Faktury</option></select></div>
+<div id="documents" class="docs"><div class="empty">Ładowanie dokumentów…</div></div>
+</section>
+<section class="section">
+<div class="section-head"><h2>Obecna domena</h2><span class="pill">Zweryfikowana</span></div>
+<div class="domain-row"><div><div class="domain-name">love-story-nowa.vercel.app</div><div class="doc-meta">Domena produkcyjna przypisana do projektu LOVE Story w Vercel</div></div><a class="btn" href="https://love-story-nowa.vercel.app/" target="_blank" rel="noopener">Otwórz domenę</a></div>
+<p class="doc-meta" style="margin-top:14px">Ten panel pokazuje stan domeny. Nie zmienia rekordów DNS, przekierowań ani przypisania domeny.</p>
+</section>
+<div class="notice"><strong>Ważne:</strong> to prywatna ewidencja plików i opisów, a nie program księgowy. Panel nie wystawia faktur, nie wylicza podatków ani VAT i nie potwierdza poprawności dokumentów. Przy rozliczeniach działalności nierejestrowanej poproś opiekuna i w razie potrzeby księgowego o sprawdzenie zasad. Nie przesyłaj danych kart płatniczych ani haseł.</div>
+<p class="foot">Dostęp do widoku i plików jest ograniczony do zalogowanych administratorów. Przechowywane dokumenty są prywatne.</p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.0"></script>
 <script>
 (()=>{"use strict";
-const URL="https://khggputlakhupiypybic.supabase.co",KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+const URL="https://khggputlakhupiypybic.supabase.co",KEY="sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe",BUCKET="admin-financial-documents";
 const $=id=>document.getElementById(id);
 const sb=supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true}});
-async function boot(){try{const result=await sb.auth.getSession();if(result.error)throw result.error;const session=result.data.session;if(!session){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
-const userResponse=await fetch(URL+"/auth/v1/user",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
-if(!userResponse.ok)throw new Error("Sesja wygasła. Zaloguj się ponownie.");
-const user=await userResponse.json();
-const check=await fetch(URL+"/rest/v1/admin_users?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id&limit=1",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
-if(!check.ok)throw new Error("Nie udało się potwierdzić uprawnień administratora.");
-const rows=await check.json();if(!Array.isArray(rows)||!rows.length){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
-$("app").classList.remove("hidden");$("loading").classList.add("hidden");
-}catch(error){$("bootStatus").textContent=error.message||"Nie udało się sprawdzić dostępu.";$("denied").classList.remove("hidden");$("loading").classList.add("hidden");}}
+let currentUser=null,allDocs=[];
+const typeName=t=>t==="receipt"?"Paragon":"Faktura";
+const money=(amount,currency)=>amount===null||amount===undefined?"Kwota niepodana":new Intl.NumberFormat("pl-PL",{style:"currency",currency}).format(Number(amount));
+const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+function setStatus(id,message,good=false){const el=$(id);el.textContent=message;el.classList.toggle("good",good)}
+async function loadDocs(){
+  $("documents").innerHTML='<div class="empty">Ładowanie dokumentów…</div>';
+  const {data,error}=await sb.from("admin_financial_documents").select("*").order("created_at",{ascending:false}).limit(300);
+  if(error)throw error;
+  allDocs=data||[];$("docCount").textContent="Zapisane dokumenty: "+allDocs.length;
+  renderDocs();
+}
+function renderDocs(){
+  const term=$("searchDocs").value.trim().toLocaleLowerCase("pl"),kind=$("filterType").value;
+  const rows=allDocs.filter(d=>(!kind||d.document_type===kind)&&(!term||[d.title,d.document_number,d.issuer,d.notes,d.file_name].some(v=>String(v||"").toLocaleLowerCase("pl").includes(term))));
+  if(!rows.length){$("documents").innerHTML='<div class="empty">Brak dokumentów pasujących do wyszukiwania.</div>';return}
+  $("documents").innerHTML=rows.map(d=>'<article class="doc"><div class="doc-main"><div class="doc-title">'+escapeHtml(d.title)+' <span class="doc-meta">· '+typeName(d.document_type)+'</span></div><div class="doc-meta">'+escapeHtml(d.document_number||"Bez numeru")+' · '+escapeHtml(d.issuer||"Nie podano wystawcy")+' · '+(d.document_date?new Date(d.document_date+"T12:00:00").toLocaleDateString("pl-PL"):"Bez daty")+' · '+escapeHtml(money(d.amount,d.currency))+'</div><div class="doc-meta">'+escapeHtml(d.file_name)+' · '+(Number(d.file_size)/1024/1024).toFixed(2)+' MB</div></div><div class="doc-actions"><button class="btn" type="button" data-open="'+d.id+'">Otwórz plik</button><button class="btn danger" type="button" data-delete="'+d.id+'">Usuń</button></div></article>').join("");
+  $("documents").querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openDoc(b.dataset.open)));
+  $("documents").querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>deleteDoc(b.dataset.delete)));
+}
+async function openDoc(id){
+  const doc=allDocs.find(d=>d.id===id);if(!doc)return;
+  const {data,error}=await sb.storage.from(BUCKET).createSignedUrl(doc.storage_path,60);
+  if(error){alert("Nie udało się otworzyć pliku: "+error.message);return}
+  window.open(data.signedUrl,"_blank","noopener,noreferrer");
+}
+async function deleteDoc(id){
+  const doc=allDocs.find(d=>d.id===id);if(!doc)return;
+  if(!confirm("Usunąć dokument „"+doc.title+"” wraz z załączonym plikiem?"))return;
+  const {error:storageError}=await sb.storage.from(BUCKET).remove([doc.storage_path]);
+  if(storageError){alert("Nie udało się usunąć pliku: "+storageError.message);return}
+  const {error}=await sb.from("admin_financial_documents").delete().eq("id",id);
+  if(error){alert("Plik usunięty, ale nie udało się usunąć wpisu: "+error.message);return}
+  await loadDocs();
+}
+async function saveDoc(event){
+  event.preventDefault();setStatus("formStatus","");
+  const file=$("docFile").files[0];if(!file){setStatus("formStatus","Wybierz plik.");return}
+  const allowed=["application/pdf","image/jpeg","image/png","image/webp"];
+  if(!allowed.includes(file.type)){setStatus("formStatus","Dozwolone są tylko pliki PDF, JPG, PNG i WEBP.");return}
+  if(file.size>15*1024*1024){setStatus("formStatus","Plik przekracza limit 15 MB.");return}
+  const amountValue=$("amount").value;
+  if(amountValue!==""&&(!Number.isFinite(Number(amountValue))||Number(amountValue)<0)){setStatus("formStatus","Podaj prawidłową kwotę.");return}
+  $("saveDoc").disabled=true;$("saveDoc").textContent="Zapisywanie…";
+  const safeName=file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g,"-").slice(-100)||"dokument";
+  const path=currentUser.id+"/"+crypto.randomUUID()+"-"+safeName;
+  try{
+    const {error:uploadError}=await sb.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+    if(uploadError)throw uploadError;
+    const row={document_type:$("docType").value,title:$("docTitle").value.trim(),document_number:$("docNumber").value.trim()||null,issuer:$("issuer").value.trim()||null,document_date:$("docDate").value||null,amount:amountValue===""?null:Number(amountValue),currency:$("currency").value,notes:$("notes").value.trim()||null,storage_path:path,file_name:file.name,mime_type:file.type,file_size:file.size,created_by:currentUser.id};
+    const {error:insertError}=await sb.from("admin_financial_documents").insert(row);
+    if(insertError){await sb.storage.from(BUCKET).remove([path]);throw insertError}
+    $("docForm").reset();setStatus("formStatus","Dokument został zapisany.",true);await loadDocs();
+  }catch(error){setStatus("formStatus",error.message||"Nie udało się zapisać dokumentu.")}
+  finally{$("saveDoc").disabled=false;$("saveDoc").textContent="Zapisz dokument"}
+}
+async function boot(){
+ try{
+  const result=await sb.auth.getSession();if(result.error)throw result.error;const session=result.data.session;
+  if(!session){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
+  const userResponse=await fetch(URL+"/auth/v1/user",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
+  if(!userResponse.ok)throw new Error("Sesja wygasła. Zaloguj się ponownie.");
+  const user=await userResponse.json();
+  const check=await fetch(URL+"/rest/v1/admin_users?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id&limit=1",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
+  if(!check.ok)throw new Error("Nie udało się potwierdzić uprawnień administratora.");
+  const rows=await check.json();if(!Array.isArray(rows)||!rows.length){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
+  currentUser=user;$("app").classList.remove("hidden");$("loading").classList.add("hidden");await loadDocs();
+ }catch(error){$("bootStatus").textContent=error.message||"Nie udało się sprawdzić dostępu.";$("denied").classList.remove("hidden");$("loading").classList.add("hidden")}
+}
+$("docForm").addEventListener("submit",saveDoc);$("refreshDocs").addEventListener("click",()=>loadDocs().catch(e=>setStatus("formStatus",e.message)));
+$("searchDocs").addEventListener("input",renderDocs);$("filterType").addEventListener("change",renderDocs);
 $("logout").addEventListener("click",async()=>{await sb.auth.signOut({scope:"local"});location.href="/admin.html"});
 boot();
 })();
