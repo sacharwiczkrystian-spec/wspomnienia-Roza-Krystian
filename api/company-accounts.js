@@ -10,19 +10,16 @@ module.exports=async(req,res)=>{if(req.method!=="POST"){res.setHeader("Allow","P
 if(["create","create_collaborator","list_collaborators","set_collaborator_status","list_ads","review_ad"].includes(action)){const c=await context(req,true);if(c.error)return reply(res,c.error[0],{error:c.error[1]});const {user,key}=c;
 if(action==="create"){const nip=String(b.nip||"").replace(/\D/g,""),name=String(b.company_name||"").trim();if(!validNip(nip))return reply(res,400,{error:"Nieprawidłowy NIP."});if(name.length<2||name.length>160)return reply(res,400,{error:"Nazwa firmy musi mieć 2–160 znaków."});if((await db("partner_company_accounts?nip=eq."+nip+"&select=user_id&limit=1",key)).length)return reply(res,409,{error:"Konto dla tego NIP-u już istnieje."});const email="nip-"+nip+"@partners.love-story-nowa.vercel.app",password=tempPassword();const r=await fetch(URL+"/auth/v1/admin/users",{method:"POST",headers:headers(key,{"Content-Type":"application/json"}),body:JSON.stringify({email,password,email_confirm:true,app_metadata:{account_type:"partner_company",must_change_password:true},user_metadata:{nip,company_name:name}})}),u=await r.json();if(!r.ok||!u.id)throw Error("Nie udało się utworzyć konta Auth.");try{await db("partner_company_accounts",key,{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({user_id:u.id,nip,company_name:name,created_by:user.id,account_status:"active",must_change_password:true})});await db("staff_permissions",key,{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({user_id:u.id,permission:"partner_company",granted_by:user.id})})}catch(e){await fetch(URL+"/auth/v1/admin/users/"+u.id,{method:"DELETE",headers:headers(key)});await db("partner_company_accounts?user_id=eq."+u.id,key,{method:"DELETE"}).catch(()=>{});throw e}return reply(res,200,{ok:true,nip,company_name:name,temporary_password:password})}
 if(action==="create_collaborator"){
- const email=String(b.email||"").trim().toLowerCase(),display=String(b.display_name||"").trim(),companyId=String(b.company_user_id||"");
+ const email=String(b.email||"").trim().toLowerCase(),display=String(b.display_name||"").trim();
  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email))return reply(res,400,{error:"Podaj prawidłowy adres e-mail."});
- if(display.length<2||display.length>100)return reply(res,400,{error:"Imię i nazwisko musi mieć 2–100 znaków."});
- if(!/^[0-9a-f-]{36}$/i.test(companyId))return reply(res,400,{error:"Wybierz prawidłową firmę."});
+ if(display.length<2||display.length>100)return reply(res,400,{error:"Nazwa współpracownika musi mieć 2–100 znaków."});
  if((await db("partner_collaborator_accounts?email=eq."+encodeURIComponent(email)+"&select=user_id&limit=1",key)).length)return reply(res,409,{error:"Konto współpracownika z tym adresem e-mail już istnieje."});
- const companies=await db("partner_company_accounts?user_id=eq."+encodeURIComponent(companyId)+"&select=user_id,company_name,nip,account_status,must_change_password&limit=1",key),company=companies[0];
- if(!company||company.account_status!=="active"||company.must_change_password)return reply(res,400,{error:"Wybrana firma nie ma aktywnego konta lub nie zakończyła pierwszej zmiany hasła."});
  const password=tempPassword();
- const authRes=await fetch(URL+"/auth/v1/admin/users",{method:"POST",headers:headers(key,{"Content-Type":"application/json"}),body:JSON.stringify({email,password,email_confirm:true,app_metadata:{account_type:"partner_collaborator",must_change_password:true},user_metadata:{display_name:display,company_name:company.company_name}})});
+ const authRes=await fetch(URL+"/auth/v1/admin/users",{method:"POST",headers:headers(key,{"Content-Type":"application/json"}),body:JSON.stringify({email,password,email_confirm:true,app_metadata:{account_type:"partner_collaborator",must_change_password:true},user_metadata:{display_name:display}})});
  const authUser=await authRes.json();
  if(!authRes.ok||!authUser.id)throw Error("Nie udało się utworzyć konta logowania.");
  try{
-  await db("partner_collaborator_accounts",key,{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({user_id:authUser.id,company_user_id:company.user_id,display_name:display,email,company_name:company.company_name,company_nip:company.nip,account_status:"active",must_change_password:true,created_by:user.id})});
+  await db("partner_collaborator_accounts",key,{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({user_id:authUser.id,display_name:display,email,company_name:display,account_status:"active",must_change_password:true,created_by:user.id})});
   await db("staff_permissions",key,{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({user_id:authUser.id,permission:"partner_collaborator",granted_by:user.id})});
  }catch(e){
   await fetch(URL+"/auth/v1/admin/users/"+authUser.id,{method:"DELETE",headers:headers(key)});
@@ -30,12 +27,11 @@ if(action==="create_collaborator"){
   await db("staff_permissions?user_id=eq."+authUser.id+"&permission=eq.partner_collaborator",key,{method:"DELETE"}).catch(()=>{});
   throw e;
  }
- return reply(res,200,{ok:true,email,display_name:display,company_name:company.company_name,temporary_password:password});
+ return reply(res,200,{ok:true,email,display_name:display,temporary_password:password});
 }
 if(action==="list_collaborators"){
- const accounts=await db("partner_collaborator_accounts?select=user_id,display_name,email,company_user_id,company_name,company_nip,account_status,must_change_password,created_at&order=created_at.desc&limit=300",key);
- const companies=await db("partner_company_accounts?select=user_id,company_name,nip,account_status,must_change_password&order=company_name.asc&limit=300",key);
- return reply(res,200,{collaborators:accounts,companies});
+ const accounts=await db("partner_collaborator_accounts?select=user_id,display_name,email,company_name,account_status,must_change_password,created_at&order=created_at.desc&limit=300",key);
+ return reply(res,200,{collaborators:accounts});
 }
 if(action==="set_collaborator_status"){
  const id=String(b.user_id||""),status=String(b.status||"");
