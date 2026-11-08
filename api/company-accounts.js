@@ -1,6 +1,6 @@
 const URL=process.env.SUPABASE_URL||"https://khggputlakhupiypybic.supabase.co";
 const PUB=process.env.SUPABASE_PUBLISHABLE_KEY||"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
-const headers=(key,extra={})=>({apikey:String(key).startsWith("sb_secret_")?PUB:key,Authorization:"Bearer "+key,...extra});
+const headers=(key,extra={})=>{const value=String(key||"");if(value.startsWith("sb_secret_")||value.startsWith("sb_publishable_"))return {apikey:value,...extra};return {apikey:value,Authorization:"Bearer "+value,...extra}};
 const reply=(res,status,data)=>res.status(status).setHeader("Content-Type","application/json; charset=utf-8").setHeader("Cache-Control","no-store").end(JSON.stringify(data));
 const validNip=n=>/^\d{10}$/.test(n)&&[6,5,7,2,3,4,5,6,7].reduce((s,w,i)=>s+w*Number(n[i]),0)%11===Number(n[9]);
 const tempPassword=()=>{const c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";return [...require("crypto").randomBytes(24)].map(x=>c[x%c.length]).join("")};
