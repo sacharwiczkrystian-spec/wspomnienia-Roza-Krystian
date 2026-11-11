@@ -186,9 +186,27 @@ begin
 end;
 $$;
 
+create or replace function public.phone_verification_cancel(p_user_id uuid, p_code_hash text)
+returns boolean
+language plpgsql
+security invoker
+set search_path = public, pg_temp
+as $
+declare
+  v_deleted integer;
+begin
+  delete from public.phone_verification_challenges
+  where user_id = p_user_id and code_hash = p_code_hash;
+  get diagnostics v_deleted = row_count;
+  return v_deleted = 1;
+end;
+$;
+
 revoke all on function public.consume_phone_rate_limit(text, integer) from public, anon, authenticated;
 revoke all on function public.phone_verification_start(uuid, text, text, timestamptz, text, text, text) from public, anon, authenticated;
 revoke all on function public.phone_verification_check(uuid, text) from public, anon, authenticated;
+revoke all on function public.phone_verification_cancel(uuid, text) from public, anon, authenticated;
 grant execute on function public.consume_phone_rate_limit(text, integer) to service_role;
 grant execute on function public.phone_verification_start(uuid, text, text, timestamptz, text, text, text) to service_role;
 grant execute on function public.phone_verification_check(uuid, text) to service_role;
+grant execute on function public.phone_verification_cancel(uuid, text) to service_role;
