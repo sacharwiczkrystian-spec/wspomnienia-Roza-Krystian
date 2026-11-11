@@ -232,6 +232,7 @@ as $function$
     );
 $function$;
 
+grant usage on schema private to authenticated;
 revoke all on function private.phone_verification_is_complete() from public, anon;
 grant execute on function private.phone_verification_is_complete() to authenticated;
 
