@@ -132,7 +132,7 @@ test("migration keeps the approved-ad exception SELECT-only and gates writes", (
   assert.doesNotMatch(adsSelect[0], /for all/i);
 
   for (const command of ["insert", "update", "delete"]) {
-    const policy = migration.match(new RegExp("create policy phone_verification_ads_" + command + "[\\\\s\\\\S]*?;", "i"));
+    const policy = migration.match(new RegExp("create policy phone_verification_ads_" + command + "[\\s\\S]*?;", "i"));
     assert.ok(policy, "company_ads " + command.toUpperCase() + " policy exists");
     assert.match(policy[0], /is_phone_verified/i);
     assert.doesNotMatch(policy[0], /status\\s*=\\s*'approved'/i);
@@ -153,7 +153,7 @@ test("migration explicitly revokes public execution from privileged RPCs", () =>
     "get_my_training_materials"
   ];
   for (const name of protectedFunctions) {
-    assert.match(migration, new RegExp("revoke all on function public\\\\." + name + "\\\\(", "i"), name + " PUBLIC/anon revoke");
-    assert.match(migration, new RegExp("grant execute on function public\\\\." + name + "\\\\(", "i"), name + " authenticated grant");
+    assert.match(migration, new RegExp("revoke all on function public\\." + name + "\\(", "i"), name + " PUBLIC/anon revoke");
+    assert.match(migration, new RegExp("grant execute on function public\\." + name + "\\(", "i"), name + " authenticated grant");
   }
 });
