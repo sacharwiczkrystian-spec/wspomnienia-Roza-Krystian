@@ -9,7 +9,9 @@ function reply(res, status, body) {
   res.end(JSON.stringify(body));
 }
 function serverKey() {
-  return process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  let key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  try { const bundle = JSON.parse(process.env.SUPABASE_SECRET_KEYS || "{}"); key = key || bundle.default || bundle.secret_key || ""; } catch (_) {}
+  return key;
 }
 function supabaseHeaders(key, extra = {}) {
   const h = { apikey: key, ...extra };
