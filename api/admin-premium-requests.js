@@ -1,4 +1,5 @@
 // Admin-only API for manual Premium activation approvals.
+const { requirePhoneVerified } = require("./_lib/phone-verification");
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 const PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 
@@ -19,6 +20,8 @@ async function adminContext(req) {
   const user = await auth.json();
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) return { error: [503, "Brak konfiguracji serwera."] };
+  try { if (!await requirePhoneVerified(user.id, key)) return { error: [403, "Najpierw potwierdź numer telefonu."] }; }
+  catch (error) { return { error: [error.status || 503, "Nie udało się sprawdzić weryfikacji telefonu."] }; }
   const checks = await Promise.all(["admin_users", "admins"].map(async table => {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${encodeURIComponent(user.id)}&select=user_id&limit=1`, {
       headers: headers(key)
