@@ -72,3 +72,21 @@ Przed wdrożeniem trzeba zdecydować, czy weryfikacja ma być jedynie krokiem UX
 - `authUser` weryfikuje token przez Supabase Auth, a identyfikator użytkownika jest pobierany z odpowiedzi Auth, nie z żądania klienta.
 - Odpowiedź Infobip jest sprawdzana na poziomie HTTP; warto dodatkowo zweryfikować payload dostawcy i statusy dostarczenia w kontrolowanym środowisku testowym.
 - Statyczna kontrola składni nie zastępuje uruchomienia migracji, testów współbieżności, testów API ani testów przeglądarkowych.
+
+
+## Implementacja egzekwowania po stronie serwera — 11.11.2026
+
+Na gałęzi dodano warstwę egzekwowania weryfikacji:
+
+1. **RLS w bazie:** funkcja private.phone_verification_is_complete() (SECURITY DEFINER, pusty search_path, identyfikator wyłącznie z auth.uid()) sprawdza obecność rekordu w verified_phone_numbers. Ograniczająca polityka RLS phone_verification_required jest dodawana dynamicznie do wszystkich tabel public z włączonym RLS oraz do storage.objects, jeśli istnieje i ma włączone RLS. Polityka dotyczy roli authenticated, więc nie blokuje anonimowego odczytu danych, które są celowo publiczne. Weryfikacja jest sprawdzana na bieżąco w bazie — nie opiera się na możliwych do opóźnienia claimach JWT.
+2. **API z service role:** dodano wspólny moduł api/_lib/phone-verification.js. Weryfikacja jest wymagana w company-accounts, administracyjnym service-accounts, admin-premium-requests, company-premium i create-checkout-session. Endpoint phone-verification pozostaje celowo dostępny dla niezweryfikowanych, aby umożliwić status/start/verify. service-accounts — akcja verify_second — pozostaje celowo dostępna po drugim haśle, ponieważ w tym miejscu użytkownik dopiero przechodzi do weryfikacji telefonu; nie zwraca danych panelu poza nazwą i etykietą instytucji.
+3. **Interfejsy:** dodano lub przesunięto bramkę przed pierwszym zapytaniem RLS w dodatkowych panelach administracyjnych, pracowniczych, służb, szkoleń, moderacji, wspomnień strażackich, zarządzania dostępami i Premium.
+
+### Istotne ograniczenia i warunki odbioru
+
+- Polityka obejmuje tabele public z włączonym RLS i storage.objects. Nie chroni tabel w innych schematach ani zewnętrznych systemów.
+- **Publiczne adresy URL plików w publicznych bucketach pozostają publiczne** — RLS nie cofa dostępu do pliku udostępnionego przez publiczny URL. Jeśli pliki mają być prywatne, bucket i istniejące URL-e wymagają osobnego audytu i migracji.
+- Serwerowe endpointy używające service-role muszą być nadal audytowane przy dodawaniu nowych tras. Webhooki Stripe i publiczne formularze nie są bramkami sesji użytkownika.
+- Nie wykonano migracji na produkcyjnej bazie ani na stagingu. Nie uruchomiono testów lokalnych SQL, testów integracyjnych, Storage ani Realtime. Nie należy traktować statycznej kontroli kodu jako potwierdzenia skuteczności wdrożenia.
+- Przed merge trzeba uruchomić migrację na lokalnym Supabase, zweryfikować, że nie ma tabel publicznych bez RLS, sprawdzić wszystkie strony logowania oraz sprawdzić blokadę/odblokowanie przez RLS i Storage na kontach testowych. Dodatkowo należy przejrzeć polityki bucketów i publiczne URL-e.
+- Globalna polityka oznacza, że każda strona z aktywną sesją i zapytaniami do tabel chronionych musi wykonać bramkę przed pierwszym zapytaniem. Lista stron została rozszerzona, ale przed produkcją potrzebny jest przegląd całego repozytorium i wszystkich przyszłych paneli.
