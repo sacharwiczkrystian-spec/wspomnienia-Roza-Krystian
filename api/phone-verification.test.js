@@ -120,3 +120,40 @@ test("ambiguous SMS network failure preserves the challenge for a possibly deliv
   assert.equal(calls.some(call => call.url.includes("/rest/v1/rpc/phone_verification_cancel")), false);
   assert.equal(res.body.includes("test-only-key"), false);
 });
+
+test("migration keeps the approved-ad exception SELECT-only and gates writes", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const migration = fs.readFileSync(path.join(__dirname, "../supabase/migrations/20261111220000_phone_verification_enforcement.sql"), "utf8");
+  const adsSelect = migration.match(/create policy phone_verification_ads_select[\\s\\S]*?;/i);
+  assert.ok(adsSelect, "approved-ad SELECT policy exists");
+  assert.match(adsSelect[0], /for select/i);
+  assert.match(adsSelect[0], /status = 'approved'/i);
+  assert.doesNotMatch(adsSelect[0], /for all/i);
+
+  for (const command of ["insert", "update", "delete"]) {
+    const policy = migration.match(new RegExp("create policy phone_verification_ads_" + command + "[\\\\s\\\\S]*?;", "i"));
+    assert.ok(policy, "company_ads " + command.toUpperCase() + " policy exists");
+    assert.match(policy[0], /is_phone_verified/i);
+    assert.doesNotMatch(policy[0], /status\\s*=\\s*'approved'/i);
+  }
+});
+
+test("migration explicitly revokes public execution from privileged RPCs", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const migration = fs.readFileSync(path.join(__dirname, "../supabase/migrations/20261111220000_phone_verification_enforcement.sql"), "utf8");
+  const protectedFunctions = [
+    "admin_create_staff_id_card",
+    "admin_list_staff_id_cards",
+    "admin_list_staff_id_cards_v2",
+    "admin_set_staff_id_card_status",
+    "admin_list_training_users",
+    "admin_set_training_code",
+    "get_my_training_materials"
+  ];
+  for (const name of protectedFunctions) {
+    assert.match(migration, new RegExp("revoke all on function public\\\\." + name + "\\\\(", "i"), name + " PUBLIC/anon revoke");
+    assert.match(migration, new RegExp("grant execute on function public\\\\." + name + "\\\\(", "i"), name + " authenticated grant");
+  }
+});
