@@ -1,6 +1,6 @@
 const URL=process.env.SUPABASE_URL||"https://khggputlakhupiypybic.supabase.co";
 const PUB=process.env.SUPABASE_PUBLISHABLE_KEY||"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
-const { requirePhoneVerified } = require("./_lib/phone-verification");
+const { requirePhoneVerified } = require("../lib/phone-verification");
 const crypto=require("crypto");
 const {promisify}=require("util");
 const scrypt=promisify(crypto.scrypt);
