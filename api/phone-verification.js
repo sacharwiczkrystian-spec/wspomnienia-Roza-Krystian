@@ -42,6 +42,11 @@ module.exports = async (req, res) => {
     }
 
     if (body.action === "start") {
+      const current = await db("verified_phone_numbers?user_id=eq." + encodeURIComponent(user.id) + "&select=phone_e164&limit=1", key);
+      if (current.length && current[0].phone_e164 !== String(body.phone || "").replace(/[\\s().-]/g, "")) {
+        const signedInAt = user.last_sign_in_at ? new Date(user.last_sign_in_at).getTime() : 0;
+        if (!signedInAt || Date.now() - signedInAt > 10 * 60 * 1000) return reply(res, 403, { error: "Przed zmianą numeru wyloguj się i zaloguj ponownie." });
+      }
       const phone = String(body.phone || "").replace(/[\s().-]/g, "");
       if (!/^\+[1-9]\d{7,14}$/.test(phone)) return reply(res, 400, { error: "Wpisz numer w formacie międzynarodowym, np. +48500100200." });
       const code = String(crypto.randomInt(100000, 1000000));
