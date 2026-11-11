@@ -1,3 +1,4 @@
+const { requirePhoneVerified } = require("./_lib/phone-verification");
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 const PRICE_ID = process.env.STRIPE_PREMIUM_PRICE_ID || "price_1UaATHC074K6xfn9pPQfJ33F";
@@ -62,6 +63,7 @@ module.exports = async function handler(req, res) {
   try {
     const user = await authUser(req);
     if (!user?.id || !user.email) return reply(res, 401, { error: "Zaloguj się ponownie." });
+    if (!await requirePhoneVerified(user.id, key)) return reply(res, 403, { error: "Najpierw potwierdź numer telefonu." });
     const accounts = await db("partner_company_accounts?user_id=eq." + encodeURIComponent(user.id) + "&select=user_id,company_name,account_status&limit=1", key);
     if (!accounts.length || accounts[0].account_status !== "active") {
       return reply(res, 403, { error: "Abonament Premium jest dostępny tylko dla aktywnego konta firmy." });
