@@ -33,16 +33,26 @@ module.exports = async (req, res) => {
     const user = await authUser(req);
     let key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     try { const bundle = JSON.parse(process.env.SUPABASE_SECRET_KEYS || "{}"); key = key || bundle.default || bundle.secret_key || null; } catch {}
-    if (!key || !process.env.INFOBIP_API_KEY || !process.env.INFOBIP_BASE_URL || pepper().length < 32) {
-      return reply(res, 503, { error: "Weryfikacja SMS nie jest jeszcze skonfigurowana na serwerze." });
+    if (!key) {
+      return reply(res, 503, { error: "Usługa weryfikacji nie jest jeszcze skonfigurowana na serwerze." });
     }
 
+    // Status is read-only and must remain available even when SMS delivery is
+    // temporarily unconfigured. Existing verified users must not be locked out.
     if (body.action === "status") {
       const rows = await db("verified_phone_numbers?user_id=eq." + encodeURIComponent(user.id) + "&select=phone_e164,verified_at&limit=1", key);
       return reply(res, 200, { verified: !!rows.length, phone: rows[0] ? mask(rows[0].phone_e164) : null, verified_at: rows[0]?.verified_at || null });
     }
 
+    // HMAC is required for both issuing and checking OTPs, but not for status.
+    if (pepper().length < 32) {
+      return reply(res, 503, { error: "Weryfikacja SMS nie jest jeszcze skonfigurowana na serwerze." });
+    }
+
     if (body.action === "start") {
+      if (!process.env.INFOBIP_API_KEY || !process.env.INFOBIP_BASE_URL) {
+        return reply(res, 503, { error: "Wysyłanie SMS nie jest jeszcze skonfigurowane na serwerze." });
+      }
       const current = await db("verified_phone_numbers?user_id=eq." + encodeURIComponent(user.id) + "&select=phone_e164&limit=1", key);
       if (current.length && current[0].phone_e164 !== String(body.phone || "").replace(/[\s().-]/g, "")) {
         const signedInAt = user.last_sign_in_at ? new Date(user.last_sign_in_at).getTime() : 0;
