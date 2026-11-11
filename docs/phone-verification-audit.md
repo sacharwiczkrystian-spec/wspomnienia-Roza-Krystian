@@ -90,3 +90,8 @@ Na gałęzi dodano warstwę egzekwowania weryfikacji:
 - Nie wykonano migracji na produkcyjnej bazie ani na stagingu. Nie uruchomiono testów lokalnych SQL, testów integracyjnych, Storage ani Realtime. Nie należy traktować statycznej kontroli kodu jako potwierdzenia skuteczności wdrożenia.
 - Przed merge trzeba uruchomić migrację na lokalnym Supabase, zweryfikować, że nie ma tabel publicznych bez RLS, sprawdzić wszystkie strony logowania oraz sprawdzić blokadę/odblokowanie przez RLS i Storage na kontach testowych. Dodatkowo należy przejrzeć polityki bucketów i publiczne URL-e.
 - Globalna polityka oznacza, że każda strona z aktywną sesją i zapytaniami do tabel chronionych musi wykonać bramkę przed pierwszym zapytaniem. Lista stron została rozszerzona, ale przed produkcją potrzebny jest przegląd całego repozytorium i wszystkich przyszłych paneli.
+
+
+### Automatyczny Preview Vercel
+
+W komentarzach PR od bota Vercel potwierdzono automatyczne utworzenie wdrożenia Preview dla projektu love-story-nowa. Nie jest to wdrożenie Production. Preview drugiego podłączonego projektu nie powiódł się z powodu dziennego limitu wdrożeń Vercel (ponad 100). Nie uruchamiano ręcznie wdrożenia produkcyjnego ani migracji bazy.
