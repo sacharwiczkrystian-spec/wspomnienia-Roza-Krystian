@@ -33,3 +33,15 @@ Ta funkcja jest przygotowana na gałęzi `feature/infobip-phone-verification`. N
 - Konto Infobip trial może wysyłać wyłącznie na numery zweryfikowane w panelu Infobip i może wymagać nadawcy testowego.
 - SMS potwierdza kontrolę nad numerem telefonu; nie zastępuje silnego MFA.
 - Nie logować numerów telefonów, kodów OTP ani nagłówka autoryzacji.
+
+
+## Testy lokalne bez kosztów hostingu
+
+Przed tworzeniem jakiegokolwiek zdalnego środowiska testowego użyj lokalnego Supabase CLI:
+
+- wymagane: Node.js 20+ i Docker-compatible runtime;
+- repozytorium obecnie nie ma `supabase/config.toml`, więc wygeneruj go przez `npx supabase init`;
+- uruchom `npx supabase start` i `npx supabase db reset` (wyłącznie lokalnie);
+- nie wykonuj `supabase link`, nie dodawaj `--remote`, nie używaj danych produkcyjnych i nie konfiguruj wysyłki prawdziwych SMS-ów na tym etapie.
+
+Lokalny stack nie generuje opłat za gałąź/projekt Supabase. Testuje bazę i migracje; nie zastępuje testów pełnego flow auth, Vercel ani Infobip.
