@@ -77,6 +77,13 @@ as $$
 declare
   v_sent_at timestamptz;
 begin
+  -- A missing challenge row cannot be locked with SELECT ... FOR UPDATE.
+  -- Serialize all starts for this user before checking cooldown or inserting,
+  -- so simultaneous requests cannot both pass the 60-second cooldown.
+  perform pg_advisory_xact_lock(
+    hashtextextended('phone-verification-user:' || p_user_id::text, 0)
+  );
+
   if exists (
     select 1 from public.verified_phone_numbers
     where user_id = p_user_id and phone_e164 = p_phone_e164
