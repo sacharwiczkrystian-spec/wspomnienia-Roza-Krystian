@@ -56,3 +56,13 @@ Przejrzano gałąź `feature/infobip-phone-verification`, w tym:
 ## Werdykt
 
 **NIE MERGOWAĆ I NIE WDRAŻAĆ NA PRODUKCJĘ.** Wprowadzono warstwę egzekwowania po stronie API, RLS, Storage i wybranych funkcji SECURITY DEFINER, ale nowa migracja nie została uruchomiona ani zweryfikowana. Nie wysłano SMS, nie sprawdzono klucza Infobip i nie wykonano wdrożenia. Kolejny krok to lokalne testy migracji i testy kont; produkcyjne wdrożenie wymaga pełnego review oraz udziału i zgody opiekuna.
+
+
+## Korekty po przeglądzie testowym
+
+- Akcja API `status` sprawdza teraz wyłącznie dostępność klucza serwerowego Supabase. Nie wymaga skonfigurowanego Infobip ani `PHONE_OTP_PEPPER`, więc brak dostawcy SMS nie blokuje wcześniej zweryfikowanych użytkowników.
+- Wymaganie Infobip jest sprawdzane dopiero dla akcji `start`; HMAC pepper nadal jest wymagany dla wystawiania i sprawdzania kodu.
+- Funkcja `phone_verification_start` pobiera transakcyjną blokadę advisory per użytkownik przed odczytem cooldownu. Chroni to przed dwoma równoczesnymi żądaniami startowymi przechodzącymi kontrolę cooldownu, także gdy wyzwanie jeszcze nie istnieje.
+- Usunięto z pierwszej migracji wcześniejszą, globalną politykę RLS. Była szersza niż późniejsza migracja egzekwowania i blokowałaby także celowo publiczne wyjątki. Pierwsza migracja tworzy tylko schemat `private`; druga migracja odpowiada za precyzyjne polityki i wyjątki.
+
+Te korekty przeszły statyczne kontrole oraz testy handlera API z atrapami odpowiedzi. Nadal nie wykonano migracji w PostgreSQL/Supabase ani testów rzeczywistej współbieżności SQL, RLS, Storage i logowania.
