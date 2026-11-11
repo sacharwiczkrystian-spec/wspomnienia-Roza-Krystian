@@ -70,12 +70,20 @@ module.exports = async (req, res) => {
 
       const base = String(process.env.INFOBIP_BASE_URL).replace(/\/+$/, "");
       const sender = process.env.INFOBIP_SENDER || "InfoSMS";
-      const sms = await fetch(base + "/sms/3/messages", {
-        method: "POST",
-        headers: { Authorization: "App " + process.env.INFOBIP_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ messages: [{ destinations: [{ to: phone }], from: sender, content: { text: "Twój kod weryfikacyjny LOVE Story: " + code + ". Kod jest ważny 5 minut. Nie udostępniaj go nikomu." } }] })
-      });
+      let sms;
+      try {
+        sms = await fetch(base + "/sms/3/messages", {
+          method: "POST",
+          headers: { Authorization: "App " + process.env.INFOBIP_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ messages: [{ destinations: [{ to: phone }], from: sender, content: { text: "Twój kod weryfikacyjny LOVE Story: " + code + ". Kod jest ważny 5 minut. Nie udostępniaj go nikomu." } }] })
+        });
+      } catch (sendError) {
+        try { await rpc("phone_verification_cancel", { p_user_id: user.id, p_code_hash: codeHash }, key); } catch {}
+        console.error("Infobip SMS request failed", { message: sendError.message });
+        return reply(res, 502, { error: "Nie udało się wysłać SMS-a. Spróbuj ponownie za chwilę." });
+      }
       if (!sms.ok) {
+        try { await rpc("phone_verification_cancel", { p_user_id: user.id, p_code_hash: codeHash }, key); } catch {}
         console.error("Infobip SMS send failed", { status: sms.status });
         return reply(res, 502, { error: "Nie udało się wysłać SMS-a. Spróbuj ponownie za chwilę." });
       }
