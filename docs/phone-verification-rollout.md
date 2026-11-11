@@ -11,7 +11,7 @@ Ta funkcja jest przygotowana na gałęzi `feature/infobip-phone-verification`. N
    - `INFOBIP_SENDER` — opcjonalnie; dla konta trial może być wymagane `InfoSMS`
    - `PHONE_OTP_PEPPER` — nowy, losowy sekret o wysokiej entropii, wyłącznie jako Sensitive env var
    - `SUPABASE_SECRET_KEY` lub `SUPABASE_SERVICE_ROLE_KEY` — istniejący sekret serwerowy Supabase
-3. Zastosować migrację `supabase/migrations/20261111204000_phone_verification.sql` do środowiska testowego, a następnie sprawdzić tabele, funkcje, RLS i uprawnienia.
+3. Zastosować kolejno migracje `supabase/migrations/20261111204000_phone_verification.sql` oraz `supabase/migrations/20261111220000_phone_verification_enforcement.sql` do środowiska lokalnego/testowego. Sprawdzić tabele, funkcje, RLS, Storage i uprawnienia RPC.
 4. Wykonać testy integracyjne na własnym, zweryfikowanym numerze testowym w Infobip. Nie wysyłać SMS-ów do osób postronnych.
 5. Sprawdzić osobno: zwykłe konto, konto firmy, współpracownika, administratora oraz konto modułu współpracy (po drugim haśle).
 6. Dopiero po przeglądzie bezpieczeństwa i zgodzie opiekuna przygotować wdrożenie produkcyjne.
@@ -45,3 +45,18 @@ Przed tworzeniem jakiegokolwiek zdalnego środowiska testowego użyj lokalnego S
 - nie wykonuj `supabase link`, nie dodawaj `--remote`, nie używaj danych produkcyjnych i nie konfiguruj wysyłki prawdziwych SMS-ów na tym etapie.
 
 Lokalny stack nie generuje opłat za gałąź/projekt Supabase. Testuje bazę i migracje; nie zastępuje testów pełnego flow auth, Vercel ani Infobip.
+
+
+## Egzekwowanie po stronie serwera
+
+Druga migracja dodaje restrykcyjne polityki RLS dla wszystkich tabel public, które mają polityki dla roli `authenticated`, oraz dla `storage.objects`. Weryfikacja jest sprawdzana na bieżąco przez `private.is_phone_verified()` i opiera się na `auth.uid()`, a nie na danych przesłanych z przeglądarki.
+
+Zachowane wyjątki publiczne:
+- odczyt zatwierdzonych reklam;
+- publiczny odczyt ustawień strony;
+- publiczne zgłoszenia rekrutacyjne;
+- publiczne, ograniczone sprawdzanie statusu rekrutacji i ważności karty.
+
+Migracja dodaje też kontrolę wewnątrz administracyjnych funkcji `SECURITY DEFINER`, ponieważ takie funkcje mogą omijać RLS. Publiczne funkcje weryfikacji kart i statusu rekrutacji pozostają dostępne zgodnie z dotychczasowym przeznaczeniem.
+
+**Ważne:** po dodaniu polityk każde konto z sesją musi przejść bramkę telefonu przed pierwszym zapytaniem do chronionych tabel. Dlatego testuj również przywracanie sesji, passkey i wszystkie dodatkowe podstrony. Nie uruchamiaj migracji na produkcji w ramach testów.
