@@ -210,3 +210,61 @@ grant execute on function public.consume_phone_rate_limit(text, integer) to serv
 grant execute on function public.phone_verification_start(uuid, text, text, timestamptz, text, text, text) to service_role;
 grant execute on function public.phone_verification_check(uuid, text) to service_role;
 grant execute on function public.phone_verification_cancel(uuid, text) to service_role;
+
+
+-- Central RLS gate: authenticated users may access protected public tables and
+-- Storage objects only after their phone has been verified. The function reads
+-- the verified-number table as its owner but is scoped strictly to auth.uid().
+create schema if not exists private;
+
+create or replace function private.phone_verification_is_complete()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $function$
+  select (select auth.uid()) is not null
+    and exists (
+      select 1
+      from public.verified_phone_numbers v
+      where v.user_id = (select auth.uid())
+    );
+$function$;
+
+revoke all on function private.phone_verification_is_complete() from public, anon;
+grant execute on function private.phone_verification_is_complete() to authenticated;
+
+do $phone_gate$
+declare
+  v_table record;
+begin
+  for v_table in
+    select n.nspname, c.relname
+    from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public'
+      and c.relkind in ('r', 'p')
+      and c.relrowsecurity
+  loop
+    execute format(
+      'drop policy if exists phone_verification_required on %I.%I',
+      v_table.nspname, v_table.relname
+    );
+    execute format(
+      'create policy phone_verification_required on %I.%I as restrictive for all to authenticated using (private.phone_verification_is_complete()) with check (private.phone_verification_is_complete())',
+      v_table.nspname, v_table.relname
+    );
+  end loop;
+
+  if to_regclass('storage.objects') is not null
+     and exists (
+       select 1 from pg_class c
+       join pg_namespace n on n.oid = c.relnamespace
+       where n.nspname = 'storage' and c.relname = 'objects' and c.relrowsecurity
+     ) then
+    execute 'drop policy if exists phone_verification_required on storage.objects';
+    execute 'create policy phone_verification_required on storage.objects as restrictive for all to authenticated using (private.phone_verification_is_complete()) with check (private.phone_verification_is_complete())';
+  end if;
+end;
+$phone_gate$;
