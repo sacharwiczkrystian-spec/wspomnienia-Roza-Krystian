@@ -5,7 +5,6 @@
 
 do $test$
 declare
-  v_bad text;
   v_fn regprocedure;
 begin
   -- The OTP tables must have RLS enabled.
@@ -37,10 +36,10 @@ begin
     select 1 from pg_policies
     where schemaname = 'public'
       and tablename = 'company_ads'
-      and policyname = 'phone_verification_required'
       and cmd = 'ALL'
+      and (coalesce(qual, '') ilike '%approved%' or coalesce(with_check, '') ilike '%approved%')
   ) then
-    raise exception 'FAIL: company_ads verification policy is FOR ALL; split the SELECT exception from write/delete gates';
+    raise exception 'FAIL: company_ads has an ALL policy containing the approved-ad exception';
   end if;
 
   if not exists (
@@ -48,9 +47,21 @@ begin
     where schemaname = 'public'
       and tablename = 'company_ads'
       and cmd = 'SELECT'
+      and permissive = 'RESTRICTIVE'
       and qual ilike '%approved%'
   ) then
     raise exception 'FAIL: company_ads is missing the explicit approved-ad SELECT exception';
+  end if;
+
+  -- Writes/deletes on company_ads must each have a restrictive phone gate.
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='company_ads' and cmd='INSERT' and permissive='RESTRICTIVE' and coalesce(with_check,'') ilike '%is_phone_verified%') then
+    raise exception 'FAIL: company_ads INSERT is not gated by phone verification';
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='company_ads' and cmd='UPDATE' and permissive='RESTRICTIVE' and coalesce(qual,'') ilike '%is_phone_verified%' and coalesce(with_check,'') ilike '%is_phone_verified%') then
+    raise exception 'FAIL: company_ads UPDATE is not gated by phone verification';
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='company_ads' and cmd='DELETE' and permissive='RESTRICTIVE' and coalesce(qual,'') ilike '%is_phone_verified%') then
+    raise exception 'FAIL: company_ads DELETE is not gated by phone verification';
   end if;
 
   -- Storage must remain protected for all authenticated object operations.
@@ -79,7 +90,10 @@ begin
       raise exception 'FAIL: one of the expected protected RPC functions is missing';
     end if;
     if has_function_privilege('anon', v_fn, 'EXECUTE') then
-      raise exception 'FAIL: anon can execute protected RPC %', v_fn;
+      raise exception 'FAIL: anon or PUBLIC can execute protected RPC %', v_fn;
+    end if;
+    if not has_function_privilege('authenticated', v_fn, 'EXECUTE') then
+      raise exception 'FAIL: authenticated cannot execute protected RPC %', v_fn;
     end if;
   end loop;
 
