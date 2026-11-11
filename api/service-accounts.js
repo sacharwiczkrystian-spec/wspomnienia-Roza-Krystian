@@ -4,7 +4,7 @@ const { requirePhoneVerified } = require("./_lib/phone-verification");
 const crypto=require("crypto");
 const {promisify}=require("util");
 const scrypt=promisify(crypto.scrypt);
-const headers=(key,extra={})=>({apikey:key,Authorization:"Bearer "+key,...extra});
+const headers=(key,extra={})=>{const value=String(key||""),result={apikey:value,...extra};if(!value.startsWith("sb_secret_"))result.Authorization="Bearer "+value;return result};
 const reply=(res,status,data)=>res.status(status).setHeader("Content-Type","application/json; charset=utf-8").setHeader("Cache-Control","no-store").end(JSON.stringify(data));
 async function db(path,key,opts={}){const r=await fetch(URL+"/rest/v1/"+path,{...opts,headers:headers(key,{"Content-Type":"application/json",...(opts.headers||{})})});const t=await r.text();if(!r.ok)throw Error("Operacja w bazie nie powiodła się.");return t?JSON.parse(t):[]}
 function serverKey(){return process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY||null}
