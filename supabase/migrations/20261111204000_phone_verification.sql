@@ -191,7 +191,7 @@ returns boolean
 language plpgsql
 security invoker
 set search_path = public, pg_temp
-as $
+as $$
 declare
   v_deleted integer;
 begin
