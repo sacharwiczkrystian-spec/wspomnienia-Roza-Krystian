@@ -200,7 +200,7 @@ begin
   get diagnostics v_deleted = row_count;
   return v_deleted = 1;
 end;
-$;
+$$;
 
 revoke all on function public.consume_phone_rate_limit(text, integer) from public, anon, authenticated;
 revoke all on function public.phone_verification_start(uuid, text, text, timestamptz, text, text, text) from public, anon, authenticated;
