@@ -1,4 +1,4 @@
-const { requirePhoneVerified } = require("./_lib/phone-verification");
+const { requirePhoneVerified } = require("../lib/phone-verification");
 const URL=process.env.SUPABASE_URL||"https://khggputlakhupiypybic.supabase.co";
 const PUB=process.env.SUPABASE_PUBLISHABLE_KEY||"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 const headers=(key,extra={})=>{const value=String(key||"");const base={"User-Agent":"love-story-company-accounts/1.0",...extra};if(value.startsWith("sb_secret_")||value.startsWith("sb_publishable_"))return {apikey:value,...base};return {apikey:value,Authorization:"Bearer "+value,...base}};
