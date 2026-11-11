@@ -8,7 +8,10 @@ function reply(res, status, body) {
   res.end(JSON.stringify(body));
 }
 function headers(key, extra = {}) {
-  return { apikey: key, Authorization: `Bearer ${key}`, ...extra };
+  const value = String(key || "");
+  const result = { apikey: value, ...extra };
+  if (!value.startsWith("sb_secret_")) result.Authorization = `Bearer ${value}`;
+  return result;
 }
 async function adminContext(req) {
   const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
@@ -18,7 +21,7 @@ async function adminContext(req) {
   });
   if (!auth.ok) return { error: [401, "Sesja wygasła. Zaloguj się ponownie."] };
   const user = await auth.json();
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) return { error: [503, "Brak konfiguracji serwera."] };
   try { if (!await requirePhoneVerified(user.id, key)) return { error: [403, "Najpierw potwierdź numer telefonu."] }; }
   catch (error) { return { error: [error.status || 503, "Nie udało się sprawdzić weryfikacji telefonu."] }; }
