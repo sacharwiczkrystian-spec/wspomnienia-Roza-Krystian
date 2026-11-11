@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
     const user = await authUser(req);
-    const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    let key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;\n    try { const bundle = JSON.parse(process.env.SUPABASE_SECRET_KEYS || "{}"); key = key || bundle.default || bundle.secret_key || null; } catch {}
     if (!key || !process.env.INFOBIP_API_KEY || !process.env.INFOBIP_BASE_URL || !pepper()) {
       return reply(res, 503, { error: "Weryfikacja SMS nie jest jeszcze skonfigurowana na serwerze." });
     }
@@ -84,7 +84,7 @@ module.exports = async (req, res) => {
     if (body.action === "verify") {
       const code = String(body.code || "");
       if (!/^\d{6}$/.test(code)) return reply(res, 400, { error: "Wpisz 6-cyfrowy kod z SMS-a." });
-      const result = await rpc("phone_verification_check", { p_user_id: user.id, p_code_hash: hmac(user.id + "|" + String(body.phone || "") + "|" + code) }, key);
+      const challenge = await db("phone_verification_challenges?user_id=eq." + encodeURIComponent(user.id) + "&select=phone_e164&limit=1", key);\n      if (!challenge.length) return reply(res, 400, { error: "Nie znaleziono aktywnego kodu. Wyślij nowy." });\n      const result = await rpc("phone_verification_check", { p_user_id: user.id, p_code_hash: hmac(user.id + "|" + challenge[0].phone_e164 + "|" + code) }, key);
       // Numer jest przechowywany wyłącznie w rekordzie wyzwania; statusy nie ujawniają go osobom postronnym.
       if (result?.status === "verified") return reply(res, 200, { ok: true, verified: true });
       if (result?.status === "invalid") return reply(res, 400, { error: "Kod jest nieprawidłowy. Pozostało prób: " + result.attempts_left + "." });
