@@ -253,7 +253,7 @@ begin
       v_table.nspname, v_table.relname
     );
     execute format(
-      'create policy phone_verification_required on %I.%I as restrictive for all to authenticated using (private.phone_verification_is_complete()) with check (private.phone_verification_is_complete())',
+      'create policy phone_verification_required on %I.%I as restrictive for all to authenticated using ((select private.phone_verification_is_complete())) with check ((select private.phone_verification_is_complete()))',
       v_table.nspname, v_table.relname
     );
   end loop;
