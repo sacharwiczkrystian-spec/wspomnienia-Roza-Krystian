@@ -43,15 +43,36 @@ begin
 end;
 $migration$;
 
--- Signed-in users may still read approved public ads before verification,
--- but every account-specific ad operation requires a verified phone.
-create policy phone_verification_required
+-- Signed-in users may still read approved public ads before verification.
+-- Keep that exception SELECT-only: a FOR ALL USING clause also affects DELETE.
+create policy phone_verification_ads_select
 on public.company_ads
 as restrictive
-for all
+for select
 to authenticated
-using ((select private.is_phone_verified()) or status = 'approved')
+using ((select private.is_phone_verified()) or status = 'approved');
+
+create policy phone_verification_ads_insert
+on public.company_ads
+as restrictive
+for insert
+to authenticated
 with check ((select private.is_phone_verified()));
+
+create policy phone_verification_ads_update
+on public.company_ads
+as restrictive
+for update
+to authenticated
+using ((select private.is_phone_verified()))
+with check ((select private.is_phone_verified()));
+
+create policy phone_verification_ads_delete
+on public.company_ads
+as restrictive
+for delete
+to authenticated
+using ((select private.is_phone_verified()));
 
 -- Site settings are public-readable; only authenticated updates are gated.
 create policy phone_verification_required
@@ -294,3 +315,23 @@ begin
   return query select m.title,m.content from public.training_materials m where m.id=1;
 end;
 $function$;
+
+
+-- CREATE OR REPLACE preserves existing function ACLs. Explicitly remove the
+-- default PUBLIC/anon access from privileged SECURITY DEFINER RPCs and expose
+-- them only to signed-in clients; each function still performs its own checks.
+revoke all on function public.admin_create_staff_id_card(text,text,text,text,text,text,date) from public, anon;
+revoke all on function public.admin_list_staff_id_cards() from public, anon;
+revoke all on function public.admin_list_staff_id_cards_v2() from public, anon;
+revoke all on function public.admin_set_staff_id_card_status(uuid,text) from public, anon;
+revoke all on function public.admin_list_training_users() from public, anon;
+revoke all on function public.admin_set_training_code(uuid,text) from public, anon;
+revoke all on function public.get_my_training_materials(text) from public, anon;
+
+grant execute on function public.admin_create_staff_id_card(text,text,text,text,text,text,date) to authenticated;
+grant execute on function public.admin_list_staff_id_cards() to authenticated;
+grant execute on function public.admin_list_staff_id_cards_v2() to authenticated;
+grant execute on function public.admin_set_staff_id_card_status(uuid,text) to authenticated;
+grant execute on function public.admin_list_training_users() to authenticated;
+grant execute on function public.admin_set_training_code(uuid,text) to authenticated;
+grant execute on function public.get_my_training_materials(text) to authenticated;
