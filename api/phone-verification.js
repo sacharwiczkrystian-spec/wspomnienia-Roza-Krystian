@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
     const user = await authUser(req);
     let key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
     try { const bundle = JSON.parse(process.env.SUPABASE_SECRET_KEYS || "{}"); key = key || bundle.default || bundle.secret_key || null; } catch {}
-    if (!key || !process.env.INFOBIP_API_KEY || !process.env.INFOBIP_BASE_URL || !pepper()) {
+    if (!key || !process.env.INFOBIP_API_KEY || !process.env.INFOBIP_BASE_URL || pepper().length < 32) {
       return reply(res, 503, { error: "Weryfikacja SMS nie jest jeszcze skonfigurowana na serwerze." });
     }
 
@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
 
     if (body.action === "start") {
       const current = await db("verified_phone_numbers?user_id=eq." + encodeURIComponent(user.id) + "&select=phone_e164&limit=1", key);
-      if (current.length && current[0].phone_e164 !== String(body.phone || "").replace(/[\\s().-]/g, "")) {
+      if (current.length && current[0].phone_e164 !== String(body.phone || "").replace(/[\s().-]/g, "")) {
         const signedInAt = user.last_sign_in_at ? new Date(user.last_sign_in_at).getTime() : 0;
         if (!signedInAt || Date.now() - signedInAt > 10 * 60 * 1000) return reply(res, 403, { error: "Przed zmianą numeru wyloguj się i zaloguj ponownie." });
       }
