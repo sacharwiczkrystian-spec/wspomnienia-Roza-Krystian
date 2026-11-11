@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 const PUB = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 const reply = (res, status, data) => res.status(status).setHeader("Content-Type", "application/json; charset=utf-8").setHeader("Cache-Control", "no-store").end(JSON.stringify(data));
-const headers = (key, extra = {}) => ({ apikey: key, Authorization: "Bearer " + key, "Content-Type": "application/json", ...extra });
+const headers = (key, extra = {}) => { const value = String(key || ""); const base = { "Content-Type": "application/json", ...extra }; if (value.startsWith("sb_secret_") || value.startsWith("sb_publishable_")) return { apikey: value, ...base }; return { apikey: value, Authorization: "Bearer " + value, ...base }; };
 const pepper = () => process.env.PHONE_OTP_PEPPER || "";
 const hmac = value => crypto.createHmac("sha256", pepper()).update(value).digest("hex");
 const mask = phone => phone ? phone.slice(0, 4) + "••••" + phone.slice(-3) : null;
