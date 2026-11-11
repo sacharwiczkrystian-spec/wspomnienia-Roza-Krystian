@@ -58,3 +58,17 @@ Lokalny stack Supabase jest bezpłatny i nie zużywa limitu projektu hostowanego
 ## Werdykt
 
 **NIE MERGOWAĆ I NIE WDRAŻAĆ NA PRODUKCJĘ.** Wykonano poprawki statyczne, ale nie uruchomiono migracji, nie wysłano SMS, nie przetestowano klucza Infobip i nie wykonano wdrożenia. Kolejny bezpieczny krok to przygotowanie osobnego projektu Supabase staging, konfiguracja testowych sekretów i testy end-to-end na kontrolowanym numerze.
+
+
+## Krytyczna luka — egzekwowanie weryfikacji
+
+**Nie wdrażać jako mechanizmu kontroli dostępu.** Aktualna integracja wymusza weryfikację wyłącznie po stronie interfejsu (funkcja `ensurePhoneVerified` w panelach). Endpoint potwierdza tożsamość sesji i zapisuje zweryfikowany numer, ale pozostałe API oraz polityki RLS nie sprawdzają, czy numer jest zweryfikowany. Użytkownik może ominąć modal, wywołać bezpośrednio istniejące endpointy lub korzystać z zasobów Supabase, do których jego sesja ma dostęp.
+
+Przed wdrożeniem trzeba zdecydować, czy weryfikacja ma być jedynie krokiem UX, czy warunkiem dostępu. Jeśli warunkiem dostępu, należy dodać egzekwowanie po stronie serwera dla wszystkich chronionych API i odpowiednich polityk dostępu (bez ufania flagom z przeglądarki), a następnie przetestować wszystkie ścieżki. Nie należy włączać globalnego blokowania RLS bez pełnego audytu istniejących polityk — mogłoby to zablokować prawidłowe konta.
+
+## Dodatkowe uwagi z przeglądu API
+
+- Klucz service-role jest używany po stronie serwera do operacji na tabelach weryfikacji; nie może trafić do kodu klienta ani logów.
+- `authUser` weryfikuje token przez Supabase Auth, a identyfikator użytkownika jest pobierany z odpowiedzi Auth, nie z żądania klienta.
+- Odpowiedź Infobip jest sprawdzana na poziomie HTTP; warto dodatkowo zweryfikować payload dostawcy i statusy dostarczenia w kontrolowanym środowisku testowym.
+- Statyczna kontrola składni nie zastępuje uruchomienia migracji, testów współbieżności, testów API ani testów przeglądarkowych.
