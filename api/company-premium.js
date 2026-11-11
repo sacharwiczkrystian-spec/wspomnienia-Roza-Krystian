@@ -1,4 +1,4 @@
-const { requirePhoneVerified } = require("./_lib/phone-verification");
+const { requirePhoneVerified } = require("../lib/phone-verification");
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 const PRICE_ID = process.env.STRIPE_PREMIUM_PRICE_ID || "price_1UaATHC074K6xfn9pPQfJ33F";
