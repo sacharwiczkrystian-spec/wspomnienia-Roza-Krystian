@@ -53,7 +53,7 @@ function jsonResponse(value, status = 200) {
   });
 }
 
-function installFetch({ verifiedRows = [], challengeRows = [], rpcResult = null, smsError = null } = {}) {
+function installFetch({ verifiedRows = [], challengeRows = [], rpcResult = null, smsError = null, smsStatus = "QUEUED" } = {}) {
   const calls = [];
   global.fetch = async (url, options = {}) => {
     calls.push({ url: String(url), options });
@@ -66,7 +66,7 @@ function installFetch({ verifiedRows = [], challengeRows = [], rpcResult = null,
     if (String(url).includes("/rest/v1/rpc/phone_verification_cancel")) return jsonResponse(true);
     if (String(url).includes("/rest/messages/sms")) {
       if (smsError) throw smsError;
-      return jsonResponse([{ id: 123, status_code: "QUEUED", status_description: "The message has been accepted" }]);
+      return jsonResponse([{ id: 123, status_code: smsStatus, status_description: smsStatus === "QUEUED" ? "The message has been accepted" : "The message was rejected" }]);
     }
     throw new Error("Unexpected fetch URL: " + url);
   };
