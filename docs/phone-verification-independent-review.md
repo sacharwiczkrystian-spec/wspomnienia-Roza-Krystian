@@ -1,5 +1,19 @@
 # Niezależny przegląd bezpieczeństwa weryfikacji telefonu
 
+## Status korekt — 2026-11-11
+
+Ten dokument pierwotnie opisywał problemy wykryte przed poprawkami w migracji. Stan na gałęzi `feature/infobip-offline-hardening`:
+
+- **P1 — `company_ads`: poprawione w migracji** `20261111220000_phone_verification_enforcement.sql`. Wyjątek zatwierdzonych reklam jest wyłącznie dla SELECT; INSERT, UPDATE i DELETE mają osobne restrykcyjne bramki weryfikacji.
+- **P1 — administracyjne RPC: poprawione w migracji**. Siedem wymienionych funkcji ma jawne `REVOKE ALL ... FROM PUBLIC, anon` i `GRANT EXECUTE ... TO authenticated`.
+- **P2 — niejednoznaczny wynik wysyłki SMS: częściowo zabezpieczone w follow-upie**. Po błędzie sieciowym endpoint nie anuluje już challenge, ponieważ dostawca mógł przyjąć SMS przed utratą odpowiedzi. Użytkownik może więc nadal użyć dostarczonego kodu; cooldown ogranicza natychmiastowe ponowne wysłanie. To nie zastępuje testu rzeczywistego zachowania dostawcy.
+- **P2 — wiarygodność adresu IP: nadal otwarte**. Trzeba potwierdzić zachowanie `x-forwarded-for` na docelowej platformie przed wdrożeniem.
+- **P2 — trzy tabele RLS bez polityk i ochrona przed hasłami ujawnionymi: nadal wymagają osobnej oceny**. Nie dodano szerokich polityk ani nie zmieniono ustawień Auth bez analizy wpływu na istniejące przepływy.
+
+Follow-up dodaje mockowane testy endpointu i statyczne asercje migracji. Wynik CI oraz rzeczywiste testy PostgreSQL/RLS/Storage pozostają wymagane przed scaleniem.
+
+---
+
 Data przeglądu: 2026-11-11  
 Zakres: gałąź `feature/infobip-phone-verification`, PR #1, dwie migracje SQL, endpoint `api/phone-verification.js`, helper serwerowy i skrypt przeglądarkowy.
 

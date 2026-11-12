@@ -88,9 +88,14 @@ module.exports = async (req, res) => {
           body: JSON.stringify({ messages: [{ destinations: [{ to: phone }], from: sender, content: { text: "Twój kod weryfikacyjny LOVE Story: " + code + ". Kod jest ważny 5 minut. Nie udostępniaj go nikomu." } }] })
         });
       } catch (sendError) {
-        try { await rpc("phone_verification_cancel", { p_user_id: user.id, p_code_hash: codeHash }, key); } catch {}
-        console.error("Infobip SMS request failed", { message: sendError.message });
-        return reply(res, 502, { error: "Nie udało się wysłać SMS-a. Spróbuj ponownie za chwilę." });
+        // A network timeout is ambiguous: Infobip may have accepted the SMS
+        // even though this request never received the response. Keep the
+        // challenge alive so a delivered code can still be verified. The
+        // database cooldown prevents an immediate duplicate send.
+        console.error("Infobip SMS result unknown", { name: sendError.name || "Error" });
+        return reply(res, 502, {
+          error: "Nie udało się potwierdzić wyniku wysyłki. Jeśli SMS dotarł, wpisz kod; w przeciwnym razie spróbuj ponownie po upływie blokady."
+        });
       }
       if (!sms.ok) {
         try { await rpc("phone_verification_cancel", { p_user_id: user.id, p_code_hash: codeHash }, key); } catch {}

@@ -80,6 +80,7 @@
 
   async function ensurePhoneVerified(session) {
     if (!session?.access_token) return false;
+    activeSession = session;
     const status = await request(session, { action: "status" });
     mount();
     if (status.verified) return true;
