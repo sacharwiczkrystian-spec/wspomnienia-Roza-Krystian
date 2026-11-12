@@ -14,7 +14,7 @@ beforeEach(() => {
   process.env.SUPABASE_SECRET_KEY = "sb_secret_test";
   process.env.PHONE_OTP_PEPPER = "";
   process.env.SZYBKISMS_API_TOKEN = "";
-  process.env.SZYBKISMS_BASE_URL = "";
+  process.env.SZYBKISMS_SENDER = "";
 });
 
 afterEach(() => {
@@ -106,10 +106,31 @@ test("start refuses to send when SzybkiSMS is not configured", async () => {
   assert.equal(calls.some(call => call.url.includes("phone_verification_start")), false);
 });
 
+test("start sends the OTP through the SzybkiSMS REST API using Bearer auth", async () => {
+  process.env.PHONE_OTP_PEPPER = "c".repeat(64);
+  process.env.SZYBKISMS_API_TOKEN = "test-only-token";
+  process.env.SZYBKISMS_SENDER = "LoveStory";
+  const calls = installFetch({ verifiedRows: [] });
+  const res = responseRecorder();
+  await handler(request({ action: "start", phone: "+48500100200" }), res);
+
+  const smsCall = calls.find(call => call.url === "https://api.szybkisms.pl/rest/messages/sms");
+  assert.ok(smsCall, "SzybkiSMS REST endpoint was called");
+  assert.equal(smsCall.options.headers.Authorization, "Bearer test-only-token");
+  const payload = JSON.parse(smsCall.options.body);
+  assert.equal(payload.recipients, "+48500100200");
+  assert.match(payload.message, /LOVE Story/);
+  assert.equal(payload.type, 1);
+  assert.equal(payload.unicode, true);
+  assert.equal(payload.sender, "LoveStory");
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(res.json(), { ok: true, sent: true });
+  assert.equal(res.body.includes("test-only-token"), false);
+});
+
 test("ambiguous SMS network failure preserves the challenge for a possibly delivered code", async () => {
   process.env.PHONE_OTP_PEPPER = "b".repeat(64);
   process.env.SZYBKISMS_API_TOKEN = "test-only-token";
-  process.env.SZYBKISMS_BASE_URL = "https://szybkisms.test";
   const calls = installFetch({ verifiedRows: [], smsError: new TypeError("simulated network timeout") });
   const res = responseRecorder();
   await handler(request({ action: "start", phone: "+48500100200" }), res);
