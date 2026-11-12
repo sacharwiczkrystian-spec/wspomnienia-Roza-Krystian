@@ -1,4 +1,5 @@
 // Admin-only API for manual Premium activation approvals.
+const { requirePhoneVerified, serverKey } = require("../lib/phone-verification");
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 const PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 
@@ -7,7 +8,10 @@ function reply(res, status, body) {
   res.end(JSON.stringify(body));
 }
 function headers(key, extra = {}) {
-  return { apikey: key, Authorization: `Bearer ${key}`, ...extra };
+  const value = String(key || "");
+  const result = { apikey: value, ...extra };
+  if (!value.startsWith("sb_secret_")) result.Authorization = `Bearer ${value}`;
+  return result;
 }
 async function adminContext(req) {
   const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
@@ -17,8 +21,10 @@ async function adminContext(req) {
   });
   if (!auth.ok) return { error: [401, "Sesja wygasła. Zaloguj się ponownie."] };
   const user = await auth.json();
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = serverKey();
   if (!key) return { error: [503, "Brak konfiguracji serwera."] };
+  try { if (!await requirePhoneVerified(user.id, key)) return { error: [403, "Najpierw potwierdź numer telefonu."] }; }
+  catch (error) { return { error: [error.status || 503, "Nie udało się sprawdzić weryfikacji telefonu."] }; }
   const checks = await Promise.all(["admin_users", "admins"].map(async table => {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${encodeURIComponent(user.id)}&select=user_id&limit=1`, {
       headers: headers(key)

@@ -17,6 +17,7 @@ a,.btn{color:var(--gold2);text-decoration:none}.btn{display:inline-flex;align-it
 </style>
 </head>
 <body>
+<script src="/phone-verification.js"></script>
 <section id="loading" class="gate"><div class="brand">LOVE <span>Story</span></div><h1>Sprawdzam uprawnienia</h1><p class="muted">Trwa weryfikacja sesji administratora…</p><p id="bootStatus" class="status"></p></section>
 <section id="denied" class="gate hidden"><div class="brand">LOVE <span>Story</span></div><h1>Brak dostępu</h1><p class="muted">Ta część panelu jest przeznaczona dla kont z uprawnieniami administratora.</p><div class="links"><a class="btn primary" href="/admin.html">Wróć do logowania administratora</a><a class="btn" href="/">Strona główna</a></div></section>
 <main id="app" class="wrap hidden">
@@ -123,6 +124,7 @@ async function boot(){
  try{
   const result=await sb.auth.getSession();if(result.error)throw result.error;const session=result.data.session;
   if(!session){$("denied").classList.remove("hidden");$("loading").classList.add("hidden");return}
+  if(!await window.LoveStoryPhoneVerification.ensurePhoneVerified(session))return;
   const userResponse=await fetch(URL+"/auth/v1/user",{headers:{apikey:KEY,Authorization:"Bearer "+session.access_token}});
   if(!userResponse.ok)throw new Error("Sesja wygasła. Zaloguj się ponownie.");
   const user=await userResponse.json();
