@@ -1,4 +1,4 @@
--- LOVE Story: wspólna weryfikacja numeru telefonu przez Infobip.
+-- LOVE Story: wspólna weryfikacja numeru telefonu przez SzybkiSMS.
 -- Tabele są dostępne wyłącznie dla service_role; żaden klient przeglądarkowy nie czyta OTP.
 
 create table if not exists public.phone_verification_challenges (
@@ -77,9 +77,6 @@ as $$
 declare
   v_sent_at timestamptz;
 begin
-  -- A missing challenge row cannot be locked with SELECT ... FOR UPDATE.
-  -- Serialize all starts for this user before checking cooldown or inserting,
-  -- so simultaneous requests cannot both pass the 60-second cooldown.
   perform pg_advisory_xact_lock(
     hashtextextended('phone-verification-user:' || p_user_id::text, 0)
   );
@@ -218,7 +215,4 @@ grant execute on function public.phone_verification_start(uuid, text, text, time
 grant execute on function public.phone_verification_check(uuid, text) to service_role;
 grant execute on function public.phone_verification_cancel(uuid, text) to service_role;
 
-
--- Create the private schema for the following enforcement migration.
--- The next migration installs the scoped policies and preserves public exceptions.
 create schema if not exists private;
