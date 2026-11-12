@@ -66,7 +66,7 @@ function installFetch({ verifiedRows = [], challengeRows = [], rpcResult = null,
     if (String(url).includes("/rest/v1/rpc/phone_verification_cancel")) return jsonResponse(true);
     if (String(url).includes("/rest/messages/sms")) {
       if (smsError) throw smsError;
-      return jsonResponse({ messages: [{ status: { groupName: "PENDING" } }] });
+      return jsonResponse([{ id: 123, status_code: "QUEUED", status_description: "The message has been accepted" }]);
     }
     throw new Error("Unexpected fetch URL: " + url);
   };
@@ -125,6 +125,19 @@ test("start sends the OTP through the SzybkiSMS REST API using Bearer auth", asy
   assert.equal(payload.sender, "LoveStory");
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.json(), { ok: true, sent: true });
+  assert.equal(res.body.includes("test-only-token"), false);
+});
+
+test("start rejects a SzybkiSMS HTTP 200 response when the provider rejects the message", async () => {
+  process.env.PHONE_OTP_PEPPER = "d".repeat(64);
+  process.env.SZYBKISMS_API_TOKEN = "test-only-token";
+  const calls = installFetch({ verifiedRows: [], smsStatus: "REJECTED" });
+  const res = responseRecorder();
+  await handler(request({ action: "start", phone: "+48500100200" }), res);
+
+  assert.equal(res.statusCode, 502);
+  assert.match(res.json().error, /Operator nie przyjął/);
+  assert.equal(calls.some(call => call.url.includes("/rest/v1/rpc/phone_verification_cancel")), true);
   assert.equal(res.body.includes("test-only-token"), false);
 });
 
