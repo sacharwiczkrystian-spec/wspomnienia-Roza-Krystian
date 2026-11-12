@@ -159,17 +159,17 @@ test("migration keeps the approved-ad exception SELECT-only and gates writes", (
   const fs = require("node:fs");
   const path = require("node:path");
   const migration = fs.readFileSync(path.join(__dirname, "../supabase/migrations/20261111220000_phone_verification_enforcement.sql"), "utf8");
-  const adsSelect = migration.match(/create policy phone_verification_ads_select[\\s\\S]*?;/i);
+  const adsSelect = migration.match(/create policy phone_verification_ads_select[\s\S]*?;/i);
   assert.ok(adsSelect, "approved-ad SELECT policy exists");
   assert.match(adsSelect[0], /for select/i);
   assert.match(adsSelect[0], /status = 'approved'/i);
   assert.doesNotMatch(adsSelect[0], /for all/i);
 
   for (const command of ["insert", "update", "delete"]) {
-    const policy = migration.match(new RegExp("create policy phone_verification_ads_" + command + "[\\s\\S]*?;", "i"));
+    const policy = migration.match(new RegExp("create policy phone_verification_ads_" + command + "[\s\S]*?;", "i"));
     assert.ok(policy, "company_ads " + command.toUpperCase() + " policy exists");
     assert.match(policy[0], /is_phone_verified/i);
-    assert.doesNotMatch(policy[0], /status\\s*=\\s*'approved'/i);
+    assert.doesNotMatch(policy[0], /status\s*=\s*'approved'/i);
   }
 });
 
