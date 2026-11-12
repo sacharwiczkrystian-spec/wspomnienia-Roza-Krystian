@@ -13,8 +13,8 @@ const originalEnv = { ...process.env };
 beforeEach(() => {
   process.env.SUPABASE_SECRET_KEY = "sb_secret_test";
   process.env.PHONE_OTP_PEPPER = "";
-  process.env.INFOBIP_API_KEY = "";
-  process.env.INFOBIP_BASE_URL = "";
+  process.env.SZYBKISMS_API_TOKEN = "";
+  process.env.SZYBKISMS_BASE_URL = "";
 });
 
 afterEach(() => {
@@ -64,7 +64,7 @@ function installFetch({ verifiedRows = [], challengeRows = [], rpcResult = null,
     if (String(url).includes("/rest/v1/phone_verification_challenges")) return jsonResponse(challengeRows);
     if (String(url).includes("/rest/v1/rpc/phone_verification_start")) return jsonResponse(rpcResult || { status: "started" });
     if (String(url).includes("/rest/v1/rpc/phone_verification_cancel")) return jsonResponse(true);
-    if (String(url).includes("/sms/3/messages")) {
+    if (String(url).includes("/rest/messages/sms")) {
       if (smsError) throw smsError;
       return jsonResponse({ messages: [{ status: { groupName: "PENDING" } }] });
     }
@@ -73,14 +73,14 @@ function installFetch({ verifiedRows = [], challengeRows = [], rpcResult = null,
   return calls;
 }
 
-test("status remains available without OTP pepper or Infobip configuration", async () => {
+test("status remains available without OTP pepper or SzybkiSMS configuration", async () => {
   const calls = installFetch({ verifiedRows: [] });
   const res = responseRecorder();
   await handler(request({ action: "status" }), res);
 
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.json(), { verified: false, phone: null, verified_at: null });
-  assert.equal(calls.some(call => call.url.includes("/sms/3/messages")), false);
+  assert.equal(calls.some(call => call.url.includes("/rest/messages/sms")), false);
 });
 
 test("status masks the verified phone number", async () => {
@@ -95,21 +95,21 @@ test("status masks the verified phone number", async () => {
   assert.equal(res.json().phone, "+485••••200");
 });
 
-test("start refuses to send when Infobip is not configured", async () => {
+test("start refuses to send when SzybkiSMS is not configured", async () => {
   process.env.PHONE_OTP_PEPPER = "a".repeat(64);
   const calls = installFetch({ verifiedRows: [] });
   const res = responseRecorder();
   await handler(request({ action: "start", phone: "+48500100200" }), res);
 
   assert.equal(res.statusCode, 503);
-  assert.equal(calls.some(call => call.url.includes("/sms/3/messages")), false);
+  assert.equal(calls.some(call => call.url.includes("/rest/messages/sms")), false);
   assert.equal(calls.some(call => call.url.includes("phone_verification_start")), false);
 });
 
 test("ambiguous SMS network failure preserves the challenge for a possibly delivered code", async () => {
   process.env.PHONE_OTP_PEPPER = "b".repeat(64);
-  process.env.INFOBIP_API_KEY = "test-only-key";
-  process.env.INFOBIP_BASE_URL = "https://infobip.test";
+  process.env.SZYBKISMS_API_TOKEN = "test-only-token";
+  process.env.SZYBKISMS_BASE_URL = "https://szybkisms.test";
   const calls = installFetch({ verifiedRows: [], smsError: new TypeError("simulated network timeout") });
   const res = responseRecorder();
   await handler(request({ action: "start", phone: "+48500100200" }), res);
@@ -118,7 +118,7 @@ test("ambiguous SMS network failure preserves the challenge for a possibly deliv
   assert.match(res.json().error, /wyniku wysyłki/);
   assert.equal(calls.some(call => call.url.includes("/rest/v1/rpc/phone_verification_start")), true);
   assert.equal(calls.some(call => call.url.includes("/rest/v1/rpc/phone_verification_cancel")), false);
-  assert.equal(res.body.includes("test-only-key"), false);
+  assert.equal(res.body.includes("test-only-token"), false);
 });
 
 test("migration keeps the approved-ad exception SELECT-only and gates writes", () => {
