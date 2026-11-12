@@ -6,6 +6,8 @@ on:
       - "index.html"
       - "api/supabase-send-sms.js"
       - "api/supabase-send-sms.test.js"
+      - "supabase/sql/**"
+      - "supabase/tests/**"
       - ".github/workflows/sms-phone-mfa-checks.yml"
   push:
     branches:
@@ -40,3 +42,32 @@ jobs:
         run: node --check api/supabase-send-sms.js
       - name: Test SMS hook signature and payload
         run: node --test api/supabase-send-sms.test.js
+      - name: Check AAL2 SQL hardening candidates
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const policies = fs.readFileSync('supabase/sql/mfa-aal2-opt-in-policy-review.sql', 'utf8');
+          const rpc = fs.readFileSync('supabase/sql/mfa-aal2-security-definer-hardening-review.sql', 'utf8');
+          const test = fs.readFileSync('supabase/tests/mfa-aal2-security-definer-hardening.test.sql', 'utf8');
+          const policyCount = [...policies.matchAll(/create policy "mfa_require_aal2_when_factor_enrolled"/gi)].length;
+          if (policyCount !== 39) throw new Error('Expected 39 reviewed AAL2 policies, found ' + policyCount);
+          const functions = [
+            'admin_create_staff_id_card',
+            'admin_list_staff_id_cards',
+            'admin_list_staff_id_cards_v2',
+            'admin_set_staff_id_card_status',
+            'admin_list_training_users',
+            'admin_set_training_code',
+            'get_my_training_materials'
+          ];
+          for (const name of functions) {
+            if (!rpc.includes('function public.' + name + '(')) throw new Error('Missing hardened RPC: ' + name);
+          }
+          const guardCount = (rpc.match(/perform private\.require_aal2_for_enrolled_mfa\(\);/g) || []).length;
+          if (guardCount !== functions.length) throw new Error('Expected ' + functions.length + ' AAL2 RPC guards, found ' + guardCount);
+          for (const name of ['admin_list_training_users', 'admin_set_training_code', 'get_my_training_materials']) {
+            if (!rpc.includes('revoke all on function public.' + name)) throw new Error('Missing anonymous revoke for ' + name);
+          }
+          if (!test.includes('has_function_privilege')) throw new Error('Staging privilege assertions missing');
+          console.log('Checked ' + policyCount + ' AAL2 policies, ' + guardCount + ' SECURITY DEFINER RPC guards, and anonymous RPC revocations.');
+          NODE
