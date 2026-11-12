@@ -1,62 +1,92 @@
-# Wdrożenie weryfikacji telefonu — LOVE Story
+# Wdrożenie weryfikacji telefonu przez SzybkiSMS — LOVE Story
 
-Ta funkcja jest przygotowana na gałęzi `feature/infobip-phone-verification`. Nie jest aktywna na produkcji.
+## Stan wydania (2026-11-12)
 
-## Kolejność wdrożenia
+- Kod znajduje się na gałęzi `feature/szybkisms-phone-verification`, PR #3 do `main`.
+- PR pozostaje wersją roboczą (draft); nie jest scalony.
+- GitHub Actions: testy mockowane i statyczne Node.js zakończyły się sukcesem.
+- Nie wykonano jeszcze lokalnych testów PostgreSQL, runtime RLS/Storage ani testów E2E.
+- Migracje OTP nie są zastosowane w produkcyjnym Supabase.
+- Produkcja `lovestory.szczecin.pl` nadal korzysta z `main`.
 
-1. Sprawdzić konfigurację konta Infobip i zakres klucza API: wymagane uprawnienie wysyłania SMS (`sms:message:send`).
-2. Ustawić po stronie serwera Vercel:
-   - `INFOBIP_BASE_URL` — istniejąca wartość `https://m9lj62.api.infobip.com`
-   - `INFOBIP_API_KEY` — istniejący sekret Infobip
-   - `INFOBIP_SENDER` — opcjonalnie; dla konta trial może być wymagane `InfoSMS`
-   - `PHONE_OTP_PEPPER` — nowy, losowy sekret o wysokiej entropii, wyłącznie jako Sensitive env var
-   - `SUPABASE_SECRET_KEY` lub `SUPABASE_SERVICE_ROLE_KEY` — istniejący sekret serwerowy Supabase
-3. Zastosować kolejno migracje `supabase/migrations/20261111204000_phone_verification.sql` oraz `supabase/migrations/20261111220000_phone_verification_enforcement.sql` do środowiska lokalnego/testowego. Sprawdzić tabele, funkcje, RLS, Storage i uprawnienia RPC.
-4. Wykonać testy integracyjne na własnym, zweryfikowanym numerze testowym w Infobip. Nie wysyłać SMS-ów do osób postronnych.
-5. Sprawdzić osobno: zwykłe konto, konto firmy, współpracownika, administratora oraz konto modułu współpracy (po drugim haśle).
-6. Dopiero po przeglądzie bezpieczeństwa i zgodzie opiekuna przygotować wdrożenie produkcyjne.
+Ten dokument jest checklistą przygotowania wydania, a nie potwierdzeniem wdrożenia.
 
-## Zachowanie
+## Co zawiera wydanie
 
-- Weryfikacja jest wymagana po zalogowaniu, jeżeli konto nie ma potwierdzonego numeru.
-- Ponowne logowanie nie wymaga ponownego kodu.
-- Zmiana numeru wymaga nowego kodu; poprzedni numer pozostaje aktywny do chwili potwierdzenia nowego.
-- Zmiana numeru wymaga świeżego logowania (ostatnie 10 minut).
-- Kod ma 6 cyfr, wygasa po 5 minutach, ma maksymalnie 5 prób i cooldown 60 sekund.
-- Ograniczenia wysyłania są liczone osobno dla konta, numeru i IP.
-- Kody są przechowywane wyłącznie jako HMAC z sekretem serwerowym.
-- Tabele i funkcje są dostępne wyłącznie dla roli `service_role`; RLS jest włączone, a `anon` i `authenticated` nie mają dostępu.
+1. Endpoint `api/phone-verification.js` wysyłający SMS przez SzybkiSMS.
+2. Trzy tabele OTP: `phone_verification_challenges`, `verified_phone_numbers`, `phone_verification_rate_limits`.
+3. Serwerowe RPC do rozpoczęcia, sprawdzenia i anulowania wyzwania.
+4. Egzekwowanie potwierdzenia numeru przez RLS, Storage i wybrane administracyjne RPC.
+5. Interfejs weryfikacji telefonu.
 
-## Ważne ograniczenia
+## Wymagane zmienne środowiskowe
 
-- Nie wdrażać frontendu, dopóki migracja i `PHONE_OTP_PEPPER` nie są gotowe. Bez nich API zwraca błąd konfiguracji i bramka logowania nie dopuści do panelu.
-- Konto Infobip trial może wysyłać wyłącznie na numery zweryfikowane w panelu Infobip i może wymagać nadawcy testowego.
-- SMS potwierdza kontrolę nad numerem telefonu; nie zastępuje silnego MFA.
-- Nie logować numerów telefonów, kodów OTP ani nagłówka autoryzacji.
+Ustawiane wyłącznie po stronie serwera Vercel, jako zmienne Sensitive/Secret:
 
+- `SZYBKISMS_API_TOKEN` — token API SzybkiSMS.
+- `PHONE_OTP_PEPPER` — nowy losowy sekret o wysokiej entropii, co najmniej 32 znaki; nie używać starej, wcześniej ujawnionej wartości.
+- `SUPABASE_SECRET_KEY` albo `SUPABASE_SERVICE_ROLE_KEY` — istniejący sekret serwerowy Supabase.
+- `SZYBKISMS_SENDER` — opcjonalna nazwa nadawcy, jeśli konto dostawcy ma ją skonfigurowaną.
 
-## Testy lokalne bez kosztów hostingu
+Nie umieszczać tych wartości w kodzie, repozytorium, logach ani zmiennych `NEXT_PUBLIC_*`. Nie kopiować produkcyjnych sekretów do Preview. Do testów lokalnych używać wyłącznie atrap/mocków i fikcyjnych danych.
 
-Przed tworzeniem jakiegokolwiek zdalnego środowiska testowego użyj lokalnego Supabase CLI:
+## Etap 1 — lokalne testy bez płatnego środowiska
 
-- wymagane: Node.js 20+ i Docker-compatible runtime;
-- repozytorium obecnie nie ma `supabase/config.toml`, więc wygeneruj go przez `npx supabase init`;
-- uruchom `npx supabase start` i `npx supabase db reset` (wyłącznie lokalnie);
-- nie wykonuj `supabase link`, nie dodawaj `--remote`, nie używaj danych produkcyjnych i nie konfiguruj wysyłki prawdziwych SMS-ów na tym etapie.
+Wymagane: Node.js oraz Docker-compatible runtime. Pracować na osobnym lokalnym klonie repozytorium.
 
-Lokalny stack nie generuje opłat za gałąź/projekt Supabase. Testuje bazę i migracje; nie zastępuje testów pełnego flow auth, Vercel ani Infobip.
+1. Sprawdzić `node --version`, `npm --version` i `docker --version`.
+2. Repozytorium nie ma obecnie `supabase/config.toml`; w lokalnym klonie wykonać `npx supabase init`.
+3. Uruchomić `npx supabase start`.
+4. Uruchomić `npx supabase db reset` — wyłącznie wobec lokalnego kontenera.
+5. Potwierdzić, że obie migracje wykonują się w kolejności bez błędów.
+6. Uruchomić read-only test strukturalny z `supabase/tests/phone_verification_security_structure.sql` na tej lokalnej bazie.
+7. Dodatkowo wykonać testy runtime: role `anon`, `authenticated`, `service_role`; operacje SELECT/INSERT/UPDATE/DELETE; Storage; RPC; wyjątki publiczne; konta zwykłe, firmowe, współpracownika i administratora.
+8. Uruchomić testy aplikacji i przeglądarkowe dla świeżego logowania, przywróconej sesji, passkey, zmiany numeru, wylogowania i wszystkich paneli.
 
+Nie używać `supabase link`, `--remote`, produkcyjnego connection stringa ani danych produkcyjnych. Nie wysyłać prawdziwych SMS-ów na tym etapie.
 
-## Egzekwowanie po stronie serwera
+## Etap 2 — przegląd przed wydaniem
 
-Druga migracja dodaje restrykcyjne polityki RLS dla wszystkich tabel public, które mają polityki dla roli `authenticated`, oraz dla `storage.objects`. Weryfikacja jest sprawdzana na bieżąco przez `private.is_phone_verified()` i opiera się na `auth.uid()`, a nie na danych przesłanych z przeglądarki.
+Wymagane przed zmianą statusu PR z draft:
 
-Zachowane wyjątki publiczne:
-- odczyt zatwierdzonych reklam;
-- publiczny odczyt ustawień strony;
-- publiczne zgłoszenia rekrutacyjne;
-- publiczne, ograniczone sprawdzanie statusu rekrutacji i ważności karty.
+- niezależny przegląd obu migracji i endpointu;
+- wynik lokalnego PostgreSQL/RLS/Storage bez błędów;
+- wyjaśnienie ostrzeżeń Security Advisor, zwłaszcza trzech tabel RLS bez polityk oraz funkcji SECURITY DEFINER dostępnych dla ról klienckich;
+- potwierdzenie, że `x-forwarded-for` jest wiarygodnie ustawiany przez Vercel;
+- test pełnego logowania wszystkich typów kont, aby bramka nie odcięła istniejących użytkowników;
+- potwierdzenie zachowania SzybkiSMS dla odpowiedzi `QUEUED` i `REJECTED`, bez ujawniania tokenu.
 
-Migracja dodaje też kontrolę wewnątrz administracyjnych funkcji `SECURITY DEFINER`, ponieważ takie funkcje mogą omijać RLS. Publiczne funkcje weryfikacji kart i statusu rekrutacji pozostają dostępne zgodnie z dotychczasowym przeznaczeniem.
+Obecny sukces CI dotyczy wyłącznie mockowanych i statycznych testów Node.js. Nie zastępuje powyższych kontroli.
 
-**Ważne:** po dodaniu polityk każde konto z sesją musi przejść bramkę telefonu przed pierwszym zapytaniem do chronionych tabel. Dlatego testuj również przywracanie sesji, passkey i wszystkie dodatkowe podstrony. Nie uruchamiaj migracji na produkcji w ramach testów.
+## Etap 3 — zatwierdzone wdrożenie produkcyjne
+
+Dopiero po pozytywnym przeglądzie i zatwierdzeniu przez opiekuna:
+
+1. Wykonać kopię/backup i potwierdzić możliwość odtworzenia.
+2. Ustawić i zweryfikować wymagane sekrety serwerowe Vercel; nie ujawniać ich w logach.
+3. Zastosować migrację `20261111204000_phone_verification.sql`.
+4. Sprawdzić utworzenie trzech tabel, RLS, grants i funkcji RPC.
+5. Zastosować migrację `20261111220000_phone_verification_enforcement.sql`.
+6. Ponownie sprawdzić polityki RLS, Storage, uprawnienia funkcji i wyjątki publiczne.
+7. Dopiero wtedy scalić PR i wdrożyć produkcyjny commit.
+8. Wykonać smoke test bez masowej wysyłki SMS: status weryfikacji, dostęp do strony, logowanie i zachowanie istniejących kont.
+9. Wykonać pojedynczy kontrolowany test SMS na numerze testowym należącym do osoby testującej, po osobnym zatwierdzeniu kosztu i użycia usługi.
+
+Nie stosować migracji produkcyjnych jako testu. Nie scalać PR ani nie uruchamiać produkcyjnych migracji przed ukończeniem etapów 1–2.
+
+## Plan awaryjny
+
+- Przed migracjami musi istnieć sprawdzony backup i osoba odpowiedzialna za odtworzenie.
+- Jeśli migracja lub smoke test zakończy się błędem, zatrzymać dalsze kroki i zachować logi bez sekretów i danych OTP.
+- Nie usuwać ręcznie tabel ani nie cofać polityk RLS „na szybko”. Przygotować poprawkę/forward migration po analizie przyczyny.
+- W razie problemu z dostawcą SMS nie wyłączać kontroli dostępu do bazy; przywrócić poprawne działanie endpointu i konfiguracji w kontrolowany sposób.
+
+## Kryteria gotowości
+
+Wydanie może być oznaczone jako gotowe dopiero, gdy:
+- lokalne migracje i strukturalny test SQL przechodzą;
+- runtime RLS/Storage/RPC oraz E2E przechodzą;
+- Security Advisor został przejrzany, a nowe problemy wyjaśnione;
+- sekrety są skonfigurowane wyłącznie po stronie serwera;
+- opiekun zatwierdził plan i okno wdrożenia.
+
