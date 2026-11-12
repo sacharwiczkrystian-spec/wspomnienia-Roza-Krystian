@@ -1,0 +1,24 @@
+name: Registration SMS verification tests
+
+on:
+  pull_request:
+    paths:
+      - "api/registration-phone-verification.js"
+      - "api/registration-phone-verification.test.js"
+      - "supabase/migrations/*registration_phone_verification.sql"
+      - "index.html"
+      - ".github/workflows/registration-phone-verification-tests.yml"
+  push:
+    branches:
+      - "feature/registration-sms-before-account"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check api/registration-phone-verification.js
+      - run: node --test api/registration-phone-verification.test.js
