@@ -106,10 +106,20 @@ module.exports = async (req, res) => {
           error: "Nie udało się potwierdzić wyniku wysyłki. Jeśli SMS dotarł, wpisz kod; w przeciwnym razie spróbuj ponownie po upływie blokady."
         });
       }
-      if (!sms.ok) {
+      let smsResult = null;
+      if (sms.ok) {
+        try { smsResult = await sms.json(); } catch {}
+      }
+      const acceptedMessages = Array.isArray(smsResult)
+        ? smsResult
+        : (Array.isArray(smsResult?.messages) ? smsResult.messages : []);
+      const accepted = sms.ok && acceptedMessages.length > 0 &&
+        acceptedMessages.every(item => item && item.status_code === "QUEUED");
+      if (!accepted) {
         try { await rpc("phone_verification_cancel", { p_user_id: user.id, p_code_hash: codeHash }, key); } catch {}
-        console.error("SzybkiSMS SMS send failed", { status: sms.status });
-        return reply(res, 502, { error: "Nie udało się wysłać SMS-a. Spróbuj ponownie za chwilę." });
+        const providerStatus = acceptedMessages.map(item => item?.status_code || "UNKNOWN").join(",");
+        console.error("SzybkiSMS SMS send failed", { status: sms.status, providerStatus: providerStatus || "NO_STATUS" });
+        return reply(res, 502, { error: "Operator nie przyjął wiadomości do wysłania. Spróbuj ponownie za chwilę." });
       }
       return reply(res, 200, { ok: true, sent: true });
     }
