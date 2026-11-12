@@ -344,7 +344,7 @@ body.theme-midnight :is(.panel,.card,.stat,.memory,.empty,.date-unit,.home-partn
 </div>
 <div class="panel auth">
 <div class="tabs"><button id="loginTab" class="tab active" type="button">Logowanie</button><button id="signupTab" class="tab" type="button">Nowe konto</button></div>
-<form id="authForm"><div class="field"><label for="email">Adres e-mail</label><input id="email" type="email" autocomplete="email" required placeholder="ty@przyklad.pl"></div><div class="field"><label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="Co najmniej 8 znaków"></div><div id="confirmWrap" class="field hidden"><label for="confirm">Powtórz hasło</label><input id="confirm" type="password" autocomplete="new-password" minlength="8" placeholder="Wpisz hasło ponownie"></div><label id="termsConsentWrap" class="terms-consent hidden"><input id="termsConsent" type="checkbox"><span>Akceptuję <a href="/regulamin.html" target="_blank" rel="noopener">Regulamin serwisu</a>. <strong>(wymagane)</strong></span></label>
+<form id="authForm"><div class="field"><label for="email">Adres e-mail</label><input id="email" type="email" autocomplete="email" required placeholder="ty@przyklad.pl"></div><div class="field"><label for="password">Hasło</label><input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="Co najmniej 8 znaków"></div><div id="confirmWrap" class="field hidden"><label for="confirm">Powtórz hasło</label><input id="confirm" type="password" autocomplete="new-password" minlength="8" placeholder="Wpisz hasło ponownie"></div><div id="registrationPhoneWrap" class="field hidden"><label for="registrationPhone">Numer telefonu (format międzynarodowy)</label><input id="registrationPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+48500100200"><button id="registrationPhoneSend" class="btn" type="button" style="margin-top:8px">Wyślij kod SMS</button><div id="registrationCodeWrap" class="hidden"><label for="registrationPhoneCode" style="display:block;margin-top:12px">Kod z SMS-a</label><input id="registrationPhoneCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-cyfrowy kod"><button id="registrationPhoneVerify" class="btn" type="button" style="margin-top:8px">Potwierdź numer</button></div><div id="registrationPhoneStatus" class="status" role="status" aria-live="polite"></div></div><label id="termsConsentWrap" class="terms-consent hidden"><input id="termsConsent" type="checkbox"><span>Akceptuję <a href="/regulamin.html" target="_blank" rel="noopener">Regulamin serwisu</a>. <strong>(wymagane)</strong></span></label>
 <label id="privacyConsentWrap" class="terms-consent hidden"><input id="privacyConsent" type="checkbox"><span>Zapoznałem(-am) się z <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityką prywatności</a>. <strong>(wymagane)</strong></span></label>
 <label id="signupCookieConsentWrap" class="terms-consent hidden"><input id="signupCookieConsent" type="checkbox"><span>Zgadzam się na używanie opcjonalnych plików cookies. <em>(opcjonalne)</em> Możesz zmienić wybór w ustawieniach cookies.</span></label><div class="form-actions"><button id="authBtn" class="btn primary" type="submit">Zaloguj się</button><button id="resetBtn" class="btn" type="button">Nie pamiętam hasła</button></div><div id="authStatus" class="status" role="status" aria-live="polite"></div></form>
 <p class="hint">Tworząc konto, potwierdzasz zapoznanie się z <a href="/regulamin.html">regulaminem</a> i <a href="/polityka-prywatnosci.html">polityką prywatności</a>.</p>
@@ -443,9 +443,62 @@ function normalizeCrisisText(text){return String(text||"").toLocaleLowerCase("pl
 function maySignalCrisis(text){const t=normalizeCrisisText(text);return /(?:samoboj|mysli.{0,20}samoboj|nie.{0,12}chce.{0,12}zyc|nie.{0,12}mam.{0,20}po co.{0,10}zyc|odebrac.{0,12}sobie.{0,12}zycie|zrobic.{0,12}sobie.{0,12}krzywde|chce.{0,12}sie.{0,12}zabic|ide.{0,20}na.{0,8}tory|na.{0,8}tory|pod.{0,12}pociag|rzuc.{0,12}sie.{0,12}pod|skocz.{0,12}pod|nie.{0,10}dam.{0,10}rady.{0,10}dalej|nie.{0,10}widze.{0,10}sensu|suicid|kill myself|want to die|end my life|hurt myself|self ?harm)/i.test(t)}
 function setStatus(id,msg,good=false){const el=$(id);el.textContent=msg||"";el.className="status"+(good?" good":"")}
 function safeError(e){const m=e?.message||"Wystąpił nieoczekiwany błąd.";return m.length>240?m.slice(0,240):m}
-function showAuthMode(signup){isSignup=signup; $("termsConsentWrap").classList.toggle("hidden",!signup); $("termsConsent").required=signup; $("privacyConsent").required=signup; $("privacyConsentWrap").classList.toggle("hidden",!signup); $("signupCookieConsentWrap").classList.toggle("hidden",!signup); if(!signup){$("termsConsent").checked=false;$("privacyConsent").checked=false;$("signupCookieConsent").checked=false;}$("loginTab").classList.toggle("active",!signup);$("signupTab").classList.toggle("active",signup);$("confirmWrap").classList.toggle("hidden",!signup);$("authBtn").textContent=signup?"Utwórz konto":"Zaloguj się";$("password").autocomplete=signup?"new-password":"current-password";setStatus("authStatus","")}
+let registrationPhoneVerified=false,registrationVerifiedPhone="";
+function normalizeRegistrationPhone(value){return String(value||"").replace(/[\s().-]/g,"")}
+function resetRegistrationPhoneVerification(){
+ registrationPhoneVerified=false;registrationVerifiedPhone="";
+ $("registrationPhoneCode").value="";
+ $("registrationCodeWrap").classList.add("hidden");
+ $("registrationPhoneStatus").textContent="";
+ $("authBtn").disabled=isSignup;
+}
+async function registrationPhoneRequest(payload){
+ const response=await fetch("/api/registration-phone-verification",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data.error||"Nie udało się zweryfikować numeru.");
+ return data;
+}
+function showAuthMode(signup){
+ isSignup=signup;
+ $("termsConsentWrap").classList.toggle("hidden",!signup);$("termsConsent").required=signup;
+ $("privacyConsent").required=signup;$("privacyConsentWrap").classList.toggle("hidden",!signup);
+ $("signupCookieConsentWrap").classList.toggle("hidden",!signup);
+ if(!signup){$("termsConsent").checked=false;$("privacyConsent").checked=false;$("signupCookieConsent").checked=false;}
+ $("loginTab").classList.toggle("active",!signup);$("signupTab").classList.toggle("active",signup);
+ $("confirmWrap").classList.toggle("hidden",!signup);$("registrationPhoneWrap").classList.toggle("hidden",!signup);
+ $("registrationPhone").required=signup;
+ $("authBtn").textContent=signup?"Utwórz konto":"Zaloguj się";
+ $("password").autocomplete=signup?"new-password":"current-password";
+ resetRegistrationPhoneVerification();setStatus("authStatus","");
+}
+$("registrationPhone").addEventListener("input",()=>{if(registrationPhoneVerified)resetRegistrationPhoneVerification()});
+$("email").addEventListener("input",()=>{if(registrationPhoneVerified)resetRegistrationPhoneVerification()});
+$("registrationPhoneSend").onclick=async()=>{
+ const button=$("registrationPhoneSend"),email=$("email").value.trim().toLowerCase(),phone=normalizeRegistrationPhone($("registrationPhone").value);
+ if(!email)return setStatus("registrationPhoneStatus","Najpierw wpisz adres e-mail.");
+ if(!/^\+[1-9]\d{7,14}$/.test(phone))return setStatus("registrationPhoneStatus","Wpisz numer w formacie międzynarodowym, np. +48500100200.");
+ button.disabled=true;
+ try{
+  await registrationPhoneRequest({action:"start",email,phone});
+  $("registrationCodeWrap").classList.remove("hidden");
+  setStatus("registrationPhoneStatus","Wysłaliśmy kod SMS. Wpisz go poniżej.",true);
+ }catch(error){setStatus("registrationPhoneStatus",error.message)}
+ finally{button.disabled=false}
+};
+$("registrationPhoneVerify").onclick=async()=>{
+ const button=$("registrationPhoneVerify"),email=$("email").value.trim().toLowerCase(),phone=normalizeRegistrationPhone($("registrationPhone").value),code=$("registrationPhoneCode").value.trim();
+ if(!/^\d{6}$/.test(code))return setStatus("registrationPhoneStatus","Wpisz 6-cyfrowy kod z SMS-a.");
+ button.disabled=true;
+ try{
+  await registrationPhoneRequest({action:"verify",email,phone,code});
+  registrationPhoneVerified=true;registrationVerifiedPhone=phone;
+  $("authBtn").disabled=false;
+  setStatus("registrationPhoneStatus","Numer telefonu potwierdzony. Możesz utworzyć konto.",true);
+ }catch(error){setStatus("registrationPhoneStatus",error.message)}
+ finally{button.disabled=false}
+};
 $("loginTab").onclick=()=>showAuthMode(false);$("signupTab").onclick=()=>showAuthMode(true);
-$("authForm").onsubmit=async e=>{e.preventDefault();$("authBtn").disabled=true;setStatus("authStatus","Chwila, sprawdzamy dane…");const email=$("email").value.trim(),password=$("password").value;try{if(isSignup){if(!$("termsConsent").checked)throw new Error("Aby utworzyć konto, zaakceptuj Regulamin serwisu.");if(!$("privacyConsent").checked)throw new Error("Potwierdź zapoznanie się z Polityką prywatności.");if(password!==$("confirm").value)throw new Error("Wpisane hasła nie są takie same.");if(password.length<8)throw new Error("Hasło musi mieć co najmniej 8 znaków.");const r=await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin,data:{terms_accepted_at:new Date().toISOString(),terms_version:"2.0",privacy_acknowledged_at:new Date().toISOString(),privacy_policy_version:"1.1",signup_optional_cookies_consent:$("signupCookieConsent").checked}}});if(r.error)throw r.error;setStatus("authStatus",r.data.session?"Konto utworzone.":"Konto utworzone. Sprawdź skrzynkę e-mail i potwierdź adres.",true);if(r.data.session)await boot(r.data.session)}else{const r=await sb.auth.signInWithPassword({email,password});if(r.error)throw r.error;await boot(r.data.session)}}catch(e){setStatus("authStatus",safeError(e))}finally{$("authBtn").disabled=false}};
+$("authForm").onsubmit=async e=>{e.preventDefault();$("authBtn").disabled=true;setStatus("authStatus","Chwila, sprawdzamy dane…");const email=$("email").value.trim(),password=$("password").value;try{if(isSignup){if(!$("termsConsent").checked)throw new Error("Aby utworzyć konto, zaakceptuj Regulamin serwisu.");if(!$("privacyConsent").checked)throw new Error("Potwierdź zapoznanie się z Polityką prywatności.");if(password!==$("confirm").value)throw new Error("Wpisane hasła nie są takie same.");if(password.length<8)throw new Error("Hasło musi mieć co najmniej 8 znaków.");const signupPhone=normalizeRegistrationPhone($("registrationPhone").value);if(!registrationPhoneVerified||registrationVerifiedPhone!==signupPhone)throw new Error("Najpierw potwierdź numer telefonu kodem SMS.");const r=await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin,data:{terms_accepted_at:new Date().toISOString(),terms_version:"2.0",privacy_acknowledged_at:new Date().toISOString(),privacy_policy_version:"1.1",signup_optional_cookies_consent:$("signupCookieConsent").checked,signup_phone_e164:signupPhone}}});if(r.error)throw r.error;setStatus("authStatus",r.data.session?"Konto utworzone.":"Konto utworzone. Sprawdź skrzynkę e-mail i potwierdź adres.",true);if(r.data.session)await boot(r.data.session)}else{const r=await sb.auth.signInWithPassword({email,password});if(r.error)throw r.error;await boot(r.data.session)}}catch(e){setStatus("authStatus",safeError(e))}finally{$("authBtn").disabled=isSignup&&!registrationPhoneVerified}};
 $("resetBtn").onclick=async()=>{const email=$("email").value.trim();if(!email)return setStatus("authStatus","Wpisz adres e-mail, a następnie wybierz reset hasła.");const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});setStatus("authStatus",r.error?safeError(r.error):"Jeśli konto istnieje, wysłaliśmy instrukcję resetowania hasła.",!r.error)};
 
 let activeFriendRequestId=null,activeFriendUserId=null,activeFriendName="",friendRealtimeChannel=null,friendListRealtimeChannel=null,friendNotificationsChannel=null,friendLocationRealtimeChannel=null;
