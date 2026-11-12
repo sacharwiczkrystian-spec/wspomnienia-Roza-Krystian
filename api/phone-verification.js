@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
     }
 
     if (body.action === "start") {
-      if (!process.env.INFOBIP_API_KEY || !process.env.INFOBIP_BASE_URL) {
+      if (!process.env.SZYBKISMS_API_TOKEN) {
         return reply(res, 503, { error: "Wysyłanie SMS nie jest jeszcze skonfigurowane na serwerze." });
       }
       const current = await db("verified_phone_numbers?user_id=eq." + encodeURIComponent(user.id) + "&select=phone_e164&limit=1", key);
@@ -78,28 +78,37 @@ module.exports = async (req, res) => {
       if (result?.status === "number_unavailable") return reply(res, 400, { error: "Nie można użyć tego numeru. Sprawdź go lub skontaktuj się z pomocą." });
       if (result?.status !== "started") throw Error("Nie udało się rozpocząć weryfikacji.");
 
-      const base = String(process.env.INFOBIP_BASE_URL).replace(/\/+$/, "");
-      const sender = process.env.INFOBIP_SENDER || "InfoSMS";
       let sms;
+      const smsPayload = {
+        recipients: phone,
+        message: "Twój kod weryfikacyjny LOVE Story: " + code + ". Kod jest ważny 5 minut. Nie udostępniaj go nikomu.",
+        type: 1,
+        unicode: true
+      };
+      if (process.env.SZYBKISMS_SENDER) smsPayload.sender = process.env.SZYBKISMS_SENDER;
       try {
-        sms = await fetch(base + "/sms/3/messages", {
+        sms = await fetch("https://api.szybkisms.pl/rest/messages/sms", {
           method: "POST",
-          headers: { Authorization: "App " + process.env.INFOBIP_API_KEY, "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ messages: [{ destinations: [{ to: phone }], from: sender, content: { text: "Twój kod weryfikacyjny LOVE Story: " + code + ". Kod jest ważny 5 minut. Nie udostępniaj go nikomu." } }] })
+          headers: {
+            Authorization: "Bearer " + process.env.SZYBKISMS_API_TOKEN,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify(smsPayload)
         });
       } catch (sendError) {
-        // A network timeout is ambiguous: Infobip may have accepted the SMS
-        // even though this request never received the response. Keep the
+        // A network timeout is ambiguous: the provider may have accepted the
+        // SMS even though this request never received the response. Keep the
         // challenge alive so a delivered code can still be verified. The
         // database cooldown prevents an immediate duplicate send.
-        console.error("Infobip SMS result unknown", { name: sendError.name || "Error" });
+        console.error("SzybkiSMS SMS result unknown", { name: sendError.name || "Error" });
         return reply(res, 502, {
           error: "Nie udało się potwierdzić wyniku wysyłki. Jeśli SMS dotarł, wpisz kod; w przeciwnym razie spróbuj ponownie po upływie blokady."
         });
       }
       if (!sms.ok) {
         try { await rpc("phone_verification_cancel", { p_user_id: user.id, p_code_hash: codeHash }, key); } catch {}
-        console.error("Infobip SMS send failed", { status: sms.status });
+        console.error("SzybkiSMS SMS send failed", { status: sms.status });
         return reply(res, 502, { error: "Nie udało się wysłać SMS-a. Spróbuj ponownie za chwilę." });
       }
       return reply(res, 200, { ok: true, sent: true });
