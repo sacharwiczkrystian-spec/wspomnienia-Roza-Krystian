@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "index.html"
+      - "api/supabase-send-sms.js"
+      - "api/supabase-send-sms.test.js"
       - ".github/workflows/sms-phone-mfa-checks.yml"
   push:
     branches:
@@ -17,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check inline JavaScript syntax
+      - name: Check inline JavaScript syntax and duplicate IDs
         run: |
           node <<'NODE'
           const fs = require('node:fs');
@@ -25,12 +27,16 @@ jobs:
           const scripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
           if (!scripts.length) throw new Error('No inline scripts found');
           scripts.forEach((match, index) => {
-            const file = `/tmp/love-story-inline-${index}.js`;
+            const file = '/tmp/love-story-inline-' + index + '.js';
             fs.writeFileSync(file, match[1]);
             require('node:child_process').execFileSync(process.execPath, ['--check', file], { stdio: 'inherit' });
           });
           const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
           const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
           if (duplicates.length) throw new Error('Duplicate element IDs: ' + [...new Set(duplicates)].join(', '));
-          console.log(`Checked ${scripts.length} inline scripts and ${ids.length} element IDs.`);
+          console.log('Checked ' + scripts.length + ' inline scripts and ' + ids.length + ' element IDs.');
           NODE
+      - name: Check SMS hook syntax
+        run: node --check api/supabase-send-sms.js
+      - name: Test SMS hook signature and payload
+        run: node --test api/supabase-send-sms.test.js
