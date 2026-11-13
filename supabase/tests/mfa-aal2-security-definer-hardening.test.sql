@@ -45,4 +45,5 @@ begin
   ) then
     raise exception 'private Storage AAL2 policy is missing or not restrictive';
   end if;
-end;$$;
+end;
+$$;
