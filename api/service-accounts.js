@@ -1,14 +1,15 @@
 const URL=process.env.SUPABASE_URL||"https://khggputlakhupiypybic.supabase.co";
 const PUB=process.env.SUPABASE_PUBLISHABLE_KEY||"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
+const { requirePhoneVerified, serverKey: getSupabaseServerKey } = require("../lib/phone-verification");
 const crypto=require("crypto");
 const {promisify}=require("util");
 const scrypt=promisify(crypto.scrypt);
-const headers=(key,extra={})=>({apikey:key,Authorization:"Bearer "+key,...extra});
+const headers=(key,extra={})=>{const value=String(key||""),result={apikey:value,...extra};if(!value.startsWith("sb_secret_"))result.Authorization="Bearer "+value;return result};
 const reply=(res,status,data)=>res.status(status).setHeader("Content-Type","application/json; charset=utf-8").setHeader("Cache-Control","no-store").end(JSON.stringify(data));
 async function db(path,key,opts={}){const r=await fetch(URL+"/rest/v1/"+path,{...opts,headers:headers(key,{"Content-Type":"application/json",...(opts.headers||{})})});const t=await r.text();if(!r.ok)throw Error("Operacja w bazie nie powiodła się.");return t?JSON.parse(t):[]}
-function serverKey(){return process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY||null}
+function serverKey(){return getSupabaseServerKey()||null}
 async function authUser(req){const token=(req.headers.authorization||"").replace(/^Bearer\s+/i,"");if(!token)throw Object.assign(Error("Zaloguj się ponownie."),{status:401});const r=await fetch(URL+"/auth/v1/user",{headers:{apikey:PUB,Authorization:"Bearer "+token}});if(!r.ok)throw Object.assign(Error("Sesja wygasła."),{status:401});return r.json()}
-async function adminContext(req){const user=await authUser(req),key=serverKey();if(!key)throw Object.assign(Error("Brak konfiguracji serwera. Administrator projektu musi dodać SUPABASE_SERVICE_ROLE_KEY w Vercel i wykonać redeploy."),{status:503});const rows=await db("admin_users?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id&limit=1",key);if(!rows.length)throw Object.assign(Error("Brak uprawnień administratora."),{status:403});return {user,key}}
+async function adminContext(req){const user=await authUser(req),key=serverKey();if(!key)throw Object.assign(Error("Brak konfiguracji serwera. Administrator projektu musi dodać SUPABASE_SERVICE_ROLE_KEY w Vercel i wykonać redeploy."),{status:503});if(!await requirePhoneVerified(user.id,key))throw Object.assign(Error("Najpierw potwierdź numer telefonu."),{status:403});const rows=await db("admin_users?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id&limit=1",key);if(!rows.length)throw Object.assign(Error("Brak uprawnień administratora."),{status:403});return {user,key}}
 function validLogin(s){return /^[a-z0-9._-]{3,32}$/.test(s)}
 async function hashPassword(password,salt){return (await scrypt(password,Buffer.from(salt,"hex"),64)).toString("hex")}
 module.exports=async(req,res)=>{

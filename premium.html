@@ -10,6 +10,7 @@
 </style>
 </head>
 <body>
+<script src="/phone-verification.js"></script>
 <header class="top"><div class="wrap nav"><a class="brand" href="/">Love <em>Story</em></a><a class="btn" href="/">← Wróć do pamiętnika</a></div></header>
 <main class="wrap">
 <section class="hero"><div class="eyebrow">Więcej możliwości, ta sama historia</div><h1>LOVE Story <span style="color:var(--accent)">Premium</span></h1><p>Wybierz wariant, który najlepiej pasuje do Waszego sposobu tworzenia wspomnień. Na razie możesz spokojnie obejrzeć ofertę i zaznaczyć interesujące dodatki.</p></section>
@@ -48,6 +49,7 @@ document.getElementById('buyPremiumBtn').addEventListener('click',async function
   const {data,error}=await supabaseClient.auth.getSession();
   if(error)throw error;
   if(!data.session){paymentStatus.textContent='Zaloguj się na swoje konto LOVE Story, a następnie wróć tutaj.';return;}
+  if(!await window.LoveStoryPhoneVerification.ensurePhoneVerified(data.session)){paymentStatus.textContent='Weryfikacja numeru telefonu jest wymagana.';return;}
   const response=await fetch('/api/create-checkout-session',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token,'Content-Type':'application/json'},body:'{}'});
   const result=await response.json().catch(()=>({}));
   if(!response.ok)throw new Error(result.error||'Płatności są obecnie niedostępne.');
