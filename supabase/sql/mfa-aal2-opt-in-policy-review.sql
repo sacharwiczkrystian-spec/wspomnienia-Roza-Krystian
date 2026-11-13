@@ -981,3 +981,31 @@ create policy "mfa_require_aal2_when_factor_enrolled"
 
 -- Important: restrictive RLS policies do not constrain SECURITY DEFINER functions that bypass RLS.
 -- Audit/restrict privileged RPCs separately before considering production rollout.
+
+-- Private Storage buckets contain memory photos, profile photos, chat images,
+-- personnel files and financial documents. Apply the same opt-in AAL2 rule to
+-- authenticated Storage API operations; anonymous public access is unaffected.
+drop policy if exists "mfa_require_aal2_when_factor_enrolled" on storage.objects;
+create policy "mfa_require_aal2_when_factor_enrolled"
+  on storage.objects
+  as restrictive
+  for all
+  to authenticated
+  using (array[(select auth.jwt()->>'aal')] <@ (
+    select case
+      when count(id) > 0 then array['aal2']
+      else array['aal1', 'aal2']
+    end
+    from auth.mfa_factors
+    where (select auth.uid()) = user_id
+      and status = 'verified'
+  ))
+  with check (array[(select auth.jwt()->>'aal')] <@ (
+    select case
+      when count(id) > 0 then array['aal2']
+      else array['aal1', 'aal2']
+    end
+    from auth.mfa_factors
+    where (select auth.uid()) = user_id
+      and status = 'verified'
+  ));
