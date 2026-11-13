@@ -49,7 +49,7 @@ jobs:
           const policies = fs.readFileSync('supabase/sql/mfa-aal2-opt-in-policy-review.sql', 'utf8');
           const rpc = fs.readFileSync('supabase/sql/mfa-aal2-security-definer-hardening-review.sql', 'utf8');
           const test = fs.readFileSync('supabase/tests/mfa-aal2-security-definer-hardening.test.sql', 'utf8');
-          const policyCount = [...policies.matchAll(/create policy "mfa_require_aal2_when_factor_enrolled"/gi)].length;
+          const policyCount = [...policies.matchAll(/create policy "mfa_require_aal2_when_factor_enrolled"\s+on public\./gi)].length;
           if (policyCount !== 39) throw new Error('Expected 39 reviewed AAL2 policies, found ' + policyCount);
           const functions = [
             'admin_create_staff_id_card',
@@ -69,7 +69,7 @@ jobs:
             if (!rpc.includes('revoke all on function public.' + name)) throw new Error('Missing anonymous revoke for ' + name);
           }
           if (!test.includes('has_function_privilege')) throw new Error('Staging privilege assertions missing');
-          if (!/create policy "mfa_require_aal2_when_factor_enrolled"\\s+on storage\\.objects/i.test(policies)) {
+          if (!/create policy "mfa_require_aal2_when_factor_enrolled"\s+on storage\.objects/i.test(policies)) {
             throw new Error('Missing restrictive AAL2 policy candidate for private Storage objects');
           }
           if (!test.includes("schemaname = 'storage'") || !test.includes("permissive = 'RESTRICTIVE'")) {
