@@ -32,5 +32,18 @@ begin
      or has_function_privilege('anon', 'public.get_my_training_materials(text)', 'EXECUTE') then
     raise exception 'anonymous execution remains enabled on a protected training RPC';
   end if;
+  -- Verify the private Storage policy is present and restrictive.
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'storage'
+      and tablename = 'objects'
+      and policyname = 'mfa_require_aal2_when_factor_enrolled'
+      and permissive = 'RESTRICTIVE'
+      and cmd = 'ALL'
+      and 'authenticated' = any(roles)
+  ) then
+    raise exception 'private Storage AAL2 policy is missing or not restrictive';
+  end if;
 end;
-$$;
+$;
