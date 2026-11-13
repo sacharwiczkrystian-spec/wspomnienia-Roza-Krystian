@@ -69,7 +69,7 @@ jobs:
             if (!rpc.includes('revoke all on function public.' + name)) throw new Error('Missing anonymous revoke for ' + name);
           }
           if (!test.includes('has_function_privilege')) throw new Error('Staging privilege assertions missing');
-          if (!test.trim().endsWith('$;')) throw new Error('Staging SQL test must end with a complete dollar-quote delimiter');
+          if (!test.trim().endsWith(String.fromCharCode(36,36,59))) throw new Error('Staging SQL test must end with a complete dollar-quote delimiter');
           if (!/create policy "mfa_require_aal2_when_factor_enrolled"\s+on storage\.objects/i.test(policies)) {
             throw new Error('Missing restrictive AAL2 policy candidate for private Storage objects');
           }
