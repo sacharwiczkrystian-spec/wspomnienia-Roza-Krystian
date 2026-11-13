@@ -69,5 +69,12 @@ jobs:
             if (!rpc.includes('revoke all on function public.' + name)) throw new Error('Missing anonymous revoke for ' + name);
           }
           if (!test.includes('has_function_privilege')) throw new Error('Staging privilege assertions missing');
+          if (!/create policy "mfa_require_aal2_when_factor_enrolled"\\s+on storage\\.objects/i.test(policies)) {
+            throw new Error('Missing restrictive AAL2 policy candidate for private Storage objects');
+          }
+          if (!test.includes("schemaname = 'storage'") || !test.includes("permissive = 'RESTRICTIVE'")) {
+            throw new Error('Storage AAL2 policy verification is missing');
+          }
+          console.log('Checked private Storage AAL2 policy candidate and staging assertion.');
           console.log('Checked ' + policyCount + ' AAL2 policies, ' + guardCount + ' SECURITY DEFINER RPC guards, and anonymous RPC revocations.');
           NODE
