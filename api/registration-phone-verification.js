@@ -16,7 +16,13 @@ function serverKey() {
   return key;
 }
 function dbHeaders(key) {
-  const result = { apikey: key, "Content-Type": "application/json" };
+  const result = {
+    apikey: key,
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    "User-Agent": "LOVE-Story-registration-api/1.0"
+  };
+  // Legacy JWT keys also need Authorization; sb_secret_* keys must stay in apikey only.
   if (!key.startsWith("sb_secret_")) result.Authorization = "Bearer " + key;
   return result;
 }
@@ -36,7 +42,8 @@ async function rpc(name, body, key) {
   });
   const raw = await response.text();
   if (!response.ok) {
-    console.error("registration-phone-verification RPC failed", { name, status: response.status });
+    // Log only the short Supabase diagnostic body; never log credentials or headers.
+    console.error("registration-phone-verification RPC failed", { name, status: response.status, response: raw.slice(0, 600) });
     throw new Error("Nie udało się wykonać operacji weryfikacji.");
   }
   return raw ? JSON.parse(raw) : null;
