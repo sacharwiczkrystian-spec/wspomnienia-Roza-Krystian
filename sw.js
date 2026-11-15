@@ -1,4 +1,4 @@
-const CACHE_NAME="love-story-shell-v3";
+const CACHE_NAME="love-story-shell-v4";
 const APP_SHELL=["/","/site.webmanifest","/favicon.svg"];
 
 self.addEventListener("install",event=>{
