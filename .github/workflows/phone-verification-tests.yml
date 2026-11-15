@@ -1,0 +1,28 @@
+name: Phone verification regression tests
+
+on:
+  push:
+    branches:
+      - feature/infobip-offline-hardening
+  pull_request:
+    paths:
+      - "api/phone-verification.js"
+      - "api/phone-verification.test.js"
+      - "supabase/migrations/**"
+      - ".github/workflows/phone-verification-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  node-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run mocked and static regression tests
+        run: node --test api/phone-verification.test.js

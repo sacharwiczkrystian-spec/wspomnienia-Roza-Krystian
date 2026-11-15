@@ -1,4 +1,5 @@
 // Vercel serverless function: create a Stripe Checkout subscription session.
+const { requirePhoneVerified, serverKey } = require("../lib/phone-verification");
 const SUPABASE_URL = process.env.SUPABASE_URL || "https://khggputlakhupiypybic.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe";
 const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID || "price_1UWZrYC074K6xfn90Qn34mCM";
@@ -32,6 +33,9 @@ module.exports = async function handler(req, res) {
     if (!authResponse.ok) return reply(res, 401, { error: "Sesja wygasła. Zaloguj się ponownie." });
     const account = await authResponse.json();
     if (!account.id || !account.email) return reply(res, 400, { error: "Konto nie ma zweryfikowanego adresu e-mail." });
+    const supabaseServerKey = serverKey();
+    if (!supabaseServerKey) return reply(res, 503, { error: "Brak serwerowej konfiguracji weryfikacji telefonu." });
+    if (!await requirePhoneVerified(account.id, supabaseServerKey)) return reply(res, 403, { error: "Najpierw potwierdź numer telefonu." });
 
     const form = new URLSearchParams();
     form.set("mode", "subscription");
