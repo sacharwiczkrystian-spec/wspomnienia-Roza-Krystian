@@ -987,10 +987,9 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
 (async function(){
   const banner=document.getElementById("creatorMourningBanner");
   const text=document.getElementById("creatorMourningText");
-  if(!banner||!text||!window.supabase?.createClient)return;
+  if(!banner||!text||typeof sb==="undefined"||!sb)return;
   try{
-    const client=window.supabase.createClient("https://khggputlakhupiypybic.supabase.co","sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe");
-    const result=await client.from("site_settings").select("creator_mourning_mode,creator_mourning_message").order("id",{ascending:false}).limit(1).maybeSingle();
+    const result=await sb.from("site_settings").select("creator_mourning_mode,creator_mourning_message").order("id",{ascending:false}).limit(1).maybeSingle();
     if(result.error||!result.data?.creator_mourning_mode)return;
     text.textContent=result.data.creator_mourning_message||"Z szacunkiem i pamięcią.";
     document.body.classList.add("creator-mourning-active");
