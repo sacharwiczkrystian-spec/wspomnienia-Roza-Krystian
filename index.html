@@ -199,6 +199,17 @@ body.theme-midnight :is(.panel,.card,.stat,.memory,.empty,.date-unit,.home-partn
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Love Story">
+
+<style id="creator-mourning-style">
+body.creator-mourning-active{filter:grayscale(.92)!important}
+#creatorMourningBanner{display:none;position:fixed;z-index:99999;top:0;left:0;right:0;padding:15px 20px;background:linear-gradient(115deg,#171719,#29282b);color:#f4f0eb;border-bottom:1px solid #77716b;box-shadow:0 8px 28px #0005;text-align:center;font-family:Georgia,"Times New Roman",serif}
+#creatorMourningBanner.visible{display:block}
+#creatorMourningBanner .mourning-title{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#e7dfd5;font-weight:700}
+#creatorMourningBanner .mourning-message{max-width:900px;margin:5px auto 0;font:13px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:#f0ece7;white-space:pre-wrap}
+body.creator-mourning-active{padding-top:0}
+@media(max-width:600px){#creatorMourningBanner{padding:12px 14px}#creatorMourningBanner .mourning-title{font-size:12px}#creatorMourningBanner .mourning-message{font-size:12px}}
+@media(prefers-reduced-motion:no-preference){#creatorMourningBanner.visible{animation:mourningFadeIn .5s ease-out}@keyframes mourningFadeIn{from{opacity:0}to{opacity:1}}}
+</style>
 </head>
 <body>
 <header class="top"><div class="wrap nav"><a class="brand" href="/" style="text-decoration:none;color:inherit"><span class="mark">♡</span><span>Love <em>Story</em></span></a><div class="nav-right"><span id="navEmail" class="hint hidden"></span><button id="navLogout" class="btn hidden">Wyloguj</button><a class="btn training-nav-link" href="/szkolenia.html" aria-label="Przejdź do szkoleń zespołu">Szkolenia</a><a class="btn admin-link" href="/admin.html" aria-label="Otwórz panel administratora">Panel admina</a><a class="btn admin-link" href="/staff.html" aria-label="Przejdź do logowania pracownika">Panel pracownika / logowanie</a><a class="btn admin-link" href="/komunikator-pracownikow.html" aria-label="Otwórz komunikator pracowników">Komunikator pracowników</a><a class="btn admin-link" href="/umowa-partnerska.html" aria-label="Otwórz umowę partnerską">Umowa partnerska</a><a class="btn admin-link partners-nav-link" href="/firmy-wspolpracujace.html" aria-label="Zobacz firmy współpracujące">Firmy współpracujące</a><a class="btn partners-nav-link" href="/panel-firmy.html" aria-label="Zaloguj się do panelu firmy">Logowanie firm</a><a class="btn admin-link" href="/pani-prezes.html">Pani Prezes</a><a class="btn admin-link" href="/prezes.html">Prezes</a><a class="btn admin-link" href="/wiceprezes.html">Wiceprezes</a><a class="btn admin-link" href="/dyrektor.html">Dyrektor</a><a class="btn" href="/premium.html">Premium i dodatki</a><a class="btn" href="/o-tworcy.html">O projekcie</a></div></div></header>
@@ -968,6 +979,22 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
  if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
  }
+})();
+</script>
+
+<div id="creatorMourningBanner" role="status" aria-live="polite"><div class="mourning-title">Pamięć i szacunek</div><div class="mourning-message" id="creatorMourningText"></div></div>
+<script id="creator-mourning-mode">
+(async function(){
+  const banner=document.getElementById("creatorMourningBanner");
+  const text=document.getElementById("creatorMourningText");
+  if(!banner||!text||typeof sb==="undefined"||!sb)return;
+  try{
+    const result=await sb.from("site_settings").select("creator_mourning_mode,creator_mourning_message").order("id",{ascending:false}).limit(1).maybeSingle();
+    if(result.error||!result.data?.creator_mourning_mode)return;
+    text.textContent=result.data.creator_mourning_message||"Z szacunkiem i pamięcią.";
+    document.body.classList.add("creator-mourning-active");
+    banner.classList.add("visible");
+  }catch(error){console.warn("Nie udało się pobrać ustawień trybu żałoby.",error);}
 })();
 </script>
 </body>
