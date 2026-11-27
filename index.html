@@ -147,6 +147,8 @@ input[type=checkbox],input[type=radio]{accent-color:#d9b56f}
 .home-partner-card strong{display:block;margin-bottom:7px;font-size:13px}
 .home-partner-card p{margin:0 0 12px;color:#796b76;font-size:12px;overflow-wrap:anywhere;white-space:pre-wrap}
 .home-partner-card .btn{margin:4px 5px 0 0}
+.home-partner-featured{border-color:#d8b66f;background:linear-gradient(145deg,#fffdf7,#fff5df)}
+.home-partner-ad-label{display:inline-flex;margin-bottom:9px;padding:4px 8px;border:1px solid #e6d3a6;border-radius:999px;background:#fff9e9;color:#795b25;font-size:9px;font-weight:900;letter-spacing:1px}
 .home-partner-empty{grid-column:1/-1;color:var(--muted);font-size:13px;text-align:center}
 </style>
 
@@ -862,27 +864,39 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
 (()=> {
  const box=document.getElementById("homePartnerAdsList");
  if(!box)return;
+ const addGsnAd=()=>{
+  if([...box.querySelectorAll(".home-partner-card h3")].some(el=>el.textContent.includes("GSN")))return;
+  const card=document.createElement("article");card.className="home-partner-card home-partner-featured";
+  const label=document.createElement("span");label.className="home-partner-ad-label";label.textContent="REKLAMA PARTNERSKA";
+  const name=document.createElement("h3");name.textContent="GSN – Grupa Szkół Niepublicznych";
+  const title=document.createElement("strong");title.textContent="Oficjalny partner LOVE Story · Stargard";
+  const description=document.createElement("p");description.textContent="Poznaj GSN – Grupę Szkół Niepublicznych w Stargardzie, zatwierdzonego partnera LOVE Story.";
+  const link=document.createElement("a");link.className="btn";link.href="/firmy-wspolpracujace.html";link.textContent="Poznaj partnerów";
+  card.append(label,name,title,description,link);box.append(card);
+ };
  const endpoint="https://khggputlakhupiypybic.supabase.co/rest/v1/company_ads?select=id,company_name,title,description,website_url,contact_email,phone&status=eq.approved&order=created_at.desc";
  fetch(endpoint,{headers:{apikey:"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe"}})
   .then(response=>{if(!response.ok)throw new Error("Nie udało się pobrać reklam.");return response.json()})
   .then(rows=>{
    box.replaceChildren();
    if(!Array.isArray(rows)||!rows.length){
-    const empty=document.createElement("div");empty.className="home-partner-empty";empty.textContent="Wkrótce pojawią się tutaj reklamy firm współpracujących z LOVE Story.";box.append(empty);return;
+    const empty=document.createElement("div");empty.className="home-partner-empty";empty.textContent="Poznaj zatwierdzonych partnerów LOVE Story.";box.append(empty);
+   }else{
+    rows.forEach(ad=>{
+     const card=document.createElement("article");card.className="home-partner-card";
+     const name=document.createElement("h3");name.textContent=ad.company_name||"Partner LOVE Story";
+     const title=document.createElement("strong");title.textContent=ad.title||"Oferta partnera";
+     const description=document.createElement("p");description.textContent=ad.description||"";
+     card.append(name,title,description);
+     if(ad.website_url){const link=document.createElement("a");link.className="btn";link.href=ad.website_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Odwiedź stronę";card.append(link)}
+     if(ad.contact_email){const link=document.createElement("a");link.className="btn";link.href="mailto:"+ad.contact_email;link.textContent="Kontakt";card.append(link)}
+     if(ad.phone){const phone=document.createElement("p");phone.style.marginTop="10px";phone.textContent="Telefon: "+ad.phone;card.append(phone)}
+     box.append(card);
+    });
    }
-   rows.forEach(ad=>{
-    const card=document.createElement("article");card.className="home-partner-card";
-    const name=document.createElement("h3");name.textContent=ad.company_name||"Partner LOVE Story";
-    const title=document.createElement("strong");title.textContent=ad.title||"Oferta partnera";
-    const description=document.createElement("p");description.textContent=ad.description||"";
-    card.append(name,title,description);
-    if(ad.website_url){const link=document.createElement("a");link.className="btn";link.href=ad.website_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Odwiedź stronę";card.append(link)}
-    if(ad.contact_email){const link=document.createElement("a");link.className="btn";link.href="mailto:"+ad.contact_email;link.textContent="Kontakt";card.append(link)}
-    if(ad.phone){const phone=document.createElement("p");phone.style.marginTop="10px";phone.textContent="Telefon: "+ad.phone;card.append(phone)}
-    box.append(card);
-   });
+   addGsnAd();
   })
-  .catch(()=>{box.textContent="Nie udało się teraz wczytać reklam partnerów."});
+  .catch(()=>{box.replaceChildren();const fallback=document.createElement("div");fallback.className="home-partner-empty";fallback.textContent="Lista reklam jest chwilowo niedostępna.";box.append(fallback);addGsnAd()});
 })();
 </script>
 
