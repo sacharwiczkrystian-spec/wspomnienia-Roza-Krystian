@@ -373,6 +373,7 @@
     </style>
 </head>
 <body>
+<script src="/phone-verification.js"></script>
 
     <!-- LOGIN / SETUP -->
     <main id="loginScreen" class="screen active" aria-live="polite">
@@ -829,8 +830,9 @@
         status.style.color = ok ? "#2f7d32" : "#d90429";
     }
 
-    function showLoggedIn(session) {
+    async function showLoggedIn(session) {
         if (session && session.user) {
+            if (!await window.LoveStoryPhoneVerification.ensurePhoneVerified(session)) return;
             login.style.display = "none";
             setup.style.display = "none";
             unlockApp();
