@@ -203,6 +203,7 @@ Podpis administratora lub osoby odpowiedzialnej za projekt potwierdza pełnioną
   <section class="card">
    <div class="cardhead"><div><h2>Dane partnera i warunki</h2><p>Uzupełnij wyłącznie informacje uzgodnione z partnerem.</p></div><span class="tag">Administrator</span></div>
    <form id="partnerDocsForm">
+    <div class="field"><label for="pdPreset">Gotowy wzór partnera</label><select id="pdPreset"><option value="">Wybierz partnera lub uzupełnij ręcznie</option><option value="gsn">GSN – Grupa Szkół Niepublicznych w Stargardzie</option><option value="zak">Centrum Nauki i Biznesu ŻAK – Stargard</option></select><p class="help">Wybór uzupełni nazwę i proponowane warunki. Dane prawne, kontaktowe i login nadal wymagają sprawdzenia.</p></div>
     <div class="field"><label for="pdName">Nazwa partnera</label><input id="pdName" required maxlength="180" placeholder="Pełna nazwa firmy lub instytucji"></div>
     <div class="field"><label for="pdKind">Rodzaj partnera</label><select id="pdKind"><option>Firma</option><option>Szkoła / placówka edukacyjna</option><option>Organizacja / fundacja</option><option>Instytucja</option><option>Inny partner</option></select></div>
     <div class="field"><label for="pdContact">Osoba kontaktowa (opcjonalnie)</label><input id="pdContact" maxlength="140" placeholder="Imię i nazwisko"></div>
@@ -216,7 +217,7 @@ Podpis administratora lub osoby odpowiedzialnej za projekt potwierdza pełnioną
     <div class="field"><label for="pdCosts">Koszty i rozliczenia</label><textarea id="pdCosts" maxlength="1000" placeholder="Np. współpraca bezpłatna / stawka i terminy płatności / do osobnego uzgodnienia."></textarea></div>
     <div class="field"><label for="pdDuration">Czas trwania i zakończenie współpracy</label><textarea id="pdDuration" maxlength="900" placeholder="Np. od dnia ... na czas nieokreślony, z 14-dniowym wypowiedzeniem."></textarea></div>
     <div class="divider"></div><h3>Instrukcja logowania partnera</h3>
-    <div class="field"><label for="pdLoginType">Rodzaj loginu</label><select id="pdLoginType"><option value="NIP">NIP firmy</option><option value="LS">Login LOVE Story nadany przez administratora</option><option value="EMAIL">Adres e-mail konta</option></select></div>
+    <div class="field"><label for="pdLoginType">Rodzaj loginu</label><select id="pdLoginType"><option value="" selected>Wybierz po utworzeniu konta</option><option value="NIP">NIP firmy</option><option value="LS">Login LOVE Story nadany przez administratora</option><option value="EMAIL">Adres e-mail konta</option></select></div>
     <div class="field"><label for="pdLogin">Login partnera (bez hasła)</label><input id="pdLogin" maxlength="180" placeholder="Wpisz NIP, login LOVE Story lub e-mail"></div>
     <div class="field"><label for="pdPanelUrl">Adres panelu</label><input id="pdPanelUrl" value="https://lovestory.szczecin.pl/panel-firmy.html" maxlength="240" required></div>
     <div class="field"><label for="pdExtra">Dodatkowe ustalenia / uwagi</label><textarea id="pdExtra" maxlength="1400" placeholder="Dodatkowe zasady, terminy, zakres publikacji, akceptacja materiałów."></textarea></div>
@@ -853,6 +854,35 @@ if(!form)return;
 const $=id=>document.getElementById(id);
 const esc=v=>String(v||"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const value=id=>$(id)?.value.trim()||"—";
+const presets={
+ gsn:{
+  name:"GSN – Grupa Szkół Niepublicznych w Stargardzie",kind:"Szkoła / placówka edukacyjna",
+  model:"Wzajemna promocja i polecanie partnerów",
+  description:"Proponowana współpraca partnerska pomiędzy LOVE Story a GSN – Grupą Szkół Niepublicznych w Stargardzie. LOVE Story prezentuje GSN jako partnera w swoich kanałach informacyjnych, a GSN może informować swoją społeczność o projekcie LOVE Story w uzgodnionym zakresie. Każda publikacja, termin i materiał promocyjny wymagają wcześniejszego uzgodnienia i akceptacji obu stron.",
+  love:"Proponowany zakres: wizytówka partnera w katalogu partnerów LOVE Story, publikacja uzgodnionej informacji na stronie projektu oraz kierowanie zainteresowanych do oficjalnych kanałów kontaktu GSN. Konkretne publikacje i terminy ustalane są każdorazowo.",
+  duties:"Przekazanie aktualnej nazwy, opisu, logo i oficjalnych linków, potwierdzenie praw do przekazanych materiałów, sprawdzenie poprawności informacji oraz akceptacja treści przed publikacją. Partner samodzielnie odpowiada za informacje dotyczące swojej oferty edukacyjnej i rekrutacji.",
+  benefits:"Możliwość prezentacji szkoły w katalogu partnerów LOVE Story i dotarcia do odbiorców projektu poprzez uzgodnione publikacje. Dokument nie gwarantuje określonej liczby zapytań, kandydatów ani zapisów.",
+  costs:"Do indywidualnego uzgodnienia przez strony przed rozpoczęciem odpłatnych działań. Brak opłaty nie jest przyjmowany automatycznie, jeśli strony nie potwierdzą tego na piśmie.",
+  duration:"Od dnia zaakceptowania zasad przez obie strony; okres i sposób zakończenia współpracy do uzgodnienia na piśmie.",
+  extra:"Wszelkie informacje o rekrutacji, kierunkach i warunkach nauki publikuje się po potwierdzeniu ich aktualności przez GSN. Nie wykorzystuje się wizerunku uczniów ani ich danych bez wymaganych zgód i podstaw prawnych."
+ },
+ zak:{
+  name:"Centrum Nauki i Biznesu ŻAK – placówka w Stargardzie",kind:"Szkoła / placówka edukacyjna",
+  model:"Wzajemna promocja i polecanie partnerów",
+  description:"Proponowana współpraca partnerska pomiędzy LOVE Story a Centrum Nauki i Biznesu ŻAK – placówką w Stargardzie. LOVE Story może prezentować placówkę jako partnera w swoich kanałach informacyjnych, a placówka może informować o projekcie LOVE Story w uzgodnionym zakresie. Każda publikacja, termin i materiał promocyjny wymagają wcześniejszego uzgodnienia i akceptacji obu stron.",
+  love:"Proponowany zakres: wizytówka partnera w katalogu partnerów LOVE Story, publikacja uzgodnionej informacji na stronie projektu oraz przekierowanie zainteresowanych do oficjalnych kanałów kontaktu placówki. Konkretne publikacje i terminy ustalane są każdorazowo.",
+  duties:"Przekazanie aktualnej nazwy, opisu, logo i oficjalnych linków, potwierdzenie praw do przekazanych materiałów, sprawdzenie poprawności informacji oraz akceptacja treści przed publikacją. Partner odpowiada za aktualność informacji o kierunkach, kursach, rekrutacji i warunkach nauki.",
+  benefits:"Możliwość prezentacji placówki w katalogu partnerów LOVE Story i dotarcia do odbiorców projektu poprzez uzgodnione publikacje. Dokument nie gwarantuje określonej liczby zapytań, słuchaczy ani zapisów.",
+  costs:"Do indywidualnego uzgodnienia przez strony przed rozpoczęciem odpłatnych działań. Brak opłaty nie jest przyjmowany automatycznie, jeśli strony nie potwierdzą tego na piśmie.",
+  duration:"Od dnia zaakceptowania zasad przez obie strony; okres i sposób zakończenia współpracy do uzgodnienia na piśmie.",
+  extra:"Przed publikacją należy potwierdzić dokładną nazwę podmiotu prowadzącego placówkę, dane adresowe i uprawnienie osoby podpisującej dokument. Informacje o ofercie edukacyjnej i rekrutacji wymagają potwierdzenia przez placówkę."
+ }
+};
+$("pdPreset").addEventListener("change",()=>{
+ const p=presets[$("pdPreset").value];if(!p)return;
+ for(const [key,val] of Object.entries(p)) {const el=$("pd"+key[0].toUpperCase()+key.slice(1));if(el)el.value=val;}
+ $("partnerDocsStatus").textContent="Wczytano wzór. Uzupełnij dane kontaktowe, dane prawne i login po sprawdzeniu z partnerem.";
+});
 const para=(label,val)=>'<section><h2>'+esc(label)+'</h2><p>'+esc(val).replace(/\n/g,"<br>")+'</p></section>';
 form.addEventListener("submit",e=>{
  e.preventDefault();
