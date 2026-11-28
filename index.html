@@ -874,6 +874,16 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
   const link=document.createElement("a");link.className="btn";link.href="/firmy-wspolpracujace.html";link.textContent="Poznaj GSN i zapytaj o rekrutację";
   card.append(label,name,title,description,link);box.append(card);
  };
+ const addZakAd=()=>{
+  if([...box.querySelectorAll(".home-partner-card h3")].some(el=>el.textContent.includes("ŻAK")))return;
+  const card=document.createElement("article");card.className="home-partner-card home-partner-featured";
+  const label=document.createElement("span");label.className="home-partner-ad-label";label.textContent="REKLAMA PARTNERSKA";
+  const name=document.createElement("h3");name.textContent="Centrum Nauki i Biznesu ŻAK · Stargard";
+  const title=document.createElement("strong");title.textContent="Poznaj ofertę edukacyjną ŻAK";
+  const description=document.createElement("p");description.textContent="Szukasz możliwości dalszej nauki lub rozwoju? Poznaj placówkę Centrum Nauki i Biznesu ŻAK w Stargardzie i sprawdź aktualną ofertę oraz informacje o rekrutacji w oficjalnych kanałach szkoły.";
+  const link=document.createElement("a");link.className="btn";link.href="/firmy-wspolpracujace.html";link.textContent="Poznaj partnera ŻAK";
+  card.append(label,name,title,description,link);box.append(card);
+ };
  const endpoint="https://khggputlakhupiypybic.supabase.co/rest/v1/company_ads?select=id,company_name,title,description,website_url,contact_email,phone&status=eq.approved&order=created_at.desc";
  fetch(endpoint,{headers:{apikey:"sb_publishable_NKmlxY9hjAVDeSD4FEhZhQ_8_AOunOe"}})
   .then(response=>{if(!response.ok)throw new Error("Nie udało się pobrać reklam.");return response.json()})
@@ -894,7 +904,8 @@ window.addEventListener("unhandledrejection",e=>{console.error(e.reason)});
      box.append(card);
     });
    }
-   addGsnAd();
+   addGsnAd();addZakAd();
+   addZakAd();
   })
   .catch(()=>{box.replaceChildren();const fallback=document.createElement("div");fallback.className="home-partner-empty";fallback.textContent="Lista reklam jest chwilowo niedostępna.";box.append(fallback);addGsnAd()});
 })();
