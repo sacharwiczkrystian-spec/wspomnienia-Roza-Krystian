@@ -7,7 +7,34 @@ const tempPassword=()=>{const c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwx
 async function db(path,key,opts={}){const r=await fetch(URL+"/rest/v1/"+path,{...opts,headers:headers(key,{"Content-Type":"application/json",...(opts.headers||{})})});const t=await r.text();if(!r.ok){let detail={};try{detail=JSON.parse(t)}catch{}const e=Error("Błąd REST "+r.status+": "+String(detail.message||detail.msg||detail.code||r.statusText).slice(0,300));e.status=r.status;e.code=detail.code||null;e.hint=detail.hint||null;throw e}return t?JSON.parse(t):[]}
 async function context(req,admin){const token=(req.headers.authorization||"").replace(/^Bearer\s+/i,"");if(!token)return {error:[401,"Zaloguj się ponownie."]};const a=await fetch(URL+"/auth/v1/user",{headers:{apikey:PUB,Authorization:"Bearer "+token,"User-Agent":"love-story-company-accounts/1.0"}});if(!a.ok)return {error:[401,"Sesja wygasła."]};const user=await a.json();let key=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;try{const bundle=JSON.parse(process.env.SUPABASE_SECRET_KEYS||"{}");key=key||bundle.default||bundle.secret_key||null}catch{}if(!key)return {error:[503,"Brak konfiguracji serwera. Właściciel projektu musi dodać SUPABASE_SECRET_KEY (lub SUPABASE_SERVICE_ROLE_KEY) w Vercel."]};if(admin){const rows=await db("admin_users?user_id=eq."+encodeURIComponent(user.id)+"&select=user_id&limit=1",key);if(!rows.length)return {error:[403,"Brak uprawnień administratora."]}}return {user,key}}
 module.exports=async(req,res)=>{if(req.method!=="POST"){res.setHeader("Allow","POST");return reply(res,405,{error:"Method not allowed"})}try{const b=typeof req.body==="string"?JSON.parse(req.body):req.body||{},action=b.action;
-if(["create","create_collaborator","list_collaborators","set_collaborator_status","list_ads","review_ad"].includes(action)){const c=await context(req,true);if(c.error)return reply(res,c.error[0],{error:c.error[1]});const {user,key}=c;
+if(["create","create_collaborator","list_collaborators","set_collaborator_status","list_company_accounts","delete_company_account","list_ads","review_ad"].includes(action)){const c=await context(req,true);if(c.error)return reply(res,c.error[0],{error:c.error[1]});const {user,key}=c;
+if(action==="list_company_accounts"){
+ const accounts=await db("partner_company_accounts?select=user_id,nip,company_name,account_status,created_at,account_type,login_identifier&order=created_at.desc&limit=500",key);
+ return reply(res,200,{accounts});
+}
+if(action==="delete_company_account"){
+ const id=String(b.user_id||"");
+ if(!/^[0-9a-f-]{36}$/i.test(id))return reply(res,400,{error:"Nieprawidłowy identyfikator konta."});
+ const accounts=await db("partner_company_accounts?user_id=eq."+encodeURIComponent(id)+"&select=user_id,company_name,account_type&limit=1",key);
+ if(!accounts.length)return reply(res,404,{error:"Nie znaleziono konta firmy."});
+ const account=accounts[0];
+ if((await db("admin_users?user_id=eq."+encodeURIComponent(id)+"&select=user_id&limit=1",key)).length)return reply(res,403,{error:"Nie można usunąć konta administratora."});
+ const authResponse=await fetch(URL+"/auth/v1/admin/users/"+encodeURIComponent(id),{headers:headers(key)});
+ if(!authResponse.ok)return reply(res,409,{error:"Nie udało się zweryfikować konta logowania. Konto nie zostało usunięte."});
+ const authUser=await authResponse.json();
+ if(authUser?.user?.app_metadata?.account_type!=="partner_company"&&authUser?.app_metadata?.account_type!=="partner_company")return reply(res,403,{error:"Wskazane konto nie jest kontem firmy LOVE Story."});
+ const subscriptions=await db("partner_company_subscriptions?user_id=eq."+encodeURIComponent(id)+"&select=status",key);
+ const active=subscriptions.filter(x=>["active","trialing","past_due","unpaid","paused"].includes(String(x.status||"").toLowerCase()));
+ if(active.length)return reply(res,409,{error:"Firma ma aktywną lub nierozliczoną subskrypcję. Najpierw zakończ rozliczenie subskrypcji, a potem usuń konto."});
+ await db("staff_id_cards?user_id=eq."+encodeURIComponent(id),key,{method:"DELETE",headers:{Prefer:"return=minimal"}});
+ const del=await fetch(URL+"/auth/v1/admin/users/"+encodeURIComponent(id),{method:"DELETE",headers:headers(key)});
+ if(!del.ok){
+  const detail=await del.text();
+  console.error("company-account-delete-auth",JSON.stringify({status:del.status,detail:detail.slice(0,400)}));
+  return reply(res,409,{error:"Supabase nie pozwolił usunąć konta. Jeśli firma ma pliki w magazynie Storage, trzeba najpierw usunąć lub przenieść te pliki."});
+ }
+ return reply(res,200,{ok:true,company_name:account.company_name});
+}
 if(action==="create"){
  const accountType=b.account_type==="unregistered"?"unregistered":"registered";
  const nip=accountType==="registered"?String(b.nip||"").replace(/\D/g,""):null;
